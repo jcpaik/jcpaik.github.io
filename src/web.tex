@@ -1,0 +1,52 @@
+\documentclass{article}
+
+% \usepackage[dep_graph, coverage, project=../project]{blueprint}
+
+\usepackage{amsfonts, amsthm, amssymb, amsmath}
+\usepackage{comment}
+\usepackage{tikz-cd}
+\usetikzlibrary{snakes}
+
+\numberwithin{equation}{section}
+\newtheorem{theorem}{Theorem}
+\newtheorem{theoremx}[theorem]{Theorem} % theorem not in dep graph
+\numberwithin{theorem}{section}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{lemmax}[theorem]{Lemma} % lemma not in dep graph
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{defprop}[theorem]{Definition/Proposition}
+
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{warning}[theorem]{Warning}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{examples}[theorem]{Examples}
+\newtheorem{observation}[theorem]{Observation}
+
+
+\date{\today}
+
+\setcounter{tocdepth}{1}
+
+\title{Blueprint for Sofa}
+
+\author{Jineon Baek}
+
+% \home{https://github.com/leanprover-community/lean-liquid}
+% \github{https://github.com/leanprover-community/lean-liquid/}
+
+\begin{document}
+
+\input{main}
+
+\bibliographystyle{amsalpha}
+
+\bibliography{references}
+\end{document}
