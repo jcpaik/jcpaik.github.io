@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<meta name="generator" content="plasTeX" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blueprint for Sofa: Monotone Sofas</title>
+<link rel="next" href="sect0005.html" title="General shape of a normal sofa" />
+<link rel="prev" href="sect0003.html" title="Monotone Sofas" />
+<link rel="up" href="sect0003.html" title="Monotone Sofas" />
+<link rel="stylesheet" href="styles/theme-white.css" />
+<link rel="stylesheet" href="styles/amsthm.css" />
+</head>
+
+<body>
+<header>
+<svg  id="toc-toggle" class="icon icon-list-numbered "><use xlink:href="symbol-defs.svg#icon-list-numbered"></use></svg>
+<h1 id="doc_title"><a href="index.html">Blueprint for Sofa</a></h1>
+</header>
+
+<div class="wrapper">
+<nav class="toc">
+<ul class="sub-toc-0">
+<li class="">
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Introduction</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0002.html"><span class="toc_ref">1.1</span> <span class="toc_entry">History</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class=" active">
+  <a href="sect0003.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <span class="expand-toc">▼</span>
+  <ul class="sub-toc-1 active">
+     <li class=" active current">
+  <a href="sect0004.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+ </li>
+<li class="">
+  <a href="sect0005.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+ </li>
+<li class="">
+  <a href="sect0006.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class="">
+  <a href="sect0007.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
+ </li>
+<li class="">
+  <a href="sect0008.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
+ </li>
+<li class="">
+  <a href="sect0009.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
+ </li>
+</ul>
+</nav>
+
+<div class="content">
+<div class="content-wrapper">
+
+
+<div class="main-text">
+<h2 id="a0000000005">2.1 Monotone Sofas</h2>
+<p> <span style="None"></span>redUnder construction. The following text comes from previous writings and needs to undergo major changes. </p>
+<p>Take any sofa \(S\). The starting observation is that for the canonical movement of \(S\), the intersection (??) is connected and thus already a sofa that encloses \(S\). </p>
+<p><div class="theorem_thmwrapper theorem-style-plain" id="thm:normal-sofa">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">2.1</span>
+  </div>
+  <div class="theorem_thmcontent">
+  <p> For the canonical movement of a sofa \(S\), the intersection \(N(S)\) defined as Equation (??) is connected, and so is a sofa that contains \(S\). </p>
+
+  </div>
+</div> Call this sofa \(N(S)\) as the <em>normalization</em> of \(S\), and any sofa of such form a <em>normal sofa</em>. By the restricted motion of canonical movement, a normal sofa will have much richer properties than an arbitrary sofa. We first introduce relevant notations for further discussions. </p>
+<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000015">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">2.2</span>
+  </div>
+  <div class="definition_thmcontent">
+  <p>For each \(t \in [0, \beta ]\), let \(a(t)\), \(b(t)\), \(c(t)\) and \(d(t)\) be the sides of \(L_t\) corresponding to the sides \(a, b, c\) and \(d\) of \(L\) (so that for example, \(a(t) = f^{-1}_t(a)\)). </p>
+
+  </div>
+</div> </p>
+<p>Now we move back to the proof of connectedness of \(N(S)\). </p>
+<div class="proof_wrapper" id="a0000000016">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▼</span>
+  </div>
+  <div class="proof_content">
+  <p>(of Theorem <a href="sect0004.html#thm:normal-sofa">2.1</a>) Fix an arbitrary point \(p \in N(S)\). We will show that there is a line segment inside \(N(S)\) connecting \(p\) to a point in \(S\). This completes the proof of connectedness of \(N(S)\), as \(N(S)\) is the union of \(S\) with line segments extending from \(S\). </p>
+<p>Let \(l_\theta \) be the line parallel to the \(x\)-axis rotated counterclockwise by an arbitrary angle \(\theta \in [\beta , \pi / 2]\). Regardless of \(\theta \), the intersection \(s_\theta = l_\theta \cap N(S)\) is either a line segment or an empty set. This is because \(s_\theta \) is the intersection of \(l_\theta \cap H\), \(l_\theta \cap (\operatorname{Rot}_\beta (V) + \mathbf{x}(\beta ))\), and \(l_\theta \cap L_t\) for all \(t \in [0, \beta ]\), each a line segment contained in \(l_\theta \). </p>
+<p>Now it only remains to show that for some \(\theta \), \(l_\theta \) overlaps with \(S\) so that \(s_\theta \) connects \(p\) with a point in \(S\). If either one of \(l_\beta \) or \(l_{\pi / 2}\) overlaps with \(S\), we are done. Assume otherwise that none of \(l_\beta \) and \(l_{\pi / 2}\) overlaps with \(S\). Since \(S\) is connected, it is either on the left side of \(l_{\pi / 2}\) or the right side of \(l_{\pi / 2}\). As we are working with the canonical movement of \(S\), \(S\) touches the side \(a(0)\) of \(L_0\) inside \(L_0\). This implies that \(S\) is on the right side of \(l_{\pi / 2}\). A similar argument with the side \(c(\beta )\) of \(L_\beta \) shows that \(S\) is on the left side of \(l_\beta \). Now move \(l_\theta \) continuously, taking \(\theta \) from \(\beta \) to \(\pi / 2\). As \(S\) is on the different sides of \(l_\theta \) for \(\theta = \beta \) and \(\pi / 2\), at some point \(S\) will cross the boundary \(l_\theta \) for some \(\theta \). This completes the proof of connectedness. </p>
+<p>The conditions that \(N(S)\) are contained in \(L_t\) and rotated strips of \(L\) and \(V\) follow naturally from the definition ??. Thus \(N(S)\) is a valid sofa. </p>
+
+  </div>
+</div>
+<p>It is worth noting that the normalization of a normal sofa is itself. That is, the normalization is a projection from the collection of sofas to the collection of normal sofas. <div class="corollary_thmwrapper theorem-style-plain" id="cor:norm-proj">
+  <div class="corollary_thmheading">
+    <span class="corollary_thmcaption">
+    Corollary
+    </span>
+    <span class="corollary_thmlabel">2.3</span>
+  </div>
+  <div class="corollary_thmcontent">
+  <p> Take any sofa \(S\). The canonical movement of \(S\) that <em>defines</em> the normal sofa \(N(S)\) as in (??) is identical to the canonical movement <em>of</em> the normal sofa \(N(S)\). Consequently, for any normal sofa \(S\), \(N(S) = S\). </p>
+
+  </div>
+</div> </p>
+<div class="proof_wrapper" id="a0000000017">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▼</span>
+  </div>
+  <div class="proof_content">
+  <p>By definition, the canonical movement \(f_t\) (the continuum of isometries that move a sofa) of \(S\) is a valid movement of \(N(S)\). Since \(N(S) \supset S\), the moving copy \(f_t(N(S))\) is rotated clockwise by \(t\) and always touches the sides \(a\) and \(c\) of \(L\). This identifies \(f_t\) with the canonical movement of \(N(S)\). </p>
+
+  </div>
+</div>
+<p>With this, it is natural for us to work with normal sofas only as normalizing a sofa does not decrease the area. </p>
+
+</div> <!--main-text -->
+</div> <!-- content-wrapper -->
+</div> <!-- content -->
+</div> <!-- wrapper -->
+
+<nav class="prev_up_next">
+  <a href="sect0003.html" title="Monotone Sofas"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+</a>
+  <a href="sect0003.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+</a>
+  <a href="sect0005.html" title="General shape of a normal sofa"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+</a>
+</nav>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/plastex.js"></script>
+<script type="text/javascript" src="js/svgxuse.js"></script>
+</body>
+</html>

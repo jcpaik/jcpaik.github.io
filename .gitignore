@@ -7,7 +7,6 @@
 *.out
 *.pdf
 *.paux
-web
 .python-version
 .texpadtmp
 project

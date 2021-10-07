@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<meta name="generator" content="plasTeX" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blueprint for Sofa: Differential geometry of a normal sofa and its movement</title>
+<link rel="next" href="sect0007.html" title="Corner Injectivity Theorem" />
+<link rel="prev" href="sect0005.html" title="General shape of a normal sofa" />
+<link rel="up" href="sect0003.html" title="Monotone Sofas" />
+<link rel="stylesheet" href="styles/theme-white.css" />
+<link rel="stylesheet" href="styles/amsthm.css" />
+</head>
+
+<body>
+<header>
+<svg  id="toc-toggle" class="icon icon-list-numbered "><use xlink:href="symbol-defs.svg#icon-list-numbered"></use></svg>
+<h1 id="doc_title"><a href="index.html">Blueprint for Sofa</a></h1>
+</header>
+
+<div class="wrapper">
+<nav class="toc">
+<ul class="sub-toc-0">
+<li class="">
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Introduction</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0002.html"><span class="toc_ref">1.1</span> <span class="toc_entry">History</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class=" active">
+  <a href="sect0003.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <span class="expand-toc">▼</span>
+  <ul class="sub-toc-1 active">
+     <li class="">
+  <a href="sect0004.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+ </li>
+<li class="">
+  <a href="sect0005.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+ </li>
+<li class=" active current">
+  <a href="sect0006.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class="">
+  <a href="sect0007.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
+ </li>
+<li class="">
+  <a href="sect0008.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
+ </li>
+<li class="">
+  <a href="sect0009.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
+ </li>
+</ul>
+</nav>
+
+<div class="content">
+<div class="content-wrapper">
+
+
+<div class="main-text">
+<h2 id="a0000000007">2.3 Differential geometry of a normal sofa and its movement</h2>
+<p> <span style="None"></span>redUnder construction. The following text comes from previous writings and needs to undergo major changes. </p>
+<p>Now we describe the differential geometry of a normal sofa and its canonical movement. The main argument will exploit the properties throughly. </p>
+<p>We first define the ‘discrete’ variants of the vertices of a normal sofa \(S\) on its boundary \(\partial \mathcal{C}\). This will be used later to bound geometric values of \(S\). <div class="definition_thmwrapper theorem-style-definition" id="a0000000022">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">2.8</span>
+  </div>
+  <div class="definition_thmcontent">
+  <p>Fix an arbitrary normal sofa \(S\) with rotational angle \(\beta \) and angles \(t_1, t_2 \in [0, \beta ]\) different from each other. We define the followings: </p>
+<p>\(A_{t_1, t_2}\) is the intersection of line \(a(t_1)\) and \(a(t_2)\). \(C_{t_1, t_2}\) is the intersection of line \(c(t_1)\) and \(c(t_2)\). \(g_{t_1, t_2}\) is the signed distance between points \(A_{t_1, t_2}\) and \(\mathbf{y}(t_1)\) on the line \(a(t_1)\). The value is positive when \(\mathbf{y}(t_1)\) is above \(A_{t_1, t_2}\). \(h_{t_1, t_2}\) is the signed distance between points \(C_{t_1, t_2}\) and \(\mathbf{y}(t_1)\) on the line \(c(t_1)\). The value is positive when \(\mathbf{y}(t_1)\) is above \(C_{t_1, t_2}\). </p>
+
+  </div>
+</div> </p>
+<p><div class="proposition_thmwrapper theorem-style-plain" id="prop:disc-leg-len">
+  <div class="proposition_thmheading">
+    <span class="proposition_thmcaption">
+    Proposition
+    </span>
+    <span class="proposition_thmlabel">2.9</span>
+  </div>
+  <div class="proposition_thmcontent">
+  <p> For any \(t\) and \(t_1 {\lt} t_2\) such that \(t_1\) and \(t_2\) are different from \(t\), \(A_{t, t_1}\) and \(A_{t, t_2}\) are both on the line \(a_{t}\) and \(A_{t, t_2}\) is closer to \(\mathbf{y}(t)\) than \(A_{t, t_1}\). Consequently, \(g_{t, t_1} {\gt} g_{t, t_2}\). Likewise, \(C_{t, t_1}\) and \(C_{t, t_2}\) are both on the line \(c_{t}\) and \(C_{t, t_1}\) is closer to \(\mathbf{y}(t)\) than \(C_{t, t_2}\). Consequently, \(h_{t, t_1} {\lt} h_{t, t_2}\). </p>
+
+  </div>
+</div> </p>
+<p>Now we define the continuous vertices of the boundary \(\partial \mathcal{C}\). </p>
+<p><div class="definition_thmwrapper theorem-style-definition" id="def:cont-leg-len">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">2.10</span>
+  </div>
+  <div class="definition_thmcontent">
+  <p> For a normal sofa \(S\), define </p>
+<div class="displaymath" id="a0000000023">
+  \[  A^+_{t}= \lim _{t' \rightarrow t^+} A_{t, t'} \quad A^-_{t}= \lim _{t' \rightarrow t^-} A_{t, t'} \quad C^+_{t}= \lim _{t' \rightarrow t^+} C_{t, t'} \quad C^-_{t}= \lim _{t' \rightarrow t^-} C_{t, t'}.  \]
+</div>
+<p> With this, \(A^+_{t}\) and \(C^+_{t}\) are defined for all \(t \in [0, \beta )\). Let \(C^+_\beta = c(\beta ) \cap b(\beta )\). Likewise, \(A^-_{t}\) and \(C^-_{t}\) are defined for all \(t \in (0, \beta ]\). Let \(A^-_0 = d(0) \cap a(0)\). </p>
+<p>Let </p>
+<ul class="itemize">
+  <li><p>\(g^+_t\) be the distance between \(A^+_t\) and \(\mathbf{y}(t)\), </p>
+</li>
+  <li><p>\(g^-_t\) be the distance between \(A^-_t\) and \(\mathbf{y}(t)\), </p>
+</li>
+  <li><p>\(h^+_t\) be the distance between \(C^+_t\) and \(\mathbf{y}(t)\), </p>
+</li>
+  <li><p>\(h^-_t\) be the distance between \(C^-_t\) and \(\mathbf{y}(t)\). </p>
+</li>
+</ul>
+<p> In other words, </p>
+<div class="displaymath" id="a0000000024">
+  \[  g^+_{t}= \lim _{t' \rightarrow t^+} g_{t, t'} \quad g^-_{t}= \lim _{t' \rightarrow t^-} g_{t, t'} \quad h^+_{t}= \lim _{t' \rightarrow t^+} h_{t, t'} \quad h^-_{t}= \lim _{t' \rightarrow t^-} h_{t, t'}  \]
+</div>
+<p> for appropriate values of \(t\). </p>
+
+  </div>
+</div> </p>
+<p>The line segment connecting \(A_{t}^-\) and \(A_{t}^+\) is the edge of \(\mathcal{C}\) touching \(a(t)\). Consequently \(g_t^- \geq g_t^+\). Likewise, the line segment connecting \(C_{t}^-\) and \(C_{t}^+\) is the edge of \(\mathcal{C}\) touching \(c(t)\). Consequently \(h_t^- \leq h_t^+\). </p>
+<p>The lengths \(g_t^\pm \) and \(h_t^\pm \) of the ‘legs’ extending from \(\mathbf{y}(t)\) to \(A_t^\pm \) and \(C_t^\pm \) respectively are important as they determine the velocity of the inner corner \(\mathbf{x}(t)\). </p>
+<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000025">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">2.11</span>
+  </div>
+  <div class="definition_thmcontent">
+  <p>For any sofa \(S\), \(\mathbf{v}^+ (t)\) is the right derivative of \(\mathbf{x}\) at \(t\) and \(\mathbf{v}^- (t)\) is the left derivative of \(\mathbf{x}\) at \(t\). That is, </p>
+<div class="displaymath" id="a0000000026">
+  \[  \mathbf{v}^{-} (t_0) = \lim _{t \rightarrow t_0^-} \frac{\mathbf{x}(t) - \mathbf{x}(t_0)}{t - t_0} \qquad \mathbf{v}^{+} (t_0) = \lim _{t \rightarrow t_0^+} \frac{\mathbf{x}(t) - \mathbf{x}(t_0)}{t - t_0}.  \]
+</div>
+
+  </div>
+</div> </p>
+<p><div class="lemma_thmwrapper theorem-style-plain" id="lem:leg">
+  <div class="lemma_thmheading">
+    <span class="lemma_thmcaption">
+    Lemma
+    </span>
+    <span class="lemma_thmlabel">2.12</span>
+  </div>
+  <div class="lemma_thmcontent">
+  <p> For any normal sofa \(S\), \(\mathbf{v}^+ (t)\) exists for any \(0 \leq t {\lt} \pi / 2\) and is equal to the following. </p>
+<span>\begin{align*}  \mathbf{v}^+(t) = -(g_t^+ - 1) \cdot u_t + (h^+_t - 1) \cdot v_t \end{align*}</span>
+<p>Likewise, \(\mathbf{v}^- (t)\) exists for all \(0 {\lt} t \leq \pi / 2\) and is equal to the following. </p>
+<div class="displaymath" id="a0000000027">
+  
+</div>
+
+  </div>
+</div> </p>
+<div class="proof_wrapper" id="a0000000028">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▼</span>
+  </div>
+  <div class="proof_content">
+  <p>(sketch) Take any \(0 \leq t {\lt} \pi / 2\) and set \(s = t + \delta \) for sufficiently small and arbitrary \(\delta {\gt} 0\). We simplify \(\mathbf{v}^+(t) = \lim _{\delta \rightarrow 0^+}(\mathbf{x}(s) - \mathbf{x}(t)) / \delta \). </p>
+<p>Since \(A_{t, s}\) is on lines \(a(t)\) and \(a(s)\), it satisfies both </p>
+<div class="displaymath" id="a0000000029">
+  \[ A_{t, s} \cdot u_t = \mathbf{x}(t) \cdot u_t + 1 \]
+</div>
+<p> and </p>
+<div class="displaymath" id="a0000000030">
+  \[ A_{t, s} \cdot u_s = \mathbf{x}(s) \cdot u_s + 1. \]
+</div>
+<p>Rewrite \(u_s = \cos \delta \cdot u_t + \sin \delta \cdot v_t\) on the second equation and we have </p>
+<span>\begin{align*}  A_{t, s} \cos \delta \cdot u_t + A_{t, s} \sin \delta \cdot v_t = \cos \delta (\mathbf{x}(s) \cdot u_t) + \sin \delta (\mathbf{x}(s) \cdot v_t) + 1. \end{align*}</span>
+<p>Group by \(\cos \delta \) and \(\sin \delta \) and substitute \(A_{t, s} \cdot u_t\) with first equation then </p>
+<div class="displaymath" id="a0000000031">
+  \[  \cos \delta (\mathbf{x}(s) \cdot u_t - \mathbf{x}(t) \cdot u_t) + (1 - \cos \delta ) = \sin \delta (A_{t, s} (s) \cdot v_t - \mathbf{x}(s) \cdot v_t) .  \]
+</div>
+<p>Divide by \(\delta \) and send \(\delta \) to zero. We get </p>
+<div class="displaymath" id="a0000000032">
+  \[  \mathbf{v}^+(t) \cdot u_t = (A^+(t) - \mathbf{x}(t)) \cdot v_t \]
+</div>
+<p>Note that \(g_t^+ = (\mathbf{y}(t) - A^+(t)) \cdot v_t = (\mathbf{x}(t) - A^+(t))\cdot v_t + 1\) so we have </p>
+<div class="displaymath" id="a0000000033">
+  \[  \mathbf{v}^+(t) \cdot u_t = 1 - g_t ^+. \]
+</div>
+<p>A similar argument can be applied to show \(\mathbf{v}^+(t) \cdot v_t = h_t^+ - 1\) and thus the first equation of the theorem. A symmetric argument shows the second equation of the theorem. </p>
+
+  </div>
+</div>
+
+</div> <!--main-text -->
+</div> <!-- content-wrapper -->
+</div> <!-- content -->
+</div> <!-- wrapper -->
+
+<nav class="prev_up_next">
+  <a href="sect0005.html" title="General shape of a normal sofa"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+</a>
+  <a href="sect0003.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+</a>
+  <a href="sect0007.html" title="Corner Injectivity Theorem"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+</a>
+</nav>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/plastex.js"></script>
+<script type="text/javascript" src="js/svgxuse.js"></script>
+</body>
+</html>

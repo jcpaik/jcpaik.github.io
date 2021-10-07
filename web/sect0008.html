@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+<meta name="generator" content="plasTeX" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blueprint for Sofa: Concave upper bound of sofa area</title>
+<link rel="next" href="sect0009.html" title="Bibliography" />
+<link rel="prev" href="sect0007.html" title="Corner Injectivity Theorem" />
+<link rel="up" href="index.html" title="Blueprint for Sofa" />
+<link rel="stylesheet" href="styles/theme-white.css" />
+<link rel="stylesheet" href="styles/amsthm.css" />
+</head>
+
+<body>
+<header>
+<svg  id="toc-toggle" class="icon icon-list-numbered "><use xlink:href="symbol-defs.svg#icon-list-numbered"></use></svg>
+<h1 id="doc_title"><a href="index.html">Blueprint for Sofa</a></h1>
+</header>
+
+<div class="wrapper">
+<nav class="toc">
+<ul class="sub-toc-0">
+<li class="">
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Introduction</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0002.html"><span class="toc_ref">1.1</span> <span class="toc_entry">History</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class="">
+  <a href="sect0003.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0004.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+ </li>
+<li class="">
+  <a href="sect0005.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+ </li>
+<li class="">
+  <a href="sect0006.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class="">
+  <a href="sect0007.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
+ </li>
+<li class=" active current">
+  <a href="sect0008.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
+ </li>
+<li class="">
+  <a href="sect0009.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
+ </li>
+</ul>
+</nav>
+
+<div class="content">
+<div class="content-wrapper">
+
+
+<div class="main-text">
+<h1 id="a0000000009">4 Concave upper bound of sofa area</h1>
+<p>In this section, we show that the corner injectivity theorem <a href="sect0007.html#thm:injective">3.1</a> provides us an upper bound of the area of a monotone sofa \(S\) which is concave respect to \(\mathbf{x}\). I’m following the derivation/notation provided by Yoav in a previous email. Then I will argue that the area of a monotone sofa is negative definite. Assume in the following that the upper part of the cap \(\mathcal{C}(S)\) of monotone sofa \(S\) is strictly convex and smooth. </p>
+<p>For any \(t \in \mathbb {R}\), define \(u_t\) as the unit vector that makes an angle of \(t\) from the \(x\)-axis. And define \(v_t = u_{t + \pi / 2}\) as the unit vector perpendicular to \(u_t\). We will use the wedge product \(\mathbf{v}_1 \times \mathbf{v}_2 \in \mathbb {R}\) of two vectors \(\mathbf{v}_1, \mathbf{v}_2\) in \(\mathbb {R}^2\) which is defined as \((x_1, y_1) \times (x_2, y_2) = x_1 y_2 - x_2 y_1\). </p>
+<p>For any \(0 \leq t \leq \pi \), let \(h(t)\) be the height function of the cap, and \(A(t)\) be the corresponding point on the tangency. That is, \(h(t) = \max _{p \in \mathcal{C}(S)} p \cdot u_t\) and \(A(t) = \arg \max _{p \in \mathcal{C}(S)} p \cdot u_t\). Then we have \(A(t) = h(t) u_t + h'(t) v_t\). The area of the cap is \(\frac{1}{2} \int _0^{\pi } A(t) \times A'(t) dt\), which simplifies to \(\frac{1}{2} \int _0^{\pi } h(t)^2 + h(t)h''(t) dt\) using the equation above and \(u_t \times v_t = -v_t \times u_t = 1\). For \(0 \leq t \leq \pi / 2\), define \(g(t) = h(t + \pi / 2)\). Then the integral is \(\frac{1}{2} \int _0^{\pi / 2} h(t)^2 + h(t)h''(t) + g(t)^2 + g(t)g''(t) dt\) </p>
+<p>Now we have a look at the area of the niche. The inner corner’s position is then \(\mathbf{x}(t) = (h(t) - 1) u_t + (g(t) - 1) v_t\). The area of the niche would then be bounded from below by \(\frac{1}{2} \int _0^{\pi / 2} \mathbf{x}(t) \times \mathbf{x}'(t)\). Note that here, we are using the injectivity theorem <a href="sect0007.html#thm:injective">3.1</a> to bound the area of the niche from below by the area determined by \(\mathbf{x}\). Keeping only the homogeneous quadratic terms, this is equal to \(\frac{1}{2} \int _0^{\pi / 2} h(t)^2+g(t)^2+h(t)g'(t)-g(t)h'(t) dt\). Finally, subtracting the area of cap by the lower bound of the niche, the upper bound of sofa area determined by the path of inner corner \(\mathbf{x}\) is equal to </p>
+<div class="equation" id="eq:areaub">
+<p>
+  <div class="equation_content">
+    \begin{equation}  \label{eq:areaub} \frac{1}{2}\int _0^{\pi /2} h(t)h''(t)+g(t)g''(t)-h(t)g'(t)+g(t)h'(t) dt \end{equation}
+  </div>
+  <span class="equation_label">4.1</span>
+</p>
+</div>
+<p> modulo linear terms respect to \(h\) and \(g\). This derivation so far is from Yoav’s email. </p>
+<p>Let \(B(t) = A(t + \pi / 2)\). Let \(\mathbf{y}(t)\) be the coordinate of the outer corner, so that \(\mathbf{y}(t) = h(t) u_t + g(t)v_t\). Then consequently we have \(B(t) = - g'(t) u_t + g(t)v_t \). I claim that the area <a href="sect0008.html#eq:areaub" class="eqref">4.1</a> is equal to </p>
+<div class="equation" id="fig:test">
+<p>
+  <div class="equation_content">
+    \begin{equation}  \label{eq:areaquad} - \frac{1}{2} \int _0^{\pi / 2} \left( \left((y(t) - B(t)) \cdot u_t \right)^2 + \left(\frac{1 - A(t) \cdot v_0}{\cos t} \right)^2 \right) dt \end{equation}
+  </div>
+  <span class="equation_label">4.2</span>
+</p>
+</div>
+<p> modulo linear terms. It is the area of the region shaded blue in the following figure. </p>
+<figure >
+  <div class="centered"><img src="images/img-0001.jpeg" alt="\includegraphics[width=10cm]{sofa.jpeg}" style="width:10cm" />
+  </div>
+
+</figure>
+
+
+</div> <!--main-text -->
+</div> <!-- content-wrapper -->
+</div> <!-- content -->
+</div> <!-- wrapper -->
+
+<nav class="prev_up_next">
+  <a href="sect0007.html" title="Corner Injectivity Theorem"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+</a>
+  <a href="index.html" title="Blueprint for Sofa"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+</a>
+  <a href="sect0009.html" title="Bibliography"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+</a>
+</nav>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/plastex.js"></script>
+<script type="text/javascript" src="js/svgxuse.js"></script>
+</body>
+</html>
