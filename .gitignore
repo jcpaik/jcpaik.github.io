@@ -9,6 +9,7 @@
 *.paux
 web
 .python-version
+.texpadtmp
 project
 
 decls.pickle

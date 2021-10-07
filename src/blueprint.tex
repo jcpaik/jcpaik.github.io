@@ -1,7 +1,10 @@
 \documentclass[11pt]{amsart}
+
 \usepackage{amsfonts, amsthm, amssymb, amsmath}
 \usepackage{comment}
 \usepackage{tikz-cd}
+\usepackage{graphicx}
+
 \usetikzlibrary{snakes}
 
 \usepackage{unicode-math}
@@ -12,6 +15,28 @@
 \setlength{\textwidth}{6.5in}
 \setlength{\oddsidemargin}{-0.1in}
 \setlength{\evensidemargin}{-0.1in}
+
+\DeclareMathOperator{\Rot}{Rot}
+
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\yy}{\mathbf{y}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\ww}{\mathbf{w}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\ra}{\rightarrow}
+
+
 
 \numberwithin{equation}{section}
 \newtheorem{theorem}{Theorem}

@@ -4,13 +4,29 @@ Quoting directly from \cite{kallus2018improved, romik2018differential}, the prob
 \begin{problem}[Moving Sofa Problem]
 What is the planar shape of maximal area that can be moved around a right-angled corner in a hallway of unit width?
 \end{problem} 
-A planar shape that can be moved around in this manner is simply called a \emph{sofa}.
-Since the problem was introduced, it gained a noticeable attention from the mathematics community (see the introduction of \cite{romik2018differential} for some of the reactions) and major on the problem progresses have been made over time. 
-Still, the full problem remains unsolved to this date after 50 years since its introduction.
+Any planar shape that can be moved around such a hallway is called a \emph{sofa}.
+
+The problem gained a noticeable attention from the mathematics community since \cite{romik2018differential} since its introduction, and major progresses have been made over time. However, the full problem remains unsolved to this date after 50 years.
+
+In 1997, Gerver \cite{gerver1992moving} constructed a sofa of area $2.2195\dots$ and conjectured that it attains the maximum possible area.
+The sofa's boundary consists of 3 line segments and 15 analytic curves, making its derivation complicated.
+
+The goal of this project is to prove that the Gerver's sofa indeed attains the maximum possible area of a sofa.
+As the work is still in progress, we restrict our attention to sofas that rotate 90 degrees at this moment. 
+Our plan is to extend the argument to sofas that rotate in arbitrary angle 
+\begin{remark}
+For the rest of the document, we only focus on sofas that rotate by full 90 degrees.
+\end{remark}
+
+The introduction of each chapter is written so that, when only the introductions are read sequentially, will outline the overall strategy of the proof.
+The subsections are meant to fill the mathematical provide details, which can be omitted for the first read.
+
+\subsection{History}
 
 % add figure with caption here
 % known as Hammersley's sofa, can be moved around with a continuous mix of rotation and transition.
 
+\subsubsection{Sofa Construction}
 The area of an explicit sofa gives a lower bound of the maximum sofa area. 
 Since the problem was introduced, sofas of area $2.2074\dots $ (by Hammersley \cite{hammersley1968enfeeblement}), $2.21563\dots$ (by C. Francis \cite{guy1977monthly}) and $2.215649\dots$ (by R. Guy \cite{guy1977monthly}) were successively constructed over time. 
 In 1997, Gerver \cite{gerver1992moving} found the sofa of currently best known area $2.2195\dots$ by considerations of the local maximality of a sofa.
@@ -25,15 +41,7 @@ Romik \cite{romik2018differential} simplified the derivation of Gerver's sofa in
 \end{figure}
 \end{comment}
 
+\subsubsection{Upper Bound of Sofa Area}
 On the other hand, the current best known upper bound $2.37$ of sofa area is found by Kallus and Romik in 2017 \cite{kallus2018improved} by a computer-assisted proof.
 It is conjectured that the Gerver's sofa indeed attains the maximum sofa area, a speculation held by authors worked on this problem \cite{gerver1992moving, romik2018differential} that is supported experimentally by gradient descent computation on the problem's polygonal variant \cite{gibbs2014computational}.
 Thus, under the assumption that Gerver's sofa, the resolution of moving sofa problem boils down to improving the upper bound of possible sofa area.
-
-The purpose of this document is to suggest the blueprint of a further improvement on the sofa area upper bound, and if possible, provide a blueprint of the full resolution of the moving sofa problem.
-Explicitly speaking, we provide an upper bound on sofas that rotate the full right angle,
-modulo some details the author is still working on.
-To separate the fully shown \emph{theorems} from mathematical statements that are highly speculated to be true by the author with proofs still working in progress, we will denote the latter kind of statements as \emph{claims}.
-
-\begin{theorem}
-A sofa that rotates the full 90 degrees clockwise has an area less than or equal to $2.230\dots$.
-\end{theorem}

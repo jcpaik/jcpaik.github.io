@@ -1,0 +1,35 @@
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/article.py
+ )..
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/amsfonts.py
+ )
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/amsthm.py
+ )
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/amssymb.py
+ )
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/amsmath.py
+ )
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/comment.py
+ )
+ (loading package /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Packages/tikz-cd.py
+ )............... ( ./main.tex ). ( ./introduction.tex )...................
+..........
+INFO: Directing output files to directory: ../web/.
+INFO: Importing templates from
+   /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Renderers/PageTemplate
+INFO: Importing templates from
+   /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Renderers/HTML5
+INFO: Importing templates from
+   /Users/jcpaik/Library/Python/3.8/lib/python/site-
+   packages/plasTeX/Renderers/HTML5/Themes/default
+INFO: Using the imager "gspdfpng".
+INFO: Using the vector imager "dvisvgm".
+ [ index.html [ sect0001.html ] [ sect0002.html ] ]
