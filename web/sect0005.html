@@ -9,10 +9,10 @@
 <meta name="generator" content="plasTeX" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blueprint for Sofa: General shape of a normal sofa</title>
-<link rel="next" href="sect0006.html" title="Differential geometry of a normal sofa and its movement" />
-<link rel="prev" href="sect0004.html" title="Monotone Sofas" />
-<link rel="up" href="sect0003.html" title="Monotone Sofas" />
+<title>Blueprint for Sofa: Differential geometry of a normal sofa and its movement</title>
+<link rel="next" href="sect0006.html" title="Corner Injectivity Theorem" />
+<link rel="prev" href="sect0004.html" title="General shape of a normal sofa" />
+<link rel="up" href="sect0002.html" title="Monotone Sofas" />
 <link rel="stylesheet" href="styles/theme-white.css" />
 <link rel="stylesheet" href="styles/amsthm.css" />
 </head>
@@ -27,39 +27,42 @@
 <nav class="toc">
 <ul class="sub-toc-0">
 <li class="">
-  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Introduction</span></a>
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">History</span></a>
   <span class="expand-toc">▶</span>
   <ul class="sub-toc-1">
      <li class="">
-  <a href="sect0002.html"><span class="toc_ref">1.1</span> <span class="toc_entry">History</span></a>
+  <a href="sect0001.html#a0000000012"><span class="toc_ref"></span> <span class="toc_entry">Sofa Construction</span></a>
+ </li>
+<li class="">
+  <a href="sect0001.html#a0000000013"><span class="toc_ref"></span> <span class="toc_entry">Upper Bound of Sofa Area</span></a>
  </li>
 
   </ul>
  </li>
 <li class=" active">
-  <a href="sect0003.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0002.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
   <span class="expand-toc">▼</span>
   <ul class="sub-toc-1 active">
      <li class="">
-  <a href="sect0004.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
- </li>
-<li class=" active current">
-  <a href="sect0005.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+  <a href="sect0003.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
  </li>
 <li class="">
-  <a href="sect0006.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+  <a href="sect0004.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+ </li>
+<li class=" active current">
+  <a href="sect0005.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
  </li>
 
   </ul>
  </li>
 <li class="">
-  <a href="sect0007.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
+  <a href="sect0006.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
  </li>
 <li class="">
-  <a href="sect0008.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
+  <a href="sect0007.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
  </li>
 <li class="">
-  <a href="sect0009.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
+  <a href="sect0008.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
  </li>
 </ul>
 </nav>
@@ -69,47 +72,102 @@
 
 
 <div class="main-text">
-<h2 id="a0000000006">2.2 General shape of a normal sofa</h2>
-<p> <span style="None"></span>redUnder construction. The following text comes from previous writings and needs to undergo major changes. Normal sofas conform to a specific geometric configuration. We introduce definitions and theorems that describe the general shape of a normal sofa. See Figure xx for the accompanying figure. </p>
-<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000020">
+<h2 id="a0000000006">2.3 Differential geometry of a normal sofa and its movement</h2>
+<p> <span style="None"></span>redUnder construction. The following text comes from previous writings and needs to undergo major changes. </p>
+<p>Now we describe the differential geometry of a normal sofa and its canonical movement. The main argument will exploit the properties throughly. </p>
+<p>We first define the ‘discrete’ variants of the vertices of a normal sofa \(S\) on its boundary \(\partial \mathcal{C}\). This will be used later to bound geometric values of \(S\). <div class="definition_thmwrapper theorem-style-definition" id="a0000000021">
   <div class="definition_thmheading">
     <span class="definition_thmcaption">
     Definition
     </span>
-    <span class="definition_thmlabel">2.4</span>
+    <span class="definition_thmlabel">2.8</span>
   </div>
   <div class="definition_thmcontent">
-  <p>For any \(t \in \mathbb {R}\), let \(u_t = (\cos t, \sin t)\) and \(v_t = (- \sin t, \cos t)\). The basis \(u_t, v_t\) of \(\mathbb {R}^2\) follows the frame of rotating hallway \(L_t\). </p>
+  <p>Fix an arbitrary normal sofa \(S\) with rotational angle \(\beta \) and angles \(t_1, t_2 \in [0, \beta ]\) different from each other. We define the followings: </p>
+<p>\(A_{t_1, t_2}\) is the intersection of line \(a(t_1)\) and \(a(t_2)\). \(C_{t_1, t_2}\) is the intersection of line \(c(t_1)\) and \(c(t_2)\). \(g_{t_1, t_2}\) is the signed distance between points \(A_{t_1, t_2}\) and \(\mathbf{y}(t_1)\) on the line \(a(t_1)\). The value is positive when \(\mathbf{y}(t_1)\) is above \(A_{t_1, t_2}\). \(h_{t_1, t_2}\) is the signed distance between points \(C_{t_1, t_2}\) and \(\mathbf{y}(t_1)\) on the line \(c(t_1)\). The value is positive when \(\mathbf{y}(t_1)\) is above \(C_{t_1, t_2}\). </p>
 
   </div>
 </div> </p>
-<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000021">
+<p><div class="proposition_thmwrapper theorem-style-plain" id="prop:disc-leg-len">
+  <div class="proposition_thmheading">
+    <span class="proposition_thmcaption">
+    Proposition
+    </span>
+    <span class="proposition_thmlabel">2.9</span>
+  </div>
+  <div class="proposition_thmcontent">
+  <p> For any \(t\) and \(t_1 {\lt} t_2\) such that \(t_1\) and \(t_2\) are different from \(t\), \(A_{t, t_1}\) and \(A_{t, t_2}\) are both on the line \(a_{t}\) and \(A_{t, t_2}\) is closer to \(\mathbf{y}(t)\) than \(A_{t, t_1}\). Consequently, \(g_{t, t_1} {\gt} g_{t, t_2}\). Likewise, \(C_{t, t_1}\) and \(C_{t, t_2}\) are both on the line \(c_{t}\) and \(C_{t, t_1}\) is closer to \(\mathbf{y}(t)\) than \(C_{t, t_2}\). Consequently, \(h_{t, t_1} {\lt} h_{t, t_2}\). </p>
+
+  </div>
+</div> </p>
+<p>Now we define the continuous vertices of the boundary \(\partial \mathcal{C}\). </p>
+<p><div class="definition_thmwrapper theorem-style-definition" id="def:cont-leg-len">
   <div class="definition_thmheading">
     <span class="definition_thmcaption">
     Definition
     </span>
-    <span class="definition_thmlabel">2.5</span>
+    <span class="definition_thmlabel">2.10</span>
   </div>
   <div class="definition_thmcontent">
-  <p>Let \(Q^+ = (-\infty , 1] \times (-\infty , 1]\) and \(Q^- = (-\infty , 0) \times (-\infty , 0)\). With this, \(L = Q^+ \setminus Q^-\). </p>
-<p>For an arbitrary, fixed normal sofa \(S\) with angle of rotation \(\beta \) and canonical movement \(f_t\), let \(Q^+_t = f^{-1}_t(Q^+)\) and \(Q^-_t = f^{-1}_t(Q^-)\). \(Q_t^+\) is the closed plane quadrant under the lines \(c(t)\) and \(a(t)\). \(Q_t^-\) is the open plane quadrant under the lines \(d(t)\) and \(b(t)\). \(L_t\) is \(Q_t^+ \setminus Q_t^-\). </p>
-<p>Let \(V_\beta \) be the rotated vertical strip \(\operatorname{Rot}_\beta (V) + \mathbf{x}(\beta )\). Let \(P = H \cap V_\beta \). This is equal to \(H\) for \(\beta = \pi / 2\) and is a parallelogram with two heights equal to 1 and an angle of \(\beta + \pi / 2\) for \(\beta {\lt} \pi / 2\). Let \(\mathcal{C}\) be the convex set \(P \cap \bigcap _{t=0}^\beta Q_t^+\). Let \(\mathcal{D}\) be the set \(P \cap \bigcup _{t=0}^\beta Q_t^-\). With this, \(S = \mathcal{C}\setminus \mathcal{D}\). </p>
+  <p> For a normal sofa \(S\), define </p>
+<div class="displaymath" id="a0000000022">
+  \[  A^+_{t}= \lim _{t' \rightarrow t^+} A_{t, t'} \quad A^-_{t}= \lim _{t' \rightarrow t^-} A_{t, t'} \quad C^+_{t}= \lim _{t' \rightarrow t^+} C_{t, t'} \quad C^-_{t}= \lim _{t' \rightarrow t^-} C_{t, t'}.  \]
+</div>
+<p> With this, \(A^+_{t}\) and \(C^+_{t}\) are defined for all \(t \in [0, \beta )\). Let \(C^+_\beta = c(\beta ) \cap b(\beta )\). Likewise, \(A^-_{t}\) and \(C^-_{t}\) are defined for all \(t \in (0, \beta ]\). Let \(A^-_0 = d(0) \cap a(0)\). </p>
+<p>Let </p>
+<ul class="itemize">
+  <li><p>\(g^+_t\) be the distance between \(A^+_t\) and \(\mathbf{y}(t)\), </p>
+</li>
+  <li><p>\(g^-_t\) be the distance between \(A^-_t\) and \(\mathbf{y}(t)\), </p>
+</li>
+  <li><p>\(h^+_t\) be the distance between \(C^+_t\) and \(\mathbf{y}(t)\), </p>
+</li>
+  <li><p>\(h^-_t\) be the distance between \(C^-_t\) and \(\mathbf{y}(t)\). </p>
+</li>
+</ul>
+<p> In other words, </p>
+<div class="displaymath" id="a0000000023">
+  \[  g^+_{t}= \lim _{t' \rightarrow t^+} g_{t, t'} \quad g^-_{t}= \lim _{t' \rightarrow t^-} g_{t, t'} \quad h^+_{t}= \lim _{t' \rightarrow t^+} h_{t, t'} \quad h^-_{t}= \lim _{t' \rightarrow t^-} h_{t, t'}  \]
+</div>
+<p> for appropriate values of \(t\). </p>
 
   </div>
 </div> </p>
-<p>Since we are working with the canonical movement of \(S\), \(a(t)\) and \(c(t)\) for all \(t \in [0, \beta ]\) are tangent lines of \(S\) from above. \(a(t)\) forms an angle of \(t\) from the \(y\)-axis, and \(c(t)\) forms the angle of \(t\) from the \(x\)-axis. Consequently, \(\mathcal{C}\) is a bounded convex set with tangent lines \(a(t)\) and \(c(t)\) for all \(0 \leq t \leq \beta \) from above and sides \(b(\beta )\) and \(d(0)\) from below. Define \(\partial \mathcal{C}\) as the boundary segment of \(\mathcal{C}\) touched by lines \(a(t)\) and \(c(t)\) for all \(0 \leq t \leq \beta \). Then \(\partial \mathcal{C}\) is a continuous curve consisting of two convex segments, each with tangent lines \(\{ a(t)\} _{0 \leq t \leq \beta }\) and \(\{ c(t)\} _{0 \leq t \leq \beta }\) respectively, joined at the vertex \(a(\beta ) \cap c(0)\) of \(P\) for \(\beta {\lt} \pi / 2\) or the segment \(\partial \mathcal{C}\cap c(0)\) for \(\beta = \pi / 2\). The endpoints of \(\partial \mathcal{C}\) are \(E_{l} = c(\beta ) \cap b(\beta )\) and \(E_{r} = a(0) \cap d(0)\) . This, with the theorem below, characterizes the shape of a normal sofa. <div class="theorem_thmwrapper theorem-style-plain" id="thm:normal-structure">
-  <div class="theorem_thmheading">
-    <span class="theorem_thmcaption">
-    Theorem
+<p>The line segment connecting \(A_{t}^-\) and \(A_{t}^+\) is the edge of \(\mathcal{C}\) touching \(a(t)\). Consequently \(g_t^- \geq g_t^+\). Likewise, the line segment connecting \(C_{t}^-\) and \(C_{t}^+\) is the edge of \(\mathcal{C}\) touching \(c(t)\). Consequently \(h_t^- \leq h_t^+\). </p>
+<p>The lengths \(g_t^\pm \) and \(h_t^\pm \) of the ‘legs’ extending from \(\mathbf{y}(t)\) to \(A_t^\pm \) and \(C_t^\pm \) respectively are important as they determine the velocity of the inner corner \(\mathbf{x}(t)\). </p>
+<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000024">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
     </span>
-    <span class="theorem_thmlabel">2.6</span>
+    <span class="definition_thmlabel">2.11</span>
   </div>
-  <div class="theorem_thmcontent">
-  <p> \(\mathcal{D}\) is a subset of \(\mathcal{C}\setminus \partial \mathcal{C}\). </p>
+  <div class="definition_thmcontent">
+  <p>For any sofa \(S\), \(\mathbf{v}^+ (t)\) is the right derivative of \(\mathbf{x}\) at \(t\) and \(\mathbf{v}^- (t)\) is the left derivative of \(\mathbf{x}\) at \(t\). That is, </p>
+<div class="displaymath" id="a0000000025">
+  \[  \mathbf{v}^{-} (t_0) = \lim _{t \rightarrow t_0^-} \frac{\mathbf{x}(t) - \mathbf{x}(t_0)}{t - t_0} \qquad \mathbf{v}^{+} (t_0) = \lim _{t \rightarrow t_0^+} \frac{\mathbf{x}(t) - \mathbf{x}(t_0)}{t - t_0}.  \]
+</div>
 
   </div>
 </div> </p>
-<div class="proof_wrapper" id="a0000000022">
+<p><div class="lemma_thmwrapper theorem-style-plain" id="lem:leg">
+  <div class="lemma_thmheading">
+    <span class="lemma_thmcaption">
+    Lemma
+    </span>
+    <span class="lemma_thmlabel">2.12</span>
+  </div>
+  <div class="lemma_thmcontent">
+  <p> For any normal sofa \(S\), \(\mathbf{v}^+ (t)\) exists for any \(0 \leq t {\lt} \pi / 2\) and is equal to the following. </p>
+<span>\begin{align*}  \mathbf{v}^+(t) = -(g_t^+ - 1) \cdot u_t + (h^+_t - 1) \cdot v_t \end{align*}</span>
+<p>Likewise, \(\mathbf{v}^- (t)\) exists for all \(0 {\lt} t \leq \pi / 2\) and is equal to the following. </p>
+<div class="displaymath" id="a0000000026">
+  
+</div>
+
+  </div>
+</div> </p>
+<div class="proof_wrapper" id="a0000000027">
   <div class="proof_heading">
     <span class="proof_caption">
     Proof
@@ -117,34 +175,33 @@
     <span class="expand-proof">▼</span>
   </div>
   <div class="proof_content">
-  <p>(sketch) Let \(\mathcal{F}\) be the fan above the line \(b(\beta )\) and \(d(0)\) with vertex \(O = b(\beta ) \cap d(0)\). We only need to show that \(P \cap Q^-_t\) is contained in \(\mathcal{C}\setminus \partial \mathcal{C}\) for all \(0 {\lt} t {\lt} \beta \). When \(\mathbf{x}(t)\), the corner of \(Q_t^-\), is not in \(\mathcal{F}\), \(P \cap Q^-_t\) is empty and we are done. </p>
-<p>So assume \(\mathbf{x}(t) \in \mathcal{F}\). There are three possible configurations of \(Q_t^-\) in \(\mathcal{F}\). <span style="None"></span>blueFigure here. In all three cases, we only need to show the followings for all : </p>
-<ol class="enumerate">
-  <li><p>The point \(F_l = d(t) \cap b(\beta )\) is on the strictly right side of the endpoint \(E_l\) of \(\partial \mathcal{C}\) in \(b(\beta )\). </p>
-</li>
-  <li><p>The point \(F_r = b(t) \cap d(0)\) is on the strictly left side of the endpoint \(E_r\) of \(\partial \mathcal{C}\) in \(c(0)\). </p>
-</li>
-  <li><p>The point \(\mathbf{x}(t)\) is inside \(\mathcal{C}\). </p>
-</li>
-</ol>
-<p> We first show that (1) holds. Say that a point \(p_0\) is further than \(p_1\) in the direction of nonzero vector \(v \in \mathbb {R}^2\) if and only if \(p_0 \cdot v {\gt} p_1 \cdot v\). For a fixed \(v\), this is a partial order. \(c(t) \cap a(\beta )\) is further than \(d(t) \cap b(\beta )\) in the direction of \(v_\beta \) (they are the intersection points of boundary lines of strips \(V_\beta \) and \(f^{-1}_t(H)\)). Take any point \(q\) in \(\partial \mathcal{C}\) with tangent line \(c(t)\). \(q\) is further than \(c(t) \cap a(\beta )\) in the direction of \(v_\beta \). Finally, the endpoint \(c(\beta ) \cap b(\beta )\) is further than \(q\) in the direction of \(v_\beta \) as the arc from \(q\) to \(c(\beta ) \cap b(\beta )\) in \(\partial \mathcal{C}\) is directed towards the positive direction of \(v_\beta \). In conclusion, \(c(\beta ) \cap b(\beta )\) is further than \(d(t) \cap b(\beta )\) in the direction of \(v_\beta \) and (1) is shown. <span style="None"></span>blueTODO: this needs pictures </p>
-<p>A symmetric argument can be applied to show (2). </p>
-<p>Assume by contradiction that (3) is false. That is, \(\mathbf{x}(t)\) is outside \(\mathcal{C}\) for some \(0 {\lt} t {\lt} \beta \). By (1) and the angular monotonicity of \(\partial \mathcal{C}\), the line connecting \(F_l\) and \(\mathbf{x}(t)\) only meets \(\partial \mathcal{C}\) at most one point. Since \(F_l\) is inside \(\mathcal{C}\) by (1) and \(\mathbf{x}(t)\) is outside \(\mathcal{C}\) the segment connecting \(F_l\) and \(\mathbf{x}(t)\) meets \(\partial \mathcal{C}\) at exactly one point (*). Likewise, the segment connecting \(F_r\) and \(\mathbf{x}(t)\) meets \(\partial \mathcal{C}\) at exactly one point (**). Let \(P_l\) and \(P_r\) be the points in \(S\) touching \(c(t)\) and \(a(t)\) respectively. Then the connected component of \(P_l\) and \(P_r\) in \(S\) are disjoint by (*) and (**), leading to contradiction (we want more rigor for this step). <span style="None"></span>blueTODO: this needs pictures </p>
+  <p>(sketch) Take any \(0 \leq t {\lt} \pi / 2\) and set \(s = t + \delta \) for sufficiently small and arbitrary \(\delta {\gt} 0\). We simplify \(\mathbf{v}^+(t) = \lim _{\delta \rightarrow 0^+}(\mathbf{x}(s) - \mathbf{x}(t)) / \delta \). </p>
+<p>Since \(A_{t, s}\) is on lines \(a(t)\) and \(a(s)\), it satisfies both </p>
+<div class="displaymath" id="a0000000028">
+  \[ A_{t, s} \cdot u_t = \mathbf{x}(t) \cdot u_t + 1 \]
+</div>
+<p> and </p>
+<div class="displaymath" id="a0000000029">
+  \[ A_{t, s} \cdot u_s = \mathbf{x}(s) \cdot u_s + 1. \]
+</div>
+<p>Rewrite \(u_s = \cos \delta \cdot u_t + \sin \delta \cdot v_t\) on the second equation and we have </p>
+<span>\begin{align*}  A_{t, s} \cos \delta \cdot u_t + A_{t, s} \sin \delta \cdot v_t = \cos \delta (\mathbf{x}(s) \cdot u_t) + \sin \delta (\mathbf{x}(s) \cdot v_t) + 1. \end{align*}</span>
+<p>Group by \(\cos \delta \) and \(\sin \delta \) and substitute \(A_{t, s} \cdot u_t\) with first equation then </p>
+<div class="displaymath" id="a0000000030">
+  \[  \cos \delta (\mathbf{x}(s) \cdot u_t - \mathbf{x}(t) \cdot u_t) + (1 - \cos \delta ) = \sin \delta (A_{t, s} (s) \cdot v_t - \mathbf{x}(s) \cdot v_t) .  \]
+</div>
+<p>Divide by \(\delta \) and send \(\delta \) to zero. We get </p>
+<div class="displaymath" id="a0000000031">
+  \[  \mathbf{v}^+(t) \cdot u_t = (A^+(t) - \mathbf{x}(t)) \cdot v_t \]
+</div>
+<p>Note that \(g_t^+ = (\mathbf{y}(t) - A^+(t)) \cdot v_t = (\mathbf{x}(t) - A^+(t))\cdot v_t + 1\) so we have </p>
+<div class="displaymath" id="a0000000032">
+  \[  \mathbf{v}^+(t) \cdot u_t = 1 - g_t ^+. \]
+</div>
+<p>A similar argument can be applied to show \(\mathbf{v}^+(t) \cdot v_t = h_t^+ - 1\) and thus the first equation of the theorem. A symmetric argument shows the second equation of the theorem. </p>
 
   </div>
 </div>
-<p> <div class="remark_thmwrapper theorem-style-definition" id="a0000000023">
-  <div class="remark_thmheading">
-    <span class="remark_thmcaption">
-    Remark
-    </span>
-    <span class="remark_thmlabel">2.7</span>
-  </div>
-  <div class="remark_thmcontent">
-  <p>The proof above relies a lot on figures and so we are not 100% confident that the details will contain no fallacies at all, even though the general idea seems to work. As the rest of the argument depends heavily on this general description of a normal sofa, the correctness of the statement is crucial. We will be happy to find any counterexample or replace this with any simpler argument with more rigor. </p>
-
-  </div>
-</div> </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -152,11 +209,11 @@
 </div> <!-- wrapper -->
 
 <nav class="prev_up_next">
-  <a href="sect0004.html" title="Monotone Sofas"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+  <a href="sect0004.html" title="General shape of a normal sofa"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
 </a>
-  <a href="sect0003.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+  <a href="sect0002.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0006.html" title="Differential geometry of a normal sofa and its movement"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0006.html" title="Corner Injectivity Theorem"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 

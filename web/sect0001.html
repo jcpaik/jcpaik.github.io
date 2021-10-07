@@ -9,8 +9,8 @@
 <meta name="generator" content="plasTeX" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blueprint for Sofa: Introduction</title>
-<link rel="next" href="sect0002.html" title="History" />
+<title>Blueprint for Sofa: History</title>
+<link rel="next" href="sect0002.html" title="Monotone Sofas" />
 <link rel="prev" href="index.html" title="Blueprint for Sofa" />
 <link rel="up" href="index.html" title="Blueprint for Sofa" />
 <link rel="stylesheet" href="styles/theme-white.css" />
@@ -27,39 +27,42 @@
 <nav class="toc">
 <ul class="sub-toc-0">
 <li class=" active current">
-  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Introduction</span></a>
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">History</span></a>
   <span class="expand-toc">▼</span>
   <ul class="sub-toc-1 active">
      <li class="">
-  <a href="sect0002.html"><span class="toc_ref">1.1</span> <span class="toc_entry">History</span></a>
+  <a href="sect0001.html#a0000000012"><span class="toc_ref"></span> <span class="toc_entry">Sofa Construction</span></a>
+ </li>
+<li class="">
+  <a href="sect0001.html#a0000000013"><span class="toc_ref"></span> <span class="toc_entry">Upper Bound of Sofa Area</span></a>
  </li>
 
   </ul>
  </li>
 <li class="">
-  <a href="sect0003.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0002.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
   <span class="expand-toc">▶</span>
   <ul class="sub-toc-1">
      <li class="">
-  <a href="sect0004.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0003.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
  </li>
 <li class="">
-  <a href="sect0005.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+  <a href="sect0004.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
  </li>
 <li class="">
-  <a href="sect0006.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+  <a href="sect0005.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
  </li>
 
   </ul>
  </li>
 <li class="">
-  <a href="sect0007.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
+  <a href="sect0006.html"><span class="toc_ref">3</span> <span class="toc_entry">Corner Injectivity Theorem</span></a>
  </li>
 <li class="">
-  <a href="sect0008.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
+  <a href="sect0007.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
  </li>
 <li class="">
-  <a href="sect0009.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
+  <a href="sect0008.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
  </li>
 </ul>
 </nav>
@@ -69,53 +72,45 @@
 
 
 <div class="main-text">
-<h1 id="a0000000002">1 Introduction</h1>
-<p> The <em>moving sofa problem</em> was first proposed by Leo Moser in 1966 <span class="cite">
+<h1 id="a0000000002">1 History</h1>
+<h3 id="a0000000012">Sofa Construction</h3>
+<p> The area of an explicit sofa gives a lower bound of the maximum sofa area. Since the problem was introduced, sofas of area \(2.2074\dots \) (by Hammersley <span class="cite">
 	[
-	<a href="sect0009.html#moser1966problem" >Mos66</a>
+	<a href="sect0008.html#hammersley1968enfeeblement" >Ham68</a>
 	]
-</span>. Quoting directly from <span class="cite">
+</span>), \(2.21563\dots \) (by C. Francis <span class="cite">
 	[
-	<a href="sect0009.html#kallus2018improved" >KR18</a>
+	<a href="sect0008.html#guy1977monthly" >Guy77</a>
+	]
+</span>) and \(2.215649\dots \) (by R. Guy <span class="cite">
+	[
+	<a href="sect0008.html#guy1977monthly" >Guy77</a>
+	]
+</span>) were successively constructed over time. In 1997, Gerver <span class="cite">
+	[
+	<a href="sect0008.html#gerver1992moving" >Ger92</a>
+	]
+</span> found the sofa of currently best known area \(2.2195\dots \) by considerations of the local maximality of a sofa. The boundary of Gerver’s sofa consists of 3 line segments and 15 analytic curves, making its derivation complicated. Romik <span class="cite">
+	[
+	<a href="sect0008.html#romik2018differential" >Rom18</a>
+	]
+</span> simplified the derivation of Gerver’s sofa in his work on ambidextrous sofa. </p>
+<h3 id="a0000000013">Upper Bound of Sofa Area</h3>
+<p> On the other hand, the current best known upper bound \(2.37\) of sofa area is found by Kallus and Romik in 2017 <span class="cite">
+	[
+	<a href="sect0008.html#kallus2018improved" >KR18</a>
+	]
+</span> by a computer-assisted proof. It is conjectured that the Gerver’s sofa indeed attains the maximum sofa area, a speculation held by authors worked on this problem <span class="cite">
+	[
+	<a href="sect0008.html#gerver1992moving" >Ger92</a>
 	, 
-	<a href="sect0009.html#romik2018differential" >Rom18</a>
+	<a href="sect0008.html#romik2018differential" >Rom18</a>
 	]
-</span>, the problem asks the following: <div class="problem_thmwrapper theorem-style-plain" id="a0000000013">
-  <div class="problem_thmheading">
-    <span class="problem_thmcaption">
-    Problem
-    </span>
-    <span class="problem_thmlabel">1.1</span>
-    <span class="problem_thmtitle">Moving Sofa Problem</span>
-  </div>
-  <div class="problem_thmcontent">
-  <p> What is the planar shape of maximal area that can be moved around a right-angled corner in a hallway of unit width? </p>
-
-  </div>
-</div> Any planar shape that can be moved around such a hallway is called a <em>sofa</em>. </p>
-<p>The problem gained a noticeable attention from the mathematics community since <span class="cite">
+</span> that is supported experimentally by gradient descent computation on the problem’s polygonal variant <span class="cite">
 	[
-	<a href="sect0009.html#romik2018differential" >Rom18</a>
+	<a href="sect0008.html#gibbs2014computational" >Gib14</a>
 	]
-</span> since its introduction, and major progresses have been made over time. However, the full problem remains unsolved to this date after 50 years. </p>
-<p>In 1997, Gerver <span class="cite">
-	[
-	<a href="sect0009.html#gerver1992moving" >Ger92</a>
-	]
-</span> constructed a sofa of area \(2.2195\dots \) and conjectured that it attains the maximum possible area. The sofa’s boundary consists of 3 line segments and 15 analytic curves, making its derivation complicated. </p>
-<p>The goal of this project is to prove that the Gerver’s sofa indeed attains the maximum possible area of a sofa. As the work is still in progress, we restrict our attention to sofas that rotate 90 degrees at this moment. Our plan is to extend the argument to sofas that rotate in arbitrary angle <div class="remark_thmwrapper theorem-style-definition" id="a0000000014">
-  <div class="remark_thmheading">
-    <span class="remark_thmcaption">
-    Remark
-    </span>
-    <span class="remark_thmlabel">1.2</span>
-  </div>
-  <div class="remark_thmcontent">
-  <p>For the rest of the document, we only focus on sofas that rotate by full 90 degrees. </p>
-
-  </div>
-</div> </p>
-<p>The introduction of each chapter is written so that, when only the introductions are read sequentially, will outline the overall strategy of the proof. The subsections are meant to fill the mathematical provide details, which can be omitted for the first read. </p>
+</span>. Thus, under the assumption that Gerver’s sofa, the resolution of moving sofa problem boils down to improving the upper bound of possible sofa area.  </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -127,7 +122,7 @@
 </a>
   <a href="index.html" title="Blueprint for Sofa"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0002.html" title="History"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0002.html" title="Monotone Sofas"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 
