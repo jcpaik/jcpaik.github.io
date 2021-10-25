@@ -1,33 +1,48 @@
 \maketitle
 
-The \emph{moving sofa problem} was first proposed by Leo Moser in 1966 \cite{moser1966problem}.
-Quoting directly from \cite{kallus2018improved, romik2018differential}, the problem asks the following:
-\begin{problem}[Moving Sofa Problem]
-What is the planar shape of maximal area that can be moved around a right-angled corner in a hallway of unit width?
+The following \emph{moving sofa problem} was first proposed to the literature by Leo Moser in 1966 \cite{moser1966problem}.
+\begin{problem}[Moving Sofa Problem \cite{romik2018differential}]
+A \emph{sofa} is any planar shape that can be moved around a right-angled corner in a hallway of unit width. What is the maximum area of a sofa? 
 \end{problem} 
-Any planar shape that can be moved around such a hallway is called a \emph{sofa}.
+Since then, the problem gained a reasonable attention from the mathematics community over more than 50 years \cite{gerver1992moving,  romik2018differential, kallus2018improved}. However, the full problem remains unsolved to this date.
 
-The problem gained a noticeable attention from the mathematics community since \cite{romik2018differential} since its introduction, and major progresses have been made over time. However, the full problem remains unsolved to this date after 50 years.
-
-In 1997, Gerver \cite{gerver1992moving} constructed a sofa of area $2.2195\dots$ and conjectured that it attains the maximum possible area.
-The sofa's boundary consists of 3 line segments and 15 analytic curves, making its derivation complicated.
+In 1997, Gerver \cite{gerver1992moving} constructed a sofa of area $2.2195\dots$ with considerations of local optimality. He then conjectured that his sofa attains the maximum area possible, which still holds the current record till this date.
+The sofa's boundary consists of 3 line segments and 15 analytic curves, making it even complicated to just describe the shape.
+This renders the problem as an infinite-dimensional, non-convex optimization problem with conjecturally a rather artificial and complicated optimum.
 
 The goal of this project is to prove that the Gerver's sofa indeed attains the maximum possible area of a sofa.
-As the work is still in progress, we restrict our attention to sofas that rotate 90 degrees at this moment. 
-Our plan is to extend the argument to sofas that rotate in arbitrary angle 
-\begin{remark}
-For the rest of the document, we only focus on sofas that rotate by full 90 degrees.
-\end{remark}
+The main strategy to successfully control the area function $\cA \colon \cS \ra \RR$ on the space of all sofas $\cS$ is \emph{bootstrapping} the upper bound $\cA_i$ of $\cA$. 
+We successively develop more refined upper bounds $\cA_i$ of $\cA$ which are easier to control, as we also narrow down the scope $\cS_i \subset \cS$ of sofas that contains a maximum sofa.
+From a possibly crude upper bound $\cA_i$ of area $\cA$, we obtain that a maximal sofa should be in the set $\cS_i = \{\cA_i \geq 2.2195\dots \}$. 
+Using particular properties of $\cA_i$ and $\cS_i$, we develop an upper bound $\cA_{i+1}$ that is more closer to $\cA$ than from $\cA_i$. 
+This also refines the possible scope $\cS_{i + 1} = \{\cA_{i + 1} \geq 2.2195\dots \}$ from $\cS_i$, which allows to further develop more refined bounds and regions.
 
-The introduction of each chapter is written so that, when only the introductions are read sequentially, will outline the overall strategy of the proof.
-The subsections are meant to fill the mathematical provide details, which can be omitted for the first read.
+\textcolor{blue}{Note that the following plan has not been executed fully at this moment.}
 
-\input{introduction}
+Due to the complicated and somewhat artificial nature of the optimum, computer assistance is involved in different steps of the bootstrapping process. 
+In the first step, a C++ program is developed to estimate the area of sofas from above with polygonal area $\cA_0$.
+The program then proves an important lemma for the set $\cS_0$, which enables us to produce a much refined upper bound $\cA_1$ which is both continuous and convex.
+Symbolic calculations then produce certificates satisfying Karush–Kuhn–Tucker (KKT) conditions to show linear inequalities satisfied by $\cS_1$. 
+This allows us then stratify $\cS_1$ into smaller pieces $\cS_{2, \varphi, \varphi'}$ parametrized by real values $\varphi, \varphi'$ with a convex upper bound $\cA_{2, \varphi, \varphi'}$. The values $\varphi, \varphi'$ corresponds to the moments where a hypothetical sofa starts/stops touching the inner corner of a sofa.
+We then finally obtain the optimum value $R_{\varphi, \varphi'}$ of $\cA_{2, \varphi, \varphi'}$ for each $(\varphi, \varphi')$ by solving convex programming with KKT certificates.
+Numeric/symbolic calculations are then used to show that $R_{2, \varphi, \varphi'}$ is maximized exactly when the sofa is the Gerver's sofa, where the value of $R_{2, \varphi, \varphi'}$ matches with the actual area $2.2195\cdots$, completing the proof.
 
-\input{notations}
+We are currently in the stage of producing a full computer-assisted proof. 
+Because the proof depends much on computer results, we plan to formalize our proof with collaborative effort in future. 
+We expect the formalization task to challenge and thus develop multiple aspects of formal proof technology:
+\begin{itemize}
+	\item Proper formalization of area bounded by a non-self-intersecting curve.
+	\item Formalizing the whole search tree of a branch-and-bound case analysis proof with backtracking algorithm.\footnote{Relevant discussions are made in \url{https://leanprover-community.github.io/archive/stream/113488-general/topic/Verifying.20backtracking.20algorithms.html} }
+	\item Formalization of existence/inequalities on real values satisfying certain formula. e.g.) existence of a unique $x$ that minimizes $\sin(x) / x$ for $2 \leq x \leq 6$.
+	\item Formalization of symbolic calculations.
+\end{itemize}
+
+\input{setup}
 
 \input{monotone}
 
 \input{injectivity}
 
 \input{concaveub}
+
+\input{future}

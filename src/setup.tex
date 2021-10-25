@@ -1,0 +1,102 @@
+\section{Setup}
+
+In this section, we define the problem rigorously and introduce essential concepts for the proof.
+Thus, the definitions and notations introduced here will be used throughly for the rest of the document.
+We will also describe existing works on the moving sofa problem using terminologies introduced.
+
+\subsection{Definitions}
+Assume a fixed plane $\RR^2$ with the $xy$-coordinate system, so the $x$ and $y$ coordinate each refers to the first (horizontal) and second (vertical) coordinate respectively.
+First we set up the hallway.
+\begin{definition}
+The \emph{hallway} $L = I_H \cup I_V$ is the union of its \emph{horizontal side} $I_H = (-\infty, 1] \times [0, 1]$ and \emph{vertical side} $I_V = [0, 1] \times (-\infty, 1]$. 
+
+Define the \emph{horizontal strip} $H = \RR \times [0, 1]$ and \emph{vertical strip} $V = [0, 1] \times \RR$. 
+With this, $I_H = L \cap H$ and $I_V = L \cap V$.
+\end{definition}
+We want to move the sofa from the hallway's horizontal side $I_H$ to its vertical side $I_V$.
+We also give names to the sides and vertices of the hallway $L$ for future use. The convention is that the sides are in lowercase and the vertices are in boldcase lowercase. The names of sides follow that of \cite{romik2018differential}.
+\begin{definition}
+Let $a$, $b$, $c$ and $d$ be the sides 
+\begin{align*}
+a & = \{1\} \times (-\infty, 1] \qquad b = \{0\} \times (-\infty, 0] \\
+c & = (-\infty, 1] \times \{1\} \qquad d = (-\infty, 0] \times \{0\}
+\end{align*}
+of $L$. 
+\end{definition}
+\begin{definition}
+Let $\xx = (0, 0)$ and $\yy = (1, 1)$ be the inner and outer corner of the hallway $L$ respectively.
+\end{definition}
+
+We describe the movement by a continuum of sign-preserving isometries of $\RR^2$.
+\begin{definition}
+\label{def:sofa}
+A \emph{sofa} $(S, f_t)$ is a nonempty, compact, connected subset $S$ of $\RR^2$ called the \emph{shape} of sofa equipped with a \emph{movement}, which is a rigid motion that moves $S$ from $I_H$ to $I_V$ inside $L$.
+Formally speaking, the movement of sofa $S$ is a sign-preserving isometry $f_t$ of $\mathbb{R}^2$ continuously parametrized by time $0 \leq t \leq T$ for some $T \geq 0$, so that it satisfies the following conditions.
+\begin{enumerate}
+	\item The moving sofa $S_t = f_t(S)$ at any time $0 \leq t \leq T$ is always a subset of $L$.
+	\item (Initial condition) The sofa $S_0 = f_0(S)$ at the beginning of the movement is a subset of $I_H$.
+	\item (Final condition) The sofa $S_T = f_T(S)$ at the end of the movement is a subset of $I_V$. 
+\end{enumerate}
+\end{definition}
+
+An important observation used by previous works \cite{gerver1992moving, romik2018differential, kallus2018improved} is to look at the sofa movement in the frame of sofa and not the hallway.
+That is, instead of fixing the hallway $L$ and moving the sofa $S_t$ inside $L$ over time $t$, 
+we follow the frame of reference of the sofa, making $S$ stationary, and move the hallway $L_t$ so that $L_t$ always contains $S$.
+
+\begin{definition}[Alternative definition of a sofa]
+\label{def:hallway-view}
+A sofa $(S, f_t)$ consists of the followings.
+First, a shape $S$ which is a nonempty, compact, connected subset of $\RR^2$.
+Second, the \emph{hallway movement} $g_t = f_t^{-1}$ which is a sign-preserving isometry continuously parametrized over a time interval $t \in [0, T]$ so that it satisfies the followings.
+
+\begin{enumerate}
+	\item The moving hallway $L_t = g_t(L)$ at any time $t \in [0, T]$ contains $S$.
+	\item At the beginning of the movement, the sofa $S$ is contained inside $g_0($.
+	\item At the end of the movement, the sofa $S$ is contained inside $g_T(I_V) = g_T(V) \cap L_T$, the vertical side of $L_T$. 
+\end{enumerate}
+\end{definition}
+Without loss of generality, we can assume that $S$ is already positioned in $S_0$, so that $g_0$ is the identity map of $\RR^2$, and thus $L_0 = L$ and $S$ is contained in $H$ in particular. With such assumption, the three conditions of Definition \ref{def:hallway-view} can be represented as the following single statement.
+\begin{equation}
+\label{eq:inter}
+S \subseteq H \cap g_T(V) \cap \bigcap_{0 \leq t \leq T} L_t.
+\end{equation}
+In this way, the sofa $S$ is a connected subset of a connected component of the intersection in Equation \eqref{eq:inter}.
+So the problem of maximizing the area of $S$ becomes the problem of maximizing the area of the connected component of the \emph{intersection} of two strips $H$, $g_T(V)$ and the rotating hallways $L_t$.
+
+
+We will use the following notations for translation/rotation map.
+\begin{definition}
+For any vector $v \in \RR^2$, let $T_v$ be the translation map $T_v(w) = w + v$ of the plane by $v$.
+For any $v \in \RR^2$ and $C \subset \RR^2$, write $T_v(C)$ as $C + v$.
+For any angle $\theta \in \RR$, let $R_\theta$ be the rotation map of $\RR^2$ that rotates the plane along the center of the plane with counterclockwise angle $\theta$.
+\end{definition}
+
+The following unit vectors will be useful in describing geometry of a general sofa.
+\begin{definition}
+For any $t \in \RR$, let $u_t$ be the vector $(\cos t, \sin t)$ and $v_t$ be the vector $(\sin t, -\cos t)$ so that $u_t, v_t$ forms the frame rotated counterclockwise by an angle of $t$.
+\end{definition}
+
+
+
+\subsection{History}
+
+% add figure with caption here
+% known as Hammersley's sofa, can be moved around with a continuous mix of rotation and transition.
+
+The area of an explicit sofa gives a lower bound of the maximum sofa area. 
+Since the problem was introduced, sofas of area $2.2074\dots $ (by Hammersley \cite{hammersley1968enfeeblement}), $2.21563\dots$ (by C. Francis \cite{guy1977monthly}) and $2.215649\dots$ (by R. Guy \cite{guy1977monthly}) were successively constructed over time. 
+In 1997, Gerver \cite{gerver1992moving} found the sofa of currently best known area $2.2195\dots$ by considerations of the local maximality of a sofa.
+The boundary of Gerver's sofa consists of 3 line segments and 15 analytic curves, making its derivation complicated.
+Romik \cite{romik2018differential} simplified the derivation of Gerver's sofa in his work on ambidextrous sofa.
+
+\begin{comment}
+\begin{figure}[hbt]
+  \includegraphics[width=0.9\textwidth]{img/gerver.png}
+  \caption{Gerver's sofa with 3 line segments (V, XVIII, XIII) and 15 analytic curves. Shamefully copied from Wikipedia (need to put credit).}
+  \label{fig:gerver}
+\end{figure}
+\end{comment}
+
+On the other hand, the current best known upper bound $2.37$ of sofa area is found by Kallus and Romik in 2017 \cite{kallus2018improved} by a computer-assisted proof.
+It is conjectured that the Gerver's sofa indeed attains the maximum sofa area, a speculation held by authors worked on this problem \cite{gerver1992moving, romik2018differential} that is supported experimentally by gradient descent computation on the problem's polygonal variant \cite{gibbs2014computational}.
+Thus, under the assumption that Gerver's sofa, the resolution of moving sofa problem boils down to improving the upper bound of possible sofa area.

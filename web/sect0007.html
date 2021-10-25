@@ -10,7 +10,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Blueprint for Sofa: Concave upper bound of sofa area</title>
-<link rel="next" href="sect0008.html" title="Bibliography" />
+<link rel="next" href="sect0008.html" title="Further Directions" />
 <link rel="prev" href="sect0006.html" title="Corner Injectivity Theorem" />
 <link rel="up" href="index.html" title="Blueprint for Sofa" />
 <link rel="stylesheet" href="styles/theme-white.css" />
@@ -27,14 +27,14 @@
 <nav class="toc">
 <ul class="sub-toc-0">
 <li class="">
-  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">History</span></a>
+  <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Setup</span></a>
   <span class="expand-toc">▶</span>
   <ul class="sub-toc-1">
      <li class="">
-  <a href="sect0001.html#a0000000012"><span class="toc_ref"></span> <span class="toc_entry">Sofa Construction</span></a>
+  <a href="sect0001.html#a0000000014"><span class="toc_ref"></span> <span class="toc_entry">Definitions</span></a>
  </li>
 <li class="">
-  <a href="sect0001.html#a0000000013"><span class="toc_ref"></span> <span class="toc_entry">Upper Bound of Sofa Area</span></a>
+  <a href="sect0001.html#a0000000020"><span class="toc_ref"></span> <span class="toc_entry">History</span></a>
  </li>
 
   </ul>
@@ -62,7 +62,17 @@
   <a href="sect0007.html"><span class="toc_ref">4</span> <span class="toc_entry">Concave upper bound of sofa area</span></a>
  </li>
 <li class="">
-  <a href="sect0008.html"><span class="toc_ref">5</span> <span class="toc_entry">Bibliography</span></a>
+  <a href="sect0008.html"><span class="toc_ref">5</span> <span class="toc_entry">Further Directions</span></a>
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
+     <li class="">
+  <a href="sect0009.html"><span class="toc_ref">5.1</span> <span class="toc_entry"> </span></a>
+ </li>
+
+  </ul>
+ </li>
+<li class="">
+  <a href="sect0010.html"><span class="toc_ref">6</span> <span class="toc_entry">Bibliography</span></a>
  </li>
 </ul>
 </nav>
@@ -73,14 +83,13 @@
 
 <div class="main-text">
 <h1 id="a0000000008">4 Concave upper bound of sofa area</h1>
-<p>In this section, we show that the corner injectivity theorem <a href="sect0006.html#thm:injective">3.1</a> provides us an upper bound of the area of a monotone sofa \(S\) which is concave respect to \(\mathbf{x}\). I’m following the derivation/notation provided by Yoav in a previous email. Then I will argue that the area of a monotone sofa is negative definite. Assume in the following that the upper part of the cap \(\mathcal{C}(S)\) of monotone sofa \(S\) is strictly convex and smooth. </p>
-<p>For any \(t \in \mathbb {R}\), define \(u_t\) as the unit vector that makes an angle of \(t\) from the \(x\)-axis. And define \(v_t = u_{t + \pi / 2}\) as the unit vector perpendicular to \(u_t\). We will use the wedge product \(\mathbf{v}_1 \times \mathbf{v}_2 \in \mathbb {R}\) of two vectors \(\mathbf{v}_1, \mathbf{v}_2\) in \(\mathbb {R}^2\) which is defined as \((x_1, y_1) \times (x_2, y_2) = x_1 y_2 - x_2 y_1\). </p>
-<p>For any \(0 \leq t \leq \pi \), let \(h(t)\) be the height function of the cap, and \(A(t)\) be the corresponding point on the tangency. That is, \(h(t) = \max _{p \in \mathcal{C}(S)} p \cdot u_t\) and \(A(t) = \arg \max _{p \in \mathcal{C}(S)} p \cdot u_t\). Then we have \(A(t) = h(t) u_t + h'(t) v_t\). The area of the cap is \(\frac{1}{2} \int _0^{\pi } A(t) \times A'(t) dt\), which simplifies to \(\frac{1}{2} \int _0^{\pi } h(t)^2 + h(t)h''(t) dt\) using the equation above and \(u_t \times v_t = -v_t \times u_t = 1\). For \(0 \leq t \leq \pi / 2\), define \(g(t) = h(t + \pi / 2)\). Then the integral is \(\frac{1}{2} \int _0^{\pi / 2} h(t)^2 + h(t)h''(t) + g(t)^2 + g(t)g''(t) dt\) </p>
-<p>Now we have a look at the area of the niche. The inner corner’s position is then \(\mathbf{x}(t) = (h(t) - 1) u_t + (g(t) - 1) v_t\). The area of the niche would then be bounded from below by \(\frac{1}{2} \int _0^{\pi / 2} \mathbf{x}(t) \times \mathbf{x}'(t)\). Note that here, we are using the injectivity theorem <a href="sect0006.html#thm:injective">3.1</a> to bound the area of the niche from below by the area determined by \(\mathbf{x}\). Keeping only the homogeneous quadratic terms, this is equal to \(\frac{1}{2} \int _0^{\pi / 2} h(t)^2+g(t)^2+h(t)g'(t)-g(t)h'(t) dt\). Finally, subtracting the area of cap by the lower bound of the niche, the upper bound of sofa area determined by the path of inner corner \(\mathbf{x}\) is equal to </p>
+<p>In this section, we show that the corner injectivity theorem <a href="sect0006.html#thm:injective">3.1</a> provides us an upper bound \(\mathcal{A}_1(S)\) of the area \(\mathcal{A}(S)\) of a monotone sofa \(S\) which is concave respect to \(\mathbf{x}\). Assume in the following that the upper part of the cap \(\mathcal{C}(S)\) of monotone sofa \(S\) is strictly convex and smooth. </p>
+<p>For any \(t \in \mathbb {R}\), define \(u_t\) as the unit vector that makes an angle of \(t\) from the \(x\)-axis. And define \(v_t = u_{t + \pi / 2}\) as the unit vector perpendicular to \(u_t\). We will use the wedge product \(\mathbf{v}_1 \times \mathbf{v}_2 \in \mathbb {R}\) of two vectors \(\mathbf{v}_1, \mathbf{v}_2\) in \(\mathbb {R}^2\) which is defined as \((x_1, y_1) \times (x_2, y_2) = x_1 y_2 - x_2 y_1\). For any \(0 \leq t \leq \pi \), let \(h(t)\) be the height function of the cap, and \(A(t)\) be the corresponding point on the tangency. That is, \(h(t) = \max _{p \in \mathcal{C}(S)} p \cdot u_t\) and \(A(t) = \arg \max _{p \in \mathcal{C}(S)} p \cdot u_t\). Then we have \(A(t) = h(t) u_t + h'(t) v_t\). The area of the cap is \(\frac{1}{2} \int _0^{\pi } A(t) \times A'(t) dt\), which simplifies to \(\frac{1}{2} \int _0^{\pi } h(t)^2 + h(t)h''(t) dt\) using the equation above and \(u_t \times v_t = -v_t \times u_t = 1\). For \(0 \leq t \leq \pi / 2\), define \(g(t) = h(t + \pi / 2)\). </p>
+<p>Now we have a look at the area of the niche. By the injectivity theorem <a href="sect0006.html#thm:injective">3.1</a>, it is possible to bound the area of the niche from below by the area determined by the inner corner \(\mathbf{x}\). The inner corner’s position is then \(\mathbf{x}(t) = (h(t) - 1) u_t + (g(t) - 1) v_t\). The area of the niche would then be bounded from below by \(\frac{1}{2} \int _0^{\pi / 2} \mathbf{x}(t) \times \mathbf{x}'(t)\). Keeping only the homogeneous quadratic terms, this is equal to \(\frac{1}{2} \int _0^{\pi / 2} h(t)^2+g(t)^2+h(t)g'(t)-g(t)h'(t) dt\). Finally, subtracting the area of cap by the lower bound of the niche, the upper bound of sofa area determined by the path of inner corner \(\mathbf{x}\) is equal to </p>
 <div class="equation" id="eq:areaub">
 <p>
   <div class="equation_content">
-    \begin{equation}  \label{eq:areaub} \frac{1}{2}\int _0^{\pi /2} h(t)h''(t)+g(t)g''(t)-h(t)g'(t)+g(t)h'(t) dt \end{equation}
+    \begin{equation}  \label{eq:areaub} \mathcal{A}_1(S) = \frac{1}{2}\int _0^{\pi /2} h(t)h''(t)+g(t)g''(t)-h(t)g'(t)+g(t)h'(t) dt \end{equation}
   </div>
   <span class="equation_label">4.1</span>
 </p>
@@ -90,7 +99,7 @@
 <div class="equation" id="fig:test">
 <p>
   <div class="equation_content">
-    \begin{equation}  \label{eq:areaquad} - \frac{1}{2} \int _0^{\pi / 2} \left( \left((y(t) - B(t)) \cdot u_t \right)^2 + \left(\frac{1 - A(t) \cdot v_0}{\cos t} \right)^2 \right) dt \end{equation}
+    \begin{equation}  \label{eq:areaquad} \mathcal{A}_1(S) = - \frac{1}{2} \int _0^{\pi / 2} \left( \left((y(t) - B(t)) \cdot u_t \right)^2 + \left(\frac{1 - A(t) \cdot v_0}{\cos t} \right)^2 \right) dt \end{equation}
   </div>
   <span class="equation_label">4.2</span>
 </p>
@@ -101,8 +110,7 @@
   </div>
 
 </figure>
-<p> One needs to use \(h(\pi / 2) = 1\) to show this.  </p>
-
+<p> One needs to use \(h(\pi / 2) = 1\) to show this. The integral form shows that \(\mathcal{A}_1\) is concave, which makes it subject to convex optimization.  </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -114,7 +122,7 @@
 </a>
   <a href="index.html" title="Blueprint for Sofa"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0008.html" title="Bibliography"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0008.html" title="Further Directions"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 
