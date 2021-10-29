@@ -1,12 +1,12 @@
 \section{Setup}
 
-In this section, we define the problem rigorously and introduce essential concepts for the proof.
-Thus, the definitions and notations introduced here will be used throughly for the rest of the document.
-We will also describe existing works on the moving sofa problem using terminologies introduced.
 
-\subsection{Definitions}
+\subsection{The Problem}
+We first define the problem rigorously and introduce essential concepts for the proof.
+
 Assume a fixed plane $\RR^2$ with the $xy$-coordinate system, so the $x$ and $y$ coordinate each refers to the first (horizontal) and second (vertical) coordinate respectively.
 First we set up the hallway.
+\textcolor{blue}{[A figure of hallway will help a lot]}
 \begin{definition}
 The \emph{hallway} $L = I_H \cup I_V$ is the union of its \emph{horizontal side} $I_H = (-\infty, 1] \times [0, 1]$ and \emph{vertical side} $I_V = [0, 1] \times (-\infty, 1]$. 
 
@@ -27,7 +27,28 @@ of $L$.
 Let $\xx = (0, 0)$ and $\yy = (1, 1)$ be the inner and outer corner of the hallway $L$ respectively.
 \end{definition}
 
-We describe the movement by a continuum of sign-preserving isometries of $\RR^2$.
+We will describe the movement by a continuum of orientation-preserving isometries of $\RR^2$.
+First, we use the following notations for translation and rotation maps.
+\begin{definition}
+For any vector $v \in \RR^2$, let $T_v$ be the translation map $T_v(w) = w + v$ of the plane by $v$.
+For any $v \in \RR^2$ and $C \subset \RR^2$, write $T_v(C)$ as $C + v$.
+For any angle $\theta \in \RR / 2 \pi \ZZ$, let $R_\theta$ be the rotation map of $\RR^2$ along the center of the plane with a counterclockwise angle $\theta$.
+\end{definition}
+We adopt the following equivalent definition of an orientation-preserving isometry of $\RR^2$. For the proof of equivalence to a usual definition, see \textcolor{blue}{[Insert a suitable geometry book here]}.
+\begin{definition}
+A map $f \colon \RR^2 \ra \RR^2$ is called a orientation-preserving isometry of $\RR^2$ if
+it is the composition $T_v \circ R_\theta$ of a rotation followed by a translation.
+\end{definition}
+The following theorem allows us to identify the space $\cT$ of all orientation-preserving isometries of $\RR^2$ with $\RR^2 \times \RR / 2 \pi \ZZ$.
+\begin{theorem}
+An orientation-preserving isometry of $\RR^2$ is represented uniquely as the composition $T_v \circ R_\theta$ of a rotation followed by a translation.
+Consequently, this gives a bijection $\iota \colon \RR^2 \times \RR / 2 \pi \ZZ \ra \cT$ defined as $(v, \theta) \mapsto T_v \circ R_\theta$.
+\end{theorem}
+\begin{definition}
+We give the space $\cI$ of all orientation-preserving isometries of $\RR^2$ the topology of $\RR^2 \times \RR / 2 \pi \ZZ$ mapped under the bijection $\iota$.
+\end{definition}
+
+Now we are ready to describe a sofa by its shape and movement.
 \begin{definition}
 \label{def:sofa}
 A \emph{sofa} $(S, f_t)$ is a nonempty, compact, connected subset $S$ of $\RR^2$ called the \emph{shape} of sofa equipped with a \emph{movement}, which is a rigid motion that moves $S$ from $I_H$ to $I_V$ inside $L$.
@@ -39,23 +60,77 @@ Formally speaking, the movement of sofa $S$ is a sign-preserving isometry $f_t$ 
 \end{enumerate}
 \end{definition}
 
+Now the moving sofa problem can be formalized clearly.
+\begin{problem}[Moving Sofa Problem]
+Does the maximum value of the area of the shape of a sofa exist?
+If so, which sofa attains such a maximum value?
+\end{problem}
+We aim to prove that the answer is attained by Gerver's sofa \cite{gerver1992moving}.
+\begin{conjecture}
+Gerver's sofa \cite{gerver1992moving} attains the maximum possible area of a sofa.
+\end{conjecture}
+
+\subsection{Rotation Angle}
+
+The \emph{rotation angle} is an important constant that determines the nature of a sofa.
+\begin{definition}
+The \emph{rotation angle} $\beta$ of a sofa $(S, f_t)$ with time interval $t \in [0, T]$ is the signed angular difference of $f_0$ and $f_T$ that tracks the full $2\pi$ rotations of $f_t$ during the movement.
+
+More precisely, for each time $t \in [0, T]$, let $\theta(t) \in \RR / 2 \pi \ZZ$ be the angle the orientation-preserving isometry $f_t$ rotates the plane clockwise.
+Then the map $\theta \colon [0, T] \ra \RR / 2 \pi \ZZ$ is continuous by the topology of $\cT$.
+Take any continuous lift $\tilde{\theta} \colon [0, T] \ra \RR$ of $\theta$ 
+so that the map $\tilde{\theta}$ composed with the modulus map $\RR \ra \RR / 2 \pi \ZZ$ is equal to $\theta$.
+Then the rotation angle $\beta$ of $(S, f_t)$ is defined as $\tilde{\theta}(T) - \tilde{\theta}(0)$, which is independent of the choice of $\tilde{\theta}$.
+\end{definition}
+
+It turns out that we only need to consider sofas of rotation angle in between 0 and $\pi / 2$ inclusive to find the maximum area.
+\begin{lemma}
+\label{lem:rot-angle}
+Any sofa of rotation angle $\beta > \pi / 2$ admits a movement with rotation angle $\pi / 2$. 
+Any sofa of rotation angle $\beta < 0$ has an area at most $\sqrt{2}$.
+\end{lemma}
+\begin{proof}
+\textcolor{blue}{Chore: Clean up the argument with more clear/crisp description}
+
+Take any sofa $S$ of rotation angle $\beta > \pi / 2$ with movement $f_t$ ($t \in [0, T]$). 
+By intermediate value theorem, during the movement of $S$ there is a time $T' \in [0, T]$ where the moving sofa $S_{T'}$ is a clockwise rotation of the initial position $S_0$ by $\pi / 2$. 
+Consequently, the isometry $f_{T'}$ rotates the plane clockwise by an angle of $\pi / 2$.
+Applying $f_{T'}$ to the initial condition $S_0 \subset H$, we obtain $S_{T'} \subset f_{T'}(H)$ where $f_{T'}(H)$ is a translation of the vertical strip $V$.
+This implies that $S_{T'}$ has a width of $\leq 1$ in the direction of $x$-axis.
+
+Now consider the following movement of $S$.
+Move $S$ from $S_0$ to $S_{T'}$ by following the movement $f_t$ from $t=0$ to $t=T'$.
+Since  $S_{T'}$ is contained inside $L$, we can now translate $S_{T'}$ inside $L$ towards the positive $x$-axis direction until it touches the side $a$ of $L$.
+Because $S_{T'}$ has a width of $\leq 1$ in the direction of $x$-axis, its translated copy touching side $a$ should be contained in $V$.
+This produces a movement of $S$ with rotation angle $\pi / 2$.
+
+Take any sofa of rotation angle $\beta < 0$. If $\beta \geq -\pi / 4$,
+the condition $S_T \subset V$ implies that $S_0$ is a subset of both $H$ and a rotated copy of $V$ by an angle of $\beta$. 
+The intersection of the strips form a parallelogram of area $\leq \sqrt{2}$, concluding the proof. 
+For $\beta < -\pi / 4$, by the intermediate value theorem, a copy of $S$ rotated counterclockwise by $\pi / 4$ lies in $L$.
+Looking at this in perspective of sofa, $S$ is inside a copy $L'$ of $L$ rotated clockwise by $\pi / 4$. 
+The intersection of $H$ and $L'$ always have area $\sqrt{2}$, so again $S \subset J \cap L'$ has an area less than or equal to $\sqrt{2}$.
+\end{proof}
+
+\subsection{Moving Hallway}
 An important observation used by previous works \cite{gerver1992moving, romik2018differential, kallus2018improved} is to look at the sofa movement in the frame of sofa and not the hallway.
 That is, instead of fixing the hallway $L$ and moving the sofa $S_t$ inside $L$ over time $t$, 
 we follow the frame of reference of the sofa, making $S$ stationary, and move the hallway $L_t$ so that $L_t$ always contains $S$.
 
 \begin{definition}[Alternative definition of a sofa]
-\label{def:hallway-view}
+\label{def:moving-hallway}
 A sofa $(S, f_t)$ consists of the followings.
 First, a shape $S$ which is a nonempty, compact, connected subset of $\RR^2$.
 Second, the \emph{hallway movement} $g_t = f_t^{-1}$ which is a sign-preserving isometry continuously parametrized over a time interval $t \in [0, T]$ so that it satisfies the followings.
 
 \begin{enumerate}
 	\item The moving hallway $L_t = g_t(L)$ at any time $t \in [0, T]$ contains $S$.
-	\item At the beginning of the movement, the sofa $S$ is contained inside $g_0($.
-	\item At the end of the movement, the sofa $S$ is contained inside $g_T(I_V) = g_T(V) \cap L_T$, the vertical side of $L_T$. 
+	\item At the beginning of the movement, the sofa $S$ is contained inside $g_0(H)$, so consequently, it is also contained in $g_0(I_H) = g_0(H) \cap L_0$, the horizontal side of $L_0$ by (1).
+	\item At the end of the movement, the sofa $S$ is contained inside $g_T(V)$, so consequently, it is also contained in $g_T(I_V) = g_T(V) \cap L_T$, the vertical side of $L_T$ by (1). 
 \end{enumerate}
 \end{definition}
-Without loss of generality, we can assume that $S$ is already positioned in $S_0$, so that $g_0$ is the identity map of $\RR^2$, and thus $L_0 = L$ and $S$ is contained in $H$ in particular. With such assumption, the three conditions of Definition \ref{def:hallway-view} can be represented as the following single statement.
+Without loss of generality, we can assume that $S$ is already positioned in $S_0$, so that $g_0$ is the identity map of $\RR^2$, and thus $S$ is contained in $H$ in particular. 
+With such an assumption, the three conditions of Definition \ref{def:hallway-view} can be represented as the following single statement.
 \begin{equation}
 \label{eq:inter}
 S \subseteq H \cap g_T(V) \cap \bigcap_{0 \leq t \leq T} L_t.
@@ -63,19 +138,48 @@ S \subseteq H \cap g_T(V) \cap \bigcap_{0 \leq t \leq T} L_t.
 In this way, the sofa $S$ is a connected subset of a connected component of the intersection in Equation \eqref{eq:inter}.
 So the problem of maximizing the area of $S$ becomes the problem of maximizing the area of the connected component of the \emph{intersection} of two strips $H$, $g_T(V)$ and the rotating hallways $L_t$.
 
+\subsection{Monotone Movement}
+By Lemma \ref{lem:rot-angle}, we can restrict our attention to sofas that rotate by an angle of $\beta \in [0, \pi / 2]$.
+Such a sofa $S$ can be moved in the following way we name as a \emph{monotone movement}.
+First, move a copy of $S_0$ inside $L$ in the positive $x$ and $y$ direction until it hits both sides $a$ and $c$ of the hallway $L$.
+Then, for every moment $t \in [0, \beta]$, we rotate the sofa by the unit angular speed while keeping it touching the sides $a$ and $c$.
+This way, the sofa $S_t$ is parametrized by the angle it is rotated during movement.
+Such a movement is used by previous works \cite{gerver1992moving, romik2018differential, kallus2018improved}.
+The rest of this subsection defines the monotone movement and justifies that it is a valid movement.
 
-We will use the following notations for translation/rotation map.
-\begin{definition}
-For any vector $v \in \RR^2$, let $T_v$ be the translation map $T_v(w) = w + v$ of the plane by $v$.
-For any $v \in \RR^2$ and $C \subset \RR^2$, write $T_v(C)$ as $C + v$.
-For any angle $\theta \in \RR$, let $R_\theta$ be the rotation map of $\RR^2$ that rotates the plane along the center of the plane with counterclockwise angle $\theta$.
-\end{definition}
+\textcolor{blue}{[An animation of arbitrary movement, compared to a monotone movement will be great]}
 
-The following unit vectors will be useful in describing geometry of a general sofa.
+We will use the following unit vectors to describe the geometry of a general sofa.
 \begin{definition}
 For any $t \in \RR$, let $u_t$ be the vector $(\cos t, \sin t)$ and $v_t$ be the vector $(\sin t, -\cos t)$ so that $u_t, v_t$ forms the frame rotated counterclockwise by an angle of $t$.
 \end{definition}
+In particular, we define the support functions $p_S, q_S$ of a sofa $S$ as the following.
+\begin{definition}
+For any $t \in \RR$ and a sofa $S$, define the support functions $p_S, q_S \colon \RR \ra \RR$ as
+$$p_S(t) = \max_{p \in S} p \cdot u_t$$
+and
+$$q_S(t) = \max_{p \in S} p \cdot v_t.$$
 
+If the sofa $S$ is clear from the context, we omit the subscript and denote the support functions as $p$ and $q$.
+\end{definition}
+\begin{theorem}
+For any sofa $S$, the support functions $p_S$ and $q_S$ are continuous.
+\end{theorem}
+\begin{proof}
+(omitted)
+\end{proof}
+
+\begin{theorem}
+Let $(S, f_t)$ be any sofa with shape $S$, movement $f_t$ and a rotation angle $0 \leq \beta < \pi / 2$.
+Then we can define $ $
+\begin{equation}
+\label{eq:inter}
+S \subseteq H \cap g_T(V) \cap \bigcap_{0 \leq t \leq T} L_t.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Let $g_t = f_t^{-1}$ be the hallway movement of $S$ (Definition \ref{thm:moving-hallway}).
+\end{proof}
 
 
 \subsection{History}
