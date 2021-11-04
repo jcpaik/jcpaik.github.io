@@ -9,10 +9,10 @@
 <meta name="generator" content="plasTeX" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blueprint for Sofa: General shape of a normal sofa</title>
-<link rel="next" href="sect0010.html" title="Differential geometry of a normal sofa and its movement" />
+<title>Blueprint for Sofa: Space of Monotone Sofas</title>
+<link rel="next" href="sect0010.html" title="Differential Geometry of a Monotone Sofa" />
 <link rel="prev" href="sect0008.html" title="Monotone Sofas" />
-<link rel="up" href="sect0007.html" title="Monotone Sofas" />
+<link rel="up" href="sect0006.html" title="Monotone Sofas" />
 <link rel="stylesheet" href="styles/theme-white.css" />
 <link rel="stylesheet" href="styles/amsthm.css" />
 </head>
@@ -40,26 +40,26 @@
   <a href="sect0004.html"><span class="toc_ref">1.3</span> <span class="toc_entry">Moving Hallway</span></a>
  </li>
 <li class="">
-  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">Monotone Movement</span></a>
- </li>
-<li class="">
-  <a href="sect0006.html"><span class="toc_ref">1.5</span> <span class="toc_entry">History</span></a>
+  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">History</span></a>
  </li>
 
   </ul>
  </li>
 <li class=" active">
-  <a href="sect0007.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0006.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
   <span class="expand-toc">▼</span>
   <ul class="sub-toc-1 active">
      <li class="">
-  <a href="sect0008.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
- </li>
-<li class=" active current">
-  <a href="sect0009.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+  <a href="sect0007.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Movement</span></a>
  </li>
 <li class="">
-  <a href="sect0010.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+  <a href="sect0008.html"><span class="toc_ref">2.2</span> <span class="toc_entry">Monotone Sofas</span></a>
+ </li>
+<li class=" active current">
+  <a href="sect0009.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Space of Monotone Sofas</span></a>
+ </li>
+<li class="">
+  <a href="sect0010.html"><span class="toc_ref">2.4</span> <span class="toc_entry">Differential Geometry of a Monotone Sofa</span></a>
  </li>
 
   </ul>
@@ -84,82 +84,9 @@
 
 
 <div class="main-text">
-<h2 id="a0000000010">2.2 General shape of a normal sofa</h2>
-<p> <span style="color:#FF0000">Under construction. The following text comes from previous writings and needs to undergo major changes.</span> Normal sofas conform to a specific geometric configuration. We introduce definitions and theorems that describe the general shape of a normal sofa. See Figure xx for the accompanying figure. </p>
-<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000040">
-  <div class="definition_thmheading">
-    <span class="definition_thmcaption">
-    Definition
-    </span>
-    <span class="definition_thmlabel">2.4</span>
-  </div>
-  <div class="definition_thmcontent">
-  <p>For any \(t \in \mathbb {R}\), let \(u_t = (\cos t, \sin t)\) and \(v_t = (- \sin t, \cos t)\). The basis \(u_t, v_t\) of \(\mathbb {R}^2\) follows the frame of rotating hallway \(L_t\). </p>
-
-  </div>
-</div> </p>
-<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000041">
-  <div class="definition_thmheading">
-    <span class="definition_thmcaption">
-    Definition
-    </span>
-    <span class="definition_thmlabel">2.5</span>
-  </div>
-  <div class="definition_thmcontent">
-  <p>Let \(Q^+ = (-\infty , 1] \times (-\infty , 1]\) and \(Q^- = (-\infty , 0) \times (-\infty , 0)\). With this, \(L = Q^+ \setminus Q^-\). </p>
-<p>For an arbitrary, fixed normal sofa \(S\) with angle of rotation \(\beta \) and canonical movement \(f_t\), let \(Q^+_t = f^{-1}_t(Q^+)\) and \(Q^-_t = f^{-1}_t(Q^-)\). \(Q_t^+\) is the closed plane quadrant under the lines \(c(t)\) and \(a(t)\). \(Q_t^-\) is the open plane quadrant under the lines \(d(t)\) and \(b(t)\). \(L_t\) is \(Q_t^+ \setminus Q_t^-\). </p>
-<p>Let \(V_\beta \) be the rotated vertical strip \(\operatorname{Rot}_\beta (V) + \mathbf{x}(\beta )\). Let \(P = H \cap V_\beta \). This is equal to \(H\) for \(\beta = \pi / 2\) and is a parallelogram with two heights equal to 1 and an angle of \(\beta + \pi / 2\) for \(\beta {\lt} \pi / 2\). Let \(\mathcal{C}\) be the convex set \(P \cap \bigcap _{t=0}^\beta Q_t^+\). Let \(\mathcal{D}\) be the set \(P \cap \bigcup _{t=0}^\beta Q_t^-\). With this, \(S = \mathcal{C}\setminus \mathcal{D}\). </p>
-
-  </div>
-</div> </p>
-<p>Since we are working with the canonical movement of \(S\), \(a(t)\) and \(c(t)\) for all \(t \in [0, \beta ]\) are tangent lines of \(S\) from above. \(a(t)\) forms an angle of \(t\) from the \(y\)-axis, and \(c(t)\) forms the angle of \(t\) from the \(x\)-axis. Consequently, \(\mathcal{C}\) is a bounded convex set with tangent lines \(a(t)\) and \(c(t)\) for all \(0 \leq t \leq \beta \) from above and sides \(b(\beta )\) and \(d(0)\) from below. Define \(\partial \mathcal{C}\) as the boundary segment of \(\mathcal{C}\) touched by lines \(a(t)\) and \(c(t)\) for all \(0 \leq t \leq \beta \). Then \(\partial \mathcal{C}\) is a continuous curve consisting of two convex segments, each with tangent lines \(\{ a(t)\} _{0 \leq t \leq \beta }\) and \(\{ c(t)\} _{0 \leq t \leq \beta }\) respectively, joined at the vertex \(a(\beta ) \cap c(0)\) of \(P\) for \(\beta {\lt} \pi / 2\) or the segment \(\partial \mathcal{C}\cap c(0)\) for \(\beta = \pi / 2\). The endpoints of \(\partial \mathcal{C}\) are \(E_{l} = c(\beta ) \cap b(\beta )\) and \(E_{r} = a(0) \cap d(0)\) . This, with the theorem below, characterizes the shape of a normal sofa. <div class="theorem_thmwrapper theorem-style-plain" id="thm:normal-structure">
-  <div class="theorem_thmheading">
-    <span class="theorem_thmcaption">
-    Theorem
-    </span>
-    <span class="theorem_thmlabel">2.6</span>
-  </div>
-  <div class="theorem_thmcontent">
-  <p> \(\mathcal{D}\) is a subset of \(\mathcal{C}\setminus \partial \mathcal{C}\). </p>
-
-  </div>
-</div> </p>
-<div class="proof_wrapper" id="a0000000042">
-  <div class="proof_heading">
-    <span class="proof_caption">
-    Proof
-    </span>
-    <span class="expand-proof">▼</span>
-  </div>
-  <div class="proof_content">
-  <p>(sketch) Let \(\mathcal{F}\) be the fan above the line \(b(\beta )\) and \(d(0)\) with vertex \(O = b(\beta ) \cap d(0)\). We only need to show that \(P \cap Q^-_t\) is contained in \(\mathcal{C}\setminus \partial \mathcal{C}\) for all \(0 {\lt} t {\lt} \beta \). When \(\mathbf{x}(t)\), the corner of \(Q_t^-\), is not in \(\mathcal{F}\), \(P \cap Q^-_t\) is empty and we are done. </p>
-<p>So assume \(\mathbf{x}(t) \in \mathcal{F}\). There are three possible configurations of \(Q_t^-\) in \(\mathcal{F}\). <span style="color:#0000FF">Figure here</span>. In all three cases, we only need to show the followings for all : </p>
-<ol class="enumerate">
-  <li><p>The point \(F_l = d(t) \cap b(\beta )\) is on the strictly right side of the endpoint \(E_l\) of \(\partial \mathcal{C}\) in \(b(\beta )\). </p>
-</li>
-  <li><p>The point \(F_r = b(t) \cap d(0)\) is on the strictly left side of the endpoint \(E_r\) of \(\partial \mathcal{C}\) in \(c(0)\). </p>
-</li>
-  <li><p>The point \(\mathbf{x}(t)\) is inside \(\mathcal{C}\). </p>
-</li>
-</ol>
-<p> We first show that (1) holds. Say that a point \(p_0\) is further than \(p_1\) in the direction of nonzero vector \(v \in \mathbb {R}^2\) if and only if \(p_0 \cdot v {\gt} p_1 \cdot v\). For a fixed \(v\), this is a partial order. \(c(t) \cap a(\beta )\) is further than \(d(t) \cap b(\beta )\) in the direction of \(v_\beta \) (they are the intersection points of boundary lines of strips \(V_\beta \) and \(f^{-1}_t(H)\)). Take any point \(q\) in \(\partial \mathcal{C}\) with tangent line \(c(t)\). \(q\) is further than \(c(t) \cap a(\beta )\) in the direction of \(v_\beta \). Finally, the endpoint \(c(\beta ) \cap b(\beta )\) is further than \(q\) in the direction of \(v_\beta \) as the arc from \(q\) to \(c(\beta ) \cap b(\beta )\) in \(\partial \mathcal{C}\) is directed towards the positive direction of \(v_\beta \). In conclusion, \(c(\beta ) \cap b(\beta )\) is further than \(d(t) \cap b(\beta )\) in the direction of \(v_\beta \) and (1) is shown. <span style="color:#0000FF">TODO: this needs pictures</span> </p>
-<p>A symmetric argument can be applied to show (2). </p>
-<p>Assume by contradiction that (3) is false. That is, \(\mathbf{x}(t)\) is outside \(\mathcal{C}\) for some \(0 {\lt} t {\lt} \beta \). By (1) and the angular monotonicity of \(\partial \mathcal{C}\), the line connecting \(F_l\) and \(\mathbf{x}(t)\) only meets \(\partial \mathcal{C}\) at most one point. Since \(F_l\) is inside \(\mathcal{C}\) by (1) and \(\mathbf{x}(t)\) is outside \(\mathcal{C}\) the segment connecting \(F_l\) and \(\mathbf{x}(t)\) meets \(\partial \mathcal{C}\) at exactly one point (*). Likewise, the segment connecting \(F_r\) and \(\mathbf{x}(t)\) meets \(\partial \mathcal{C}\) at exactly one point (**). Let \(P_l\) and \(P_r\) be the points in \(S\) touching \(c(t)\) and \(a(t)\) respectively. Then the connected component of \(P_l\) and \(P_r\) in \(S\) are disjoint by (*) and (**), leading to contradiction (we want more rigor for this step). <span style="color:#0000FF">TODO: this needs pictures</span> </p>
-
-  </div>
-</div>
-<p> <div class="remark_thmwrapper theorem-style-definition" id="a0000000043">
-  <div class="remark_thmheading">
-    <span class="remark_thmcaption">
-    Remark
-    </span>
-    <span class="remark_thmlabel">2.7</span>
-  </div>
-  <div class="remark_thmcontent">
-  <p>The proof above relies a lot on figures and so we are not 100% confident that the details will contain no fallacies at all, even though the general idea seems to work. As the rest of the argument depends heavily on this general description of a normal sofa, the correctness of the statement is crucial. We will be happy to find any counterexample or replace this with any simpler argument with more rigor. </p>
-
-  </div>
-</div> </p>
+<h2 id="a0000000010">2.3 Space of Monotone Sofas</h2>
+<p> Monotone sofas form a convex, closed subset of a Banach space for a fixed rotation angle \(\beta \in [0, \pi / 2]\). </p>
+<p><span style="color:#FF0000">The following stub will be used to write a more clear description</span> </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -169,9 +96,9 @@
 <nav class="prev_up_next">
   <a href="sect0008.html" title="Monotone Sofas"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
 </a>
-  <a href="sect0007.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+  <a href="sect0006.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0010.html" title="Differential geometry of a normal sofa and its movement"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0010.html" title="Differential Geometry of a Monotone Sofa"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 

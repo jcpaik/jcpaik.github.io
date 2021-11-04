@@ -9,92 +9,177 @@ This way, we will later be able to maximize or solve for concave quadratic funct
 
 \textcolor{red}{Add figure here, and likely an animation that describes the concept briefly}
 
+\subsection{Monotone Movement}
+By Lemma \ref{lem:rot-angle}, we can restrict our attention to sofas that rotate by an angle of $\beta \in [0, \pi / 2]$.
+Such an arbitrary sofa $S$ can be moved in the following way we name as a \emph{monotone movement}.
+First, move a copy of $S_0$ inside $L$ in the positive $x$ and $y$ direction until it hits both sides $a$ and $c$ of the hallway $L$.
+Then, for every moment $t \in [0, \beta]$, we rotate the sofa by the unit angular speed while keeping it touching the sides $a$ and $c$.
+This way, the sofa $S_t$ is parametrized by the angle it is rotated during movement.
+Such a movement is used by previous works \cite{gerver1992moving, romik2018differential, kallus2018improved}.
+The rest of this subsection defines the monotone movement and justifies that it is a valid movement.
 
+\textcolor{blue}{[An animation of arbitrary movement, compared to a monotone movement will be great]}
+
+First we introduce some definitions before describing the monotone movement.
+We will use the following unit vectors to describe the geometry of a general sofa.
+\begin{definition}
+For any $t \in \RR$, let $u_t$ be the vector $(\cos t, \sin t)$ and $v_t$ be the vector $(\sin t, -\cos t)$ so that $u_t, v_t$ forms the frame rotated counterclockwise by an angle of $t$.
+\end{definition}
+In particular, we define the support functions $p_S, q_S$ of a sofa $S$ as the following.
+\begin{definition}
+For any $t \in \RR$ and a closed, compact set $S \subset \RR^2$, define the support functions $p_S, q_S \colon \RR \ra \RR$ as
+$$p_S(t) = \max_{x \in S} x \cdot u_t$$
+and
+$$q_S(t) = \max_{x \in S} x \cdot v_t.$$
+
+If the sofa $S$ is clear from the context, we omit the subscript and denote the support functions as $p$ and $q$.
+\end{definition}
+\begin{theorem}
+\label{thm:support-continuous}
+For any closed, compact $S \subset \RR^2$, the support functions $p_S$ and $q_S$ are continuous.
+\end{theorem}
+\begin{proof}
+(omitted)
+\end{proof}
+
+We will use the following definition often as well.
+\begin{definition}
+Define the quadrants $Q^+ = (-\infty, 1] \times (-\infty, 1]$ and $Q^- = (-\infty, 0) \times (-\infty, 0)$.
+With this, $L$ can be expressed as $Q^+ \setminus Q^-$.
+\end{definition}
+
+Now we show that any sofa with rotation angle in between $0$ and $\pi / 2$ can be repositioned to have the following \emph{monotone movement}.
+\begin{definition}
+\label{def:monotone-movement}
+A sofa $(S, f_t)$ with hallway movement $g_t = f_t^{-1}$ and rotation angle $\beta \in [0, \pi / 2]$ is said to have a \emph{monotone movement} if it satisfies the following.
+\begin{itemize}
+	\item The sofa movement $f_t$ is parametrized by angles $t \in [0, \beta]$.
+	\item $q_{S}(0) = p_{S}(\beta) = 1$. That is, $S$ touches the sides $c(0) = g_0(c)$ and $a(\beta) = g_\beta(a)$ of $L_0$ and $L_\beta$ respectively.
+	\item $g_{t} = R_t \circ T_{(p_{S}(t) -1, q_{S}(t) -1)}$. That is, the hallway $L_{t} = g_t(L)$ at time $t$ is $L$ rotated counterclockwise by an angle of $t$ and translated to touch $S$ on the sides $a(t)$ and $c(t)$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}
+\label{thm:monotone-movement}
+Let $(S', f'_t)$ be any sofa with shape $S'$, movement $f'_t$ and a rotation angle of $\beta \in [0, \pi / 2]$.
+Then we can reposition $S'$ to a sofa shape $S$ (that is, there is an orientation-preserving isometry $m$ so that $S = m(S')$) with sofa movement $f_t$ and hallway movement $g_t = f_t^{-1}$ parametrized by $t \in [0, \beta]$ which is monotone (Definition \ref{def:monotone-movement}).
+\end{theorem}
+\begin{proof}
+First we set up the shape $S$ of the new sofa.
+Geometrically, $S$ is the translation of $S'_0$ that touches the upper and right sides of $P = H \cap R_\beta(V)$ inside.
+Note that $P$ is a parallelogram with lower left corner $(0, 0)$ when $\beta \in [0, \pi / 2)$, and $P$ is the horizontal strip $H$ when $\beta = \pi / 2$.
+The following paragraph is merely a formalization of this step.
+
+Define $S$ as the translation of $S'_0 = f'_0(S')$ by a vector $v \in \RR^2$ that satisfies $q_{S}(0) = p_{S}(\beta) = 1$.
+The condition for $v$ to satisfy $q_{S}(0) = p_{S}(\beta) = 1$ are the followings.
+\begin{gather*}
+	q_{S}(0) = q_{S'_0}(0) + v \cdot v_0 = 1\\
+	p_{S}(\beta) = p_{S'_0}(\beta) + v \cdot u_\beta = 1
+\end{gather*} 
+These are linear conditions of $v$, and such a $v$ exists uniquely for every $\beta \in [0, \pi / 2)$ as $v_0$ and $u_\beta$ forms a basis of $\RR^2$.
+For $\beta = \pi / 2$, the two equations overlap as $p_S(\pi / 2) = q_S(0)$ for any sofa $S$ by definition, so take any solution of $v$.
+Now by letting $m = T_v \circ f'_0$ and sending the sofa $(S', f'_t)$ under $m$, we have a sofa of shape $S = m(S')$ and movement $\tilde{f}_t = f'_t \circ m^{-1}$, so that $\tilde{f}_t(S) = f'_t(S') = S'_t$. That is, the movement $\tilde{f}_t$ of $S$ parametrized by $t \in [0, T]$ follows the exact same movement of $S'$.
+Also, we get $q_S(0) = p_S(\beta) = 1$ by how we chose $v$. 
+
+Now we show that the sofa shape $S$ with movement $f_t = g_t^{-1}$ defined as $g_t = R_t \circ T_{(p_{S}(t) -1, q_{S}(t) -1)}$ over $t \in [0, \beta]$ gives a valid sofa.
+First, observe that $f_t$ is continuously parametrized by $t$ because $p_S(t)$ and $q_S(t)$ are continuous (Theorem \ref{thm:support-continuous}).
+It remains for us to show that 
+\begin{itemize}
+	\item $S$ is contained in $g_0(H)$
+	\item $S$ is contained in $L_t = g_t(L)$ for all $t \in [0, \beta]$
+	\item $S$ is contained in $g_\beta(V)$
+\end{itemize}
+by the moving hallway definition of a sofa (Definition \ref{def:moving-hallway}). 
+First we show the second item $S \subseteq L_t$.
+
+Before showing $S \subseteq L_t$, we observe the following. The initial map $\tilde{f}_0$ of the movement $\tilde{f}$ is
+$T_{-v}$, a translation. 
+So it has a rotation angle of $0$.
+As $\tilde{f}_t$ has the same rotation angle $\beta$ as the original movement $f'_t$, the final map $\tilde{f}_T$ of the movement $\tilde{f}$ has a rotation angle of $\beta$.
+Because the rotation angle of $\tilde{f}_{t'}$ is continuous respect to $t' \in [0, T]$,
+by the intermediate value theorem, for every $\theta \in [0, \beta]$ we have
+some $t' \in [0, T]$ such that $\tilde{f}_{t'}$ has a rotation angle of $\theta$.
+
+Now we take arbitrary $t \in [0, \beta]$ and show $S \subseteq L_t$.
+We can find some $t \in [0, T]$ such that $\tilde{f}_t$ has a rotation angle of $\theta$ by the previous paragraph.
+So the moving hallway $\tilde{L} = \tilde{f}_t^{-1}(L)$ at time $t$ is rotated counterclockwise from $L$ by $t$.
+Geometrically, $L_t$ is a copy of $\tilde{L}$ translated in the directions $-u_\theta$ and $-v_\theta$ until it hits the sofa $S$.
+The following paragraph is a formal justification of this idea.
+
+\textcolor{blue}{TODO: complete the argument here}
+By the definition of $g_\theta$, we have $L_\theta$
+. This completes the proof that $L_\theta$ contains $S$.
+\end{proof}
 
 \subsection{Monotone Sofas}
 
-
-
-\textcolor{red}{The following stub will be used to write a more clear description}
-
-Take any sofa $S$. The starting observation is that for the canonical movement of $S$, the intersection (\ref{eq:intersection}) is connected and thus already a sofa that encloses $S$.
+We observed in Theorem \ref{thm:monotone-movement} that any sofa $S$ with rotation angle in $[0, \pi / 2]$ can be repositioned to have a monotone movement $f_t$.
+Equation \ref{eq:intersection} then tells us that $S$ is contained in the following intersection of rotated stripes and hallways.
+\begin{equation}
+\label{eq:monotone-sofa}
+M(S) = H \cap R_\beta(V) \cap \bigcap_{0 \leq t \leq \beta} L_t
+\end{equation}
+We show that this set is itself a sofa.
 
 \begin{theorem}
-\label{thm:normal-sofa}
-For the canonical movement of a sofa $S$, the intersection $N(S)$ defined as Equation (\ref{eq:intersection}) is connected, and so is a sofa that contains $S$. 
+\label{thm:monotone-sofa-connected}
+Let $(S, f_t)$ be a sofa with monotone movement, so that it has a rotation angle $\beta \in [0, \pi / 2]$ and sofa (and hallway) movement of $f_t$ (and $g_t = f_t^{-1}$) respectively.
+Denote the moving sofa as $S_t = f_t(S)$ and the moving hallway as $L_t = g_t(L)$.
+Then the set $M(S)$ containing $S$ is itself a sofa with movement $f_t$.
 \end{theorem}
-Call this sofa $N(S)$ as the \emph{normalization} of $S$, and any sofa of such form a \emph{normal sofa}. 
-By the restricted motion of canonical movement, a normal sofa will have much richer properties than an arbitrary sofa. We first introduce relevant notations for further discussions.
-
-\begin{definition}
-For each $t \in [0, \beta]$, let $a(t)$, $b(t)$, $c(t)$ and $d(t)$ be the sides of $L_t$ corresponding to the sides $a, b, c$ and $d$ of $L$ (so that for example, $a(t) = f^{-1}_t(a)$).
-
-
-\end{definition}
-
-Now we move back to the proof of connectedness of $N(S)$.
-\begin{proof} (of Theorem \ref{thm:normal-sofa})
-Fix an arbitrary point $p \in N(S)$.
-We will show that there is a line segment inside $N(S)$ connecting $p$ to a point in $S$. This completes the proof of connectedness of $N(S)$, as $N(S)$ is the union of $S$ with line segments extending from $S$.
-
-Let $l_\theta$ be the line parallel to the $x$-axis rotated counterclockwise by an arbitrary angle $\theta \in [\beta, \pi / 2]$. 
-Regardless of $\theta$, the intersection $s_\theta = l_\theta \cap N(S)$ is either a line segment or an empty set. This is because $s_\theta$ is the intersection of $l_\theta \cap H$, $l_\theta \cap (\Rot_\beta(V) + \xx(\beta))$, and $l_\theta \cap L_t$ for all $t \in [0, \beta]$, each a line segment contained in $l_\theta$.
-
-Now it only remains to show that for some $\theta$, $l_\theta$ overlaps with $S$ so that $s_\theta$ connects $p$ with a point in $S$. 
-If either one of $l_\beta$ or $l_{\pi / 2}$ overlaps with $S$, we are done. 
-Assume otherwise that none of $l_\beta$ and $l_{\pi / 2}$ overlaps with $S$.
-Since $S$ is connected, it is either on the left side of $l_{\pi / 2}$ or the right side of $l_{\pi / 2}$.
-As we are working with the canonical movement of $S$, $S$ touches the side $a(0)$ of $L_0$ inside $L_0$. This implies that $S$ is on the right side of $l_{\pi / 2}$.
-A similar argument with the side $c(\beta)$ of $L_\beta$ shows that $S$ is on the left side of $l_\beta$.
-Now move $l_\theta$ continuously, taking $\theta$ from $\beta$ to $\pi / 2$. As $S$ is on the different sides of $l_\theta$ for $\theta = \beta$ and $\pi / 2$, at some point $S$ will cross the boundary $l_\theta$ for some $\theta$. This completes the proof of connectedness.
-
-The conditions that $N(S)$ are contained in $L_t$ and rotated strips of $L$ and $V$ follow naturally from the definition \ref{eq:intersection}.
-Thus $N(S)$ is a valid sofa.
-\end{proof}
-
-
-It is worth noting that the normalization of a normal sofa is itself.
-That is, the normalization is a projection from the collection of sofas to the collection of normal sofas.
-\begin{corollary}
-\label{cor:norm-proj}
-Take any sofa $S$. 
-The canonical movement of $S$ that \emph{defines} the normal sofa $N(S)$ as in (\ref{eq:intersection}) is identical to the canonical movement \emph{of} the normal sofa $N(S)$.
-Consequently, for any normal sofa $S$, $N(S) = S$.
-\end{corollary}
 \begin{proof}
-By definition, the canonical movement $f_t$ (the continuum of isometries that move a sofa) of $S$ is a valid movement of $N(S)$. 
-Since $N(S) \supset S$, the moving copy $f_t(N(S))$ is rotated clockwise by $t$ and always touches the sides $a$ and $c$ of $L$.
-This identifies $f_t$ with the canonical movement of $N(S)$.
+The set $M(S)$ is closed by definition, and it is bounded as $H \cap R_\beta(V)$ is bounded for $\beta < 0$ and $H \cap L_{\pi / 4}$ is bounded for $\beta = \pi / 2$.
+So it suffices to show that $M(S)$ is connected.
+Then, by Definition \ref{def:moving-hallway}, the movement $f_t$ is a valid movement of $M(S)$ and so $(M(S), f_t)$ is a sofa.
+
+Fix an arbitrary point $v \in N(S)$.
+We will show that there is a line segment inside $M(S)$ connecting $v$ to a point in $S$. This completes the proof of connectedness of $M(S)$, as $M(S)$ is the union of $S$ with line segments extending from $S$.
+
+Let $l_\theta$ be the line through $v$ that makes an angle $\theta \in [\beta, \pi / 2]$ in counterclockwise direction from the $x$-axis. 
+Regardless of $\theta$, the intersection $s_\theta = l_\theta \cap M(S)$ is either a line segment or an empty set. This is because $s_\theta$ is the intersection of $l_\theta \cap H$, $l_\theta \cap R_\beta(V)$, and $l_\theta \cap L_t$ for all $t \in [0, \beta]$, all line segments contained in $l_\theta$.
+
+\textcolor{blue}{TODO: 'Sanitize': add figures, but make sure that the argument does not appeal much to some hidden geometric assumption.}
+
+Now it only remains to show that for some $\theta$, $l_\theta$ overlaps with $S$, so that the segment $s_\theta = l_\theta \cap M(S)$ connects $v$ with a point in $S$. 
+If either one of $l_\beta$ or $l_{\pi / 2}$ overlaps with $S$, then we are done. 
+Assume otherwise that none of $l_\beta$ and $l_{\pi / 2}$ overlaps with $S$.
+Since $S$ is nonempty and connected, it is either on the left side of $l_{\pi / 2}$ or the right side of $l_{\pi / 2}$.
+As we are working with the monotone movement of $S$, $S$ touches the side $a(0)$ of $L_0$ inside $L_0$. This implies that $S$ is on the right side of $l_{\pi / 2}$.
+A similar argument with the side $c(\beta)$ of $L_\beta$ shows that $S$ is on the left side of $l_\beta$.
+Now move $l_\theta$ continuously, taking $\theta$ from $\beta$ to $\pi / 2$. As $S$ is on the different sides of $l_\theta$ for $\theta = \beta$ and $\pi / 2$, at some point the line $l_\theta$ will pass through $S$. This completes the proof.
 \end{proof}
 
-With this, it is natural for us to work with normal sofas only as normalizing a sofa does not decrease the area.
-
-\subsection{General shape of a normal sofa}
-\textcolor{red}{Under construction. The following text comes from previous writings and needs to undergo major changes.}
-Normal sofas conform to a specific geometric configuration. 
-We introduce definitions and theorems that describe the general shape of a normal sofa. See Figure xx for the accompanying figure.
-
 \begin{definition}
-For any $t \in \RR$, let $u_t = (\cos t, \sin t)$ and $v_t = (- \sin t, \cos t)$.
-The basis $u_t, v_t$ of $\RR^2$ follows the frame of rotating hallway $L_t$. 
+Let $(S, f_t)$ be any sofa that follows the setting of Theorem \ref{thm:monotone-sofa-connected}.
+Also, let $P = H \cap R_\beta(V)$ be the parallelogram (or strip for $\beta = \pi / 2$). 
+Rewriting $L_t$ as $Q^+_t \setminus Q^-_t$ where $Q^+_t = g_t(Q^+)$ and $Q^-_t = g_t(Q^-)$, we have the following equality. 
+\end{definition}
+\begin{align}
+\label{eq:monotone-sofa-structure}
+M(S) & = H \cap R_\beta(V) \cap \bigcap_{0 \leq t \leq \beta} L_t \\
+& = \left(P \cap \bigcap_{0 \leq t \leq \beta} Q^+_t \right) \setminus \bigcup_{0 \leq t \leq \beta} \left(P \cap Q^-_t \right) 
+\end{align}
+\begin{definition}
+\label{def:cap-niche}
+Let $(S, f_t)$ be any sofa with monotone movement and rotation angle in $[0, \pi / 2]$. Define the \emph{cap} of $S$ as
+$$\cC(S) = P \cap \bigcap_{0 \leq t \leq \beta} Q^+_t$$
+and the \emph{niche} of $S$ as
+$$\cN(S) = \bigcup_{0 \leq t \leq \beta} \left(P \cap Q^-_t \right).$$
+For each $t \in [0, \beta]$, let $T_t = P \cap Q^-_t$ be the \emph{wedge} of $S$ at angle $t$.
+Consequently, $M(S) = \cC(S) \setminus \cN(S)$ and $\cN(S) = \cup_{0 \leq t \leq \beta} T_t$.
+
+\textcolor{blue}{TODO: this is not obvious. We need to develop sufficient language on convex sets and its boundary.} 
+Let the \emph{boundary $\partial \cC(S)$ of the cap $\cC(S)$} be the set of all points $x \in \cC(S)$ such that there is some $t \in [0, \beta]$ so that either $x \cdot u_t = p(t)$ or $x \cdot v_t = q(t)$.
+It turns out that $\partial \cC(S)$ is a closed convex curve that looks like \textcolor{blue}{TODO: add some figure and description}
 \end{definition}
 
-\begin{definition}
-Let $Q^+ = (-\infty, 1] \times (-\infty, 1]$ and $Q^- = (-\infty, 0) \times (-\infty, 0)$.
-With this, $L = Q^+ \setminus Q^-$.
-
-For an arbitrary, fixed normal sofa $S$ with angle of rotation $\beta$ and canonical movement $f_t$, let $Q^+_t = f^{-1}_t(Q^+)$ and $Q^-_t = f^{-1}_t(Q^-)$.
-$Q_t^+$ is the closed plane quadrant under the lines $c(t)$ and $a(t)$.
-$Q_t^-$ is the open plane quadrant under the lines $d(t)$ and $b(t)$.
-$L_t$ is $Q_t^+ \setminus Q_t^-$.
-
-Let $V_\beta$ be the rotated vertical strip $\Rot_\beta(V) + \xx(\beta)$.
-Let $P = H \cap V_\beta$. This is equal to $H$ for $\beta = \pi / 2$ and 
-is a parallelogram with two heights equal to 1 and an angle of $\beta + \pi / 2$ for $\beta < \pi / 2$.
-Let $\cC$ be the convex set $P \cap \bigcap_{t=0}^\beta Q_t^+$.
-Let $\cD$ be the set $P \cap \bigcup_{t=0}^\beta Q_t^-$.
-With this, $S = \cC \setminus \cD$.
-\end{definition}
+\begin{theorem}
+\label{thm:monotone-sofa-structure}
+For any sofa $S$ with monotone movement $f_t$, the niche $\cN(S)$ is contained in $\cC(S) \setminus \partial \cC(S)$.
+Also, the support functions of $S$ and $M(S)$ match. That is, $p_S = p_{M(S)}$ and $q_S = q_{M(S)}$.
+\end{theorem}
+\begin{proof}
+\textcolor{red}{TODO: convert this old writing to current writeup}
 
 Since we are working with the canonical movement of $S$, $a(t)$ and $c(t)$ for all $t \in [0, \beta]$ are tangent lines of $S$ from above. 
 $a(t)$ forms an angle of $t$ from the $y$-axis, and $c(t)$ forms the angle of $t$ from the $x$-axis.
@@ -103,11 +188,7 @@ Define $\partial \cC$ as the boundary segment of $\cC$ touched by lines $a(t)$ a
 Then $\partial \cC$ is a continuous curve consisting of two convex segments, each with tangent lines $\{a(t)\}_{0 \leq t \leq \beta}$ and $\{c(t)\}_{0 \leq t \leq \beta}$ respectively, joined at the vertex $a(\beta) \cap c(0)$ of $P$ for $\beta < \pi / 2$ or the segment $\partial \cC \cap c(0)$ for $\beta = \pi / 2$. 
 The endpoints of $\partial \cC$ are $E_{l} = c(\beta) \cap b(\beta)$ and $E_{r} = a(0) \cap d(0)$ .
 This, with the theorem below, characterizes the shape of a normal sofa.
-\begin{theorem}
-\label{thm:normal-structure}
-$\cD$ is a subset of $\cC \setminus \partial \cC$.
-\end{theorem}
-\begin{proof} (sketch)
+
 Let $\cF$ be the fan above the line $b(\beta)$ and $d(0)$ with vertex $O = b(\beta) \cap d(0)$.
 We only need to show that $P \cap Q^-_t$ is contained in $\cC \setminus \partial \cC$ for all $0 < t < \beta$.
 When $\xx(t)$, the corner of $Q_t^-$, is not in $\cF$, $P \cap Q^-_t$ is empty and we are done.
@@ -139,13 +220,29 @@ Let $P_l$ and $P_r$ be the points in $S$ touching $c(t)$ and $a(t)$ respectively
 Then the connected component of $P_l$ and $P_r$ in $S$ are disjoint by (*) and (**), leading to contradiction (we want more rigor for this step).
 \textcolor{blue}{TODO: this needs pictures}
 \end{proof}
-\begin{remark}
-The proof above relies a lot on figures and so we are not 100\% confident that the details will contain no fallacies at all, even though the general idea seems to work.
-As the rest of the argument depends heavily on this general description of a normal sofa, the correctness of the statement is crucial. 
-We will be happy to find any counterexample or replace this with any simpler argument with more rigor.  
-\end{remark}
 
-\subsection{Differential geometry of a normal sofa and its movement}
+\begin{definition}
+Any sofa $S$ with monotone movement $f_t$ is a \emph{monotone sofa} if $S$ is exactly same as the set $M(S)$ in Equation \ref{eq:monotone-sofa}.
+\end{definition}
+\begin{theorem}
+Any sofa of rotation angle in $[0, \pi / 2]$ is, after some reposition by some orientation-preserving isometry, is contained in a monotone sofa.
+\end{theorem}
+\begin{proof}
+Take any sofa $S$. After some reposition, $S$ admits a monotone movement $f_t$ by Theorem \ref{thm:monotone-movement}.
+By Theorem \ref{thm:monotone-sofa-connected}, the shape $M(S)$ is also a sofa with the same movement $f_t$.
+By Theorem \ref{thm:monotone-sofa-structure}, the support function of $S$ and $M(S)$ matches.
+Now note that a monotone movement solely depends on the support function of the sofa's shape by definition.
+So $f_t$ is not only the monotone movement of $S$, but also of $M(S)$.
+Now $(M(S), f_t)$ is a sofa with monotone movement. Consequently, $M(M(S)) = M(S)$ and so $(M(S), f_t)$ is a monotone sofa. 
+\end{proof}
+Thus, it suffices to look for monotone sofas if we want to find a sofa of maximum area.
+
+\subsection{Space of Monotone Sofas}
+Monotone sofas form a convex, closed subset of a Banach space for a fixed rotation angle $\beta \in [0, \pi / 2]$.
+
+\textcolor{red}{The following stub will be used to write a more clear description}
+
+\subsection{Differential Geometry of a Monotone Sofa}
 \textcolor{red}{Under construction. The following text comes from previous writings and needs to undergo major changes.}
 
 Now we describe the differential geometry of a normal sofa and its canonical movement.

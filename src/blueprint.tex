@@ -5,7 +5,8 @@
 \usepackage{unicode-math}
 \usepackage{fontspec}
 \setmathfont{latinmodern-math.otf}
-\setmathfont[range=\varnothing]{Asana-Math.otf}
+% Borrow missing characters in Latin Modern from Asana
+\setmathfont[range={\setminus,\varnothing}]{Asana-Math.otf}
 
 \setlength{\textwidth}{6.5in}
 \setlength{\oddsidemargin}{-0.1in}

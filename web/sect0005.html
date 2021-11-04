@@ -9,8 +9,8 @@
 <meta name="generator" content="plasTeX" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blueprint for Sofa: Monotone Movement</title>
-<link rel="next" href="sect0006.html" title="History" />
+<title>Blueprint for Sofa: History</title>
+<link rel="next" href="sect0006.html" title="Monotone Sofas" />
 <link rel="prev" href="sect0004.html" title="Moving Hallway" />
 <link rel="up" href="sect0001.html" title="Setup" />
 <link rel="stylesheet" href="styles/theme-white.css" />
@@ -40,26 +40,26 @@
   <a href="sect0004.html"><span class="toc_ref">1.3</span> <span class="toc_entry">Moving Hallway</span></a>
  </li>
 <li class=" active current">
-  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">Monotone Movement</span></a>
- </li>
-<li class="">
-  <a href="sect0006.html"><span class="toc_ref">1.5</span> <span class="toc_entry">History</span></a>
+  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">History</span></a>
  </li>
 
   </ul>
  </li>
 <li class="">
-  <a href="sect0007.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0006.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
   <span class="expand-toc">▶</span>
   <ul class="sub-toc-1">
      <li class="">
-  <a href="sect0008.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0007.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Movement</span></a>
  </li>
 <li class="">
-  <a href="sect0009.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+  <a href="sect0008.html"><span class="toc_ref">2.2</span> <span class="toc_entry">Monotone Sofas</span></a>
  </li>
 <li class="">
-  <a href="sect0010.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+  <a href="sect0009.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Space of Monotone Sofas</span></a>
+ </li>
+<li class="">
+  <a href="sect0010.html"><span class="toc_ref">2.4</span> <span class="toc_entry">Differential Geometry of a Monotone Sofa</span></a>
  </li>
 
   </ul>
@@ -84,103 +84,43 @@
 
 
 <div class="main-text">
-<h2 id="a0000000006">1.4 Monotone Movement</h2>
-<p> By Lemma <a href="sect0003.html#lem:rot-angle">1.12</a>, we can restrict our attention to sofas that rotate by an angle of \(\beta \in [0, \pi / 2]\). Such a sofa \(S\) can be moved in the following way we name as a <em>monotone movement</em>. First, move a copy of \(S_0\) inside \(L\) in the positive \(x\) and \(y\) direction until it hits both sides \(a\) and \(c\) of the hallway \(L\). Then, for every moment \(t \in [0, \beta ]\), we rotate the sofa by the unit angular speed while keeping it touching the sides \(a\) and \(c\). This way, the sofa \(S_t\) is parametrized by the angle it is rotated during movement. Such a movement is used by previous works <span class="cite">
+<h2 id="a0000000006">1.4 History</h2>
+<p>The area of an explicit sofa gives a lower bound of the maximum sofa area. Since the problem was introduced, sofas of area \(2.2074\dots \) (by Hammersley <span class="cite">
+	[
+	<a href="sect0014.html#hammersley1968enfeeblement" >Ham68</a>
+	]
+</span>), \(2.21563\dots \) (by C. Francis <span class="cite">
+	[
+	<a href="sect0014.html#guy1977monthly" >Guy77</a>
+	]
+</span>) and \(2.215649\dots \) (by R. Guy <span class="cite">
+	[
+	<a href="sect0014.html#guy1977monthly" >Guy77</a>
+	]
+</span>) were successively constructed over time. In 1997, Gerver <span class="cite">
+	[
+	<a href="sect0014.html#gerver1992moving" >Ger92</a>
+	]
+</span> found the sofa of currently best known area \(2.2195\dots \) by considerations of the local maximality of a sofa. The boundary of Gerver’s sofa consists of 3 line segments and 15 analytic curves, making its derivation complicated. Romik <span class="cite">
+	[
+	<a href="sect0014.html#romik2018differential" >Rom18</a>
+	]
+</span> simplified the derivation of Gerver’s sofa in his work on ambidextrous sofa. </p>
+<p>On the other hand, the current best known upper bound \(2.37\) of sofa area is found by Kallus and Romik in 2017 <span class="cite">
+	[
+	<a href="sect0014.html#kallus2018improved" >KR18</a>
+	]
+</span> by a computer-assisted proof. It is conjectured that the Gerver’s sofa indeed attains the maximum sofa area, a speculation held by authors worked on this problem <span class="cite">
 	[
 	<a href="sect0014.html#gerver1992moving" >Ger92</a>
 	, 
 	<a href="sect0014.html#romik2018differential" >Rom18</a>
-	, 
-	<a href="sect0014.html#kallus2018improved" >KR18</a>
 	]
-</span>. The rest of this subsection defines the monotone movement and justifies that it is a valid movement. </p>
-<p><span style="color:#0000FF">[An animation of arbitrary movement, compared to a monotone movement will be great]</span> </p>
-<p>We will use the following unit vectors to describe the geometry of a general sofa. <div class="definition_thmwrapper theorem-style-definition" id="a0000000029">
-  <div class="definition_thmheading">
-    <span class="definition_thmcaption">
-    Definition
-    </span>
-    <span class="definition_thmlabel">1.14</span>
-  </div>
-  <div class="definition_thmcontent">
-  <p>For any \(t \in \mathbb {R}\), let \(u_t\) be the vector \((\cos t, \sin t)\) and \(v_t\) be the vector \((\sin t, -\cos t)\) so that \(u_t, v_t\) forms the frame rotated counterclockwise by an angle of \(t\). </p>
-
-  </div>
-</div> In particular, we define the support functions \(p_S, q_S\) of a sofa \(S\) as the following. <div class="definition_thmwrapper theorem-style-definition" id="a0000000030">
-  <div class="definition_thmheading">
-    <span class="definition_thmcaption">
-    Definition
-    </span>
-    <span class="definition_thmlabel">1.15</span>
-  </div>
-  <div class="definition_thmcontent">
-  <p>For any \(t \in \mathbb {R}\) and a sofa \(S\), define the support functions \(p_S, q_S \colon \mathbb {R}\rightarrow \mathbb {R}\) as </p>
-<div class="displaymath" id="a0000000031">
-  \[ p_S(t) = \max _{p \in S} p \cdot u_t \]
-</div>
-<p> and </p>
-<div class="displaymath" id="a0000000032">
-  \[ q_S(t) = \max _{p \in S} p \cdot v_t. \]
-</div>
-<p>If the sofa \(S\) is clear from the context, we omit the subscript and denote the support functions as \(p\) and \(q\). </p>
-
-  </div>
-</div> <div class="theorem_thmwrapper theorem-style-plain" id="a0000000033">
-  <div class="theorem_thmheading">
-    <span class="theorem_thmcaption">
-    Theorem
-    </span>
-    <span class="theorem_thmlabel">1.16</span>
-  </div>
-  <div class="theorem_thmcontent">
-  <p>For any sofa \(S\), the support functions \(p_S\) and \(q_S\) are continuous. </p>
-
-  </div>
-</div> </p>
-<div class="proof_wrapper" id="a0000000034">
-  <div class="proof_heading">
-    <span class="proof_caption">
-    Proof
-    </span>
-    <span class="expand-proof">▼</span>
-  </div>
-  <div class="proof_content">
-  <p>(omitted) </p>
-
-  </div>
-</div>
-<p><div class="theorem_thmwrapper theorem-style-plain" id="a0000000035">
-  <div class="theorem_thmheading">
-    <span class="theorem_thmcaption">
-    Theorem
-    </span>
-    <span class="theorem_thmlabel">1.17</span>
-  </div>
-  <div class="theorem_thmcontent">
-  <p>Let \((S, f_t)\) be any sofa with shape \(S\), movement \(f_t\) and a rotation angle \(0 \leq \beta {\lt} \pi / 2\). Then we can define \( \) </p>
-<div class="equation" id="eq:inter">
-<p>
-  <div class="equation_content">
-    \begin{equation}  \label{eq:inter} S \subseteq H \cap g_T(V) \cap \bigcap _{0 \leq t \leq T} L_t. \end{equation}
-  </div>
-  <span class="equation_label">1.2</span>
-</p>
-</div>
-
-  </div>
-</div> </p>
-<div class="proof_wrapper" id="a0000000036">
-  <div class="proof_heading">
-    <span class="proof_caption">
-    Proof
-    </span>
-    <span class="expand-proof">▼</span>
-  </div>
-  <div class="proof_content">
-  <p>Let \(g_t = f_t^{-1}\) be the hallway movement of \(S\) (Definition ??). </p>
-
-  </div>
-</div>
+</span> that is supported experimentally by gradient descent computation on the problem’s polygonal variant <span class="cite">
+	[
+	<a href="sect0014.html#gibbs2014computational" >Gib14</a>
+	]
+</span>. Thus, under the assumption that Gerver’s sofa, the resolution of moving sofa problem boils down to improving the upper bound of possible sofa area.  </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -192,7 +132,7 @@
 </a>
   <a href="sect0001.html" title="Setup"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0006.html" title="History"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0006.html" title="Monotone Sofas"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 

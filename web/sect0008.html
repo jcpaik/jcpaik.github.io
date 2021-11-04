@@ -10,9 +10,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Blueprint for Sofa: Monotone Sofas</title>
-<link rel="next" href="sect0009.html" title="General shape of a normal sofa" />
-<link rel="prev" href="sect0007.html" title="Monotone Sofas" />
-<link rel="up" href="sect0007.html" title="Monotone Sofas" />
+<link rel="next" href="sect0009.html" title="Space of Monotone Sofas" />
+<link rel="prev" href="sect0007.html" title="Monotone Movement" />
+<link rel="up" href="sect0006.html" title="Monotone Sofas" />
 <link rel="stylesheet" href="styles/theme-white.css" />
 <link rel="stylesheet" href="styles/amsthm.css" />
 </head>
@@ -40,26 +40,26 @@
   <a href="sect0004.html"><span class="toc_ref">1.3</span> <span class="toc_entry">Moving Hallway</span></a>
  </li>
 <li class="">
-  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">Monotone Movement</span></a>
- </li>
-<li class="">
-  <a href="sect0006.html"><span class="toc_ref">1.5</span> <span class="toc_entry">History</span></a>
+  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">History</span></a>
  </li>
 
   </ul>
  </li>
 <li class=" active">
-  <a href="sect0007.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0006.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
   <span class="expand-toc">▼</span>
   <ul class="sub-toc-1 active">
-     <li class=" active current">
-  <a href="sect0008.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+     <li class="">
+  <a href="sect0007.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Movement</span></a>
+ </li>
+<li class=" active current">
+  <a href="sect0008.html"><span class="toc_ref">2.2</span> <span class="toc_entry">Monotone Sofas</span></a>
  </li>
 <li class="">
-  <a href="sect0009.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+  <a href="sect0009.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Space of Monotone Sofas</span></a>
  </li>
 <li class="">
-  <a href="sect0010.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+  <a href="sect0010.html"><span class="toc_ref">2.4</span> <span class="toc_entry">Differential Geometry of a Monotone Sofa</span></a>
  </li>
 
   </ul>
@@ -84,35 +84,92 @@
 
 
 <div class="main-text">
-<h2 id="a0000000009">2.1 Monotone Sofas</h2>
-<p><span style="color:#FF0000">The following stub will be used to write a more clear description</span> </p>
-<p>Take any sofa \(S\). The starting observation is that for the canonical movement of \(S\), the intersection (??) is connected and thus already a sofa that encloses \(S\). </p>
-<p><div class="theorem_thmwrapper theorem-style-plain" id="thm:normal-sofa">
+<h2 id="a0000000009">2.2 Monotone Sofas</h2>
+<p>We observed in Theorem <a href="sect0007.html#thm:monotone-movement">2.6</a> that any sofa \(S\) with rotation angle in \([0, \pi / 2]\) can be repositioned to have a monotone movement \(f_t\). Equation <a href="sect0004.html#eq:intersection">1.1</a> then tells us that \(S\) is contained in the following intersection of rotated stripes and hallways. </p>
+<div class="equation" id="eq:monotone-sofa">
+<p>
+  <div class="equation_content">
+    \begin{equation}  \label{eq:monotone-sofa} M(S) = H \cap R_\beta (V) \cap \bigcap _{0 \leq t \leq \beta } L_t \end{equation}
+  </div>
+  <span class="equation_label">2.1</span>
+</p>
+</div>
+<p> We show that this set is itself a sofa. </p>
+<p><div class="theorem_thmwrapper theorem-style-plain" id="thm:monotone-sofa-connected">
   <div class="theorem_thmheading">
     <span class="theorem_thmcaption">
     Theorem
     </span>
-    <span class="theorem_thmlabel">2.1</span>
+    <span class="theorem_thmlabel">2.7</span>
   </div>
   <div class="theorem_thmcontent">
-  <p> For the canonical movement of a sofa \(S\), the intersection \(N(S)\) defined as Equation (??) is connected, and so is a sofa that contains \(S\). </p>
+  <p> Let \((S, f_t)\) be a sofa with monotone movement, so that it has a rotation angle \(\beta \in [0, \pi / 2]\) and sofa (and hallway) movement of \(f_t\) (and \(g_t = f_t^{-1}\)) respectively. Denote the moving sofa as \(S_t = f_t(S)\) and the moving hallway as \(L_t = g_t(L)\). Then the set \(M(S)\) containing \(S\) is itself a sofa with movement \(f_t\). </p>
 
   </div>
-</div> Call this sofa \(N(S)\) as the <em>normalization</em> of \(S\), and any sofa of such form a <em>normal sofa</em>. By the restricted motion of canonical movement, a normal sofa will have much richer properties than an arbitrary sofa. We first introduce relevant notations for further discussions. </p>
-<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000037">
+</div> </p>
+<div class="proof_wrapper" id="a0000000037">
+  <div class="proof_heading">
+    <span class="proof_caption">
+    Proof
+    </span>
+    <span class="expand-proof">▼</span>
+  </div>
+  <div class="proof_content">
+  <p>The set \(M(S)\) is closed by definition, and it is bounded as \(H \cap R_\beta (V)\) is bounded for \(\beta {\lt} 0\) and \(H \cap L_{\pi / 4}\) is bounded for \(\beta = \pi / 2\). So it suffices to show that \(M(S)\) is connected. Then, by Definition <a href="sect0004.html#def:moving-hallway">1.13</a>, the movement \(f_t\) is a valid movement of \(M(S)\) and so \((M(S), f_t)\) is a sofa. </p>
+<p>Fix an arbitrary point \(v \in N(S)\). We will show that there is a line segment inside \(M(S)\) connecting \(v\) to a point in \(S\). This completes the proof of connectedness of \(M(S)\), as \(M(S)\) is the union of \(S\) with line segments extending from \(S\). </p>
+<p>Let \(l_\theta \) be the line through \(v\) that makes an angle \(\theta \in [\beta , \pi / 2]\) in counterclockwise direction from the \(x\)-axis. Regardless of \(\theta \), the intersection \(s_\theta = l_\theta \cap M(S)\) is either a line segment or an empty set. This is because \(s_\theta \) is the intersection of \(l_\theta \cap H\), \(l_\theta \cap R_\beta (V)\), and \(l_\theta \cap L_t\) for all \(t \in [0, \beta ]\), all line segments contained in \(l_\theta \). </p>
+<p><span style="color:#0000FF">TODO: ’Sanitize’: add figures, but make sure that the argument does not appeal much to some hidden geometric assumption.</span> </p>
+<p>Now it only remains to show that for some \(\theta \), \(l_\theta \) overlaps with \(S\), so that the segment \(s_\theta = l_\theta \cap M(S)\) connects \(v\) with a point in \(S\). If either one of \(l_\beta \) or \(l_{\pi / 2}\) overlaps with \(S\), then we are done. Assume otherwise that none of \(l_\beta \) and \(l_{\pi / 2}\) overlaps with \(S\). Since \(S\) is nonempty and connected, it is either on the left side of \(l_{\pi / 2}\) or the right side of \(l_{\pi / 2}\). As we are working with the monotone movement of \(S\), \(S\) touches the side \(a(0)\) of \(L_0\) inside \(L_0\). This implies that \(S\) is on the right side of \(l_{\pi / 2}\). A similar argument with the side \(c(\beta )\) of \(L_\beta \) shows that \(S\) is on the left side of \(l_\beta \). Now move \(l_\theta \) continuously, taking \(\theta \) from \(\beta \) to \(\pi / 2\). As \(S\) is on the different sides of \(l_\theta \) for \(\theta = \beta \) and \(\pi / 2\), at some point the line \(l_\theta \) will pass through \(S\). This completes the proof. </p>
+
+  </div>
+</div>
+<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000038">
   <div class="definition_thmheading">
     <span class="definition_thmcaption">
     Definition
     </span>
-    <span class="definition_thmlabel">2.2</span>
+    <span class="definition_thmlabel">2.8</span>
   </div>
   <div class="definition_thmcontent">
-  <p>For each \(t \in [0, \beta ]\), let \(a(t)\), \(b(t)\), \(c(t)\) and \(d(t)\) be the sides of \(L_t\) corresponding to the sides \(a, b, c\) and \(d\) of \(L\) (so that for example, \(a(t) = f^{-1}_t(a)\)). </p>
+  <p>Let \((S, f_t)\) be any sofa that follows the setting of Theorem <a href="sect0008.html#thm:monotone-sofa-connected">2.7</a>. Also, let \(P = H \cap R_\beta (V)\) be the parallelogram (or strip for \(\beta = \pi / 2\)). Rewriting \(L_t\) as \(Q^+_t \setminus Q^-_t\) where \(Q^+_t = g_t(Q^+)\) and \(Q^-_t = g_t(Q^-)\), we have the following equality. </p>
 
   </div>
 </div> </p>
-<p>Now we move back to the proof of connectedness of \(N(S)\). </p>
-<div class="proof_wrapper" id="a0000000038">
+<span>\begin{align}  \label{eq:monotone-sofa-structure} M(S) &  = H \cap R_\beta (V) \cap \bigcap _{0 \leq t \leq \beta } L_t \\ &  = \left(P \cap \bigcap _{0 \leq t \leq \beta } Q^+_t \right) \setminus \bigcup _{0 \leq t \leq \beta } \left(P \cap Q^-_t \right) \end{align}</span>
+<p> <div class="definition_thmwrapper theorem-style-definition" id="def:cap-niche">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
+    </span>
+    <span class="definition_thmlabel">2.9</span>
+  </div>
+  <div class="definition_thmcontent">
+  <p> Let \((S, f_t)\) be any sofa with monotone movement and rotation angle in \([0, \pi / 2]\). Define the <em>cap</em> of \(S\) as </p>
+<div class="displaymath" id="a0000000039">
+  \[ \mathcal{C}(S) = P \cap \bigcap _{0 \leq t \leq \beta } Q^+_t \]
+</div>
+<p> and the <em>niche</em> of \(S\) as </p>
+<div class="displaymath" id="a0000000040">
+  \[ \mathcal{N}(S) = \bigcup _{0 \leq t \leq \beta } \left(P \cap Q^-_t \right). \]
+</div>
+<p> For each \(t \in [0, \beta ]\), let \(T_t = P \cap Q^-_t\) be the <em>wedge</em> of \(S\) at angle \(t\). Consequently, \(M(S) = \mathcal{C}(S) \setminus \mathcal{N}(S)\) and \(\mathcal{N}(S) = \cup _{0 \leq t \leq \beta } T_t\). </p>
+<p><span style="color:#0000FF">TODO: this is not obvious. We need to develop sufficient language on convex sets and its boundary.</span> Let the <em>boundary \(\partial \mathcal{C}(S)\) of the cap \(\mathcal{C}(S)\)</em> be the set of all points \(x \in \mathcal{C}(S)\) such that there is some \(t \in [0, \beta ]\) so that either \(x \cdot u_t = p(t)\) or \(x \cdot v_t = q(t)\). It turns out that \(\partial \mathcal{C}(S)\) is a closed convex curve that looks like <span style="color:#0000FF">TODO: add some figure and description</span> </p>
+
+  </div>
+</div> </p>
+<p><div class="theorem_thmwrapper theorem-style-plain" id="thm:monotone-sofa-structure">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">2.10</span>
+  </div>
+  <div class="theorem_thmcontent">
+  <p> For any sofa \(S\) with monotone movement \(f_t\), the niche \(\mathcal{N}(S)\) is contained in \(\mathcal{C}(S) \setminus \partial \mathcal{C}(S)\). Also, the support functions of \(S\) and \(M(S)\) match. That is, \(p_S = p_{M(S)}\) and \(q_S = q_{M(S)}\). </p>
+
+  </div>
+</div> </p>
+<div class="proof_wrapper" id="a0000000041">
   <div class="proof_heading">
     <span class="proof_caption">
     Proof
@@ -120,26 +177,48 @@
     <span class="expand-proof">▼</span>
   </div>
   <div class="proof_content">
-  <p>(of Theorem <a href="sect0008.html#thm:normal-sofa">2.1</a>) Fix an arbitrary point \(p \in N(S)\). We will show that there is a line segment inside \(N(S)\) connecting \(p\) to a point in \(S\). This completes the proof of connectedness of \(N(S)\), as \(N(S)\) is the union of \(S\) with line segments extending from \(S\). </p>
-<p>Let \(l_\theta \) be the line parallel to the \(x\)-axis rotated counterclockwise by an arbitrary angle \(\theta \in [\beta , \pi / 2]\). Regardless of \(\theta \), the intersection \(s_\theta = l_\theta \cap N(S)\) is either a line segment or an empty set. This is because \(s_\theta \) is the intersection of \(l_\theta \cap H\), \(l_\theta \cap (\operatorname{Rot}_\beta (V) + \mathbf{x}(\beta ))\), and \(l_\theta \cap L_t\) for all \(t \in [0, \beta ]\), each a line segment contained in \(l_\theta \). </p>
-<p>Now it only remains to show that for some \(\theta \), \(l_\theta \) overlaps with \(S\) so that \(s_\theta \) connects \(p\) with a point in \(S\). If either one of \(l_\beta \) or \(l_{\pi / 2}\) overlaps with \(S\), we are done. Assume otherwise that none of \(l_\beta \) and \(l_{\pi / 2}\) overlaps with \(S\). Since \(S\) is connected, it is either on the left side of \(l_{\pi / 2}\) or the right side of \(l_{\pi / 2}\). As we are working with the canonical movement of \(S\), \(S\) touches the side \(a(0)\) of \(L_0\) inside \(L_0\). This implies that \(S\) is on the right side of \(l_{\pi / 2}\). A similar argument with the side \(c(\beta )\) of \(L_\beta \) shows that \(S\) is on the left side of \(l_\beta \). Now move \(l_\theta \) continuously, taking \(\theta \) from \(\beta \) to \(\pi / 2\). As \(S\) is on the different sides of \(l_\theta \) for \(\theta = \beta \) and \(\pi / 2\), at some point \(S\) will cross the boundary \(l_\theta \) for some \(\theta \). This completes the proof of connectedness. </p>
-<p>The conditions that \(N(S)\) are contained in \(L_t\) and rotated strips of \(L\) and \(V\) follow naturally from the definition ??. Thus \(N(S)\) is a valid sofa. </p>
+  <p><span style="color:#FF0000">TODO: convert this old writing to current writeup</span> </p>
+<p>Since we are working with the canonical movement of \(S\), \(a(t)\) and \(c(t)\) for all \(t \in [0, \beta ]\) are tangent lines of \(S\) from above. \(a(t)\) forms an angle of \(t\) from the \(y\)-axis, and \(c(t)\) forms the angle of \(t\) from the \(x\)-axis. Consequently, \(\mathcal{C}\) is a bounded convex set with tangent lines \(a(t)\) and \(c(t)\) for all \(0 \leq t \leq \beta \) from above and sides \(b(\beta )\) and \(d(0)\) from below. Define \(\partial \mathcal{C}\) as the boundary segment of \(\mathcal{C}\) touched by lines \(a(t)\) and \(c(t)\) for all \(0 \leq t \leq \beta \). Then \(\partial \mathcal{C}\) is a continuous curve consisting of two convex segments, each with tangent lines \(\{ a(t)\} _{0 \leq t \leq \beta }\) and \(\{ c(t)\} _{0 \leq t \leq \beta }\) respectively, joined at the vertex \(a(\beta ) \cap c(0)\) of \(P\) for \(\beta {\lt} \pi / 2\) or the segment \(\partial \mathcal{C}\cap c(0)\) for \(\beta = \pi / 2\). The endpoints of \(\partial \mathcal{C}\) are \(E_{l} = c(\beta ) \cap b(\beta )\) and \(E_{r} = a(0) \cap d(0)\) . This, with the theorem below, characterizes the shape of a normal sofa. </p>
+<p>Let \(\mathcal{F}\) be the fan above the line \(b(\beta )\) and \(d(0)\) with vertex \(O = b(\beta ) \cap d(0)\). We only need to show that \(P \cap Q^-_t\) is contained in \(\mathcal{C}\setminus \partial \mathcal{C}\) for all \(0 {\lt} t {\lt} \beta \). When \(\mathbf{x}(t)\), the corner of \(Q_t^-\), is not in \(\mathcal{F}\), \(P \cap Q^-_t\) is empty and we are done. </p>
+<p>So assume \(\mathbf{x}(t) \in \mathcal{F}\). There are three possible configurations of \(Q_t^-\) in \(\mathcal{F}\). <span style="color:#0000FF">Figure here</span>. In all three cases, we only need to show the followings for all : </p>
+<ol class="enumerate">
+  <li><p>The point \(F_l = d(t) \cap b(\beta )\) is on the strictly right side of the endpoint \(E_l\) of \(\partial \mathcal{C}\) in \(b(\beta )\). </p>
+</li>
+  <li><p>The point \(F_r = b(t) \cap d(0)\) is on the strictly left side of the endpoint \(E_r\) of \(\partial \mathcal{C}\) in \(c(0)\). </p>
+</li>
+  <li><p>The point \(\mathbf{x}(t)\) is inside \(\mathcal{C}\). </p>
+</li>
+</ol>
+<p> We first show that (1) holds. Say that a point \(p_0\) is further than \(p_1\) in the direction of nonzero vector \(v \in \mathbb {R}^2\) if and only if \(p_0 \cdot v {\gt} p_1 \cdot v\). For a fixed \(v\), this is a partial order. \(c(t) \cap a(\beta )\) is further than \(d(t) \cap b(\beta )\) in the direction of \(v_\beta \) (they are the intersection points of boundary lines of strips \(V_\beta \) and \(f^{-1}_t(H)\)). Take any point \(q\) in \(\partial \mathcal{C}\) with tangent line \(c(t)\). \(q\) is further than \(c(t) \cap a(\beta )\) in the direction of \(v_\beta \). Finally, the endpoint \(c(\beta ) \cap b(\beta )\) is further than \(q\) in the direction of \(v_\beta \) as the arc from \(q\) to \(c(\beta ) \cap b(\beta )\) in \(\partial \mathcal{C}\) is directed towards the positive direction of \(v_\beta \). In conclusion, \(c(\beta ) \cap b(\beta )\) is further than \(d(t) \cap b(\beta )\) in the direction of \(v_\beta \) and (1) is shown. <span style="color:#0000FF">TODO: this needs pictures</span> </p>
+<p>A symmetric argument can be applied to show (2). </p>
+<p>Assume by contradiction that (3) is false. That is, \(\mathbf{x}(t)\) is outside \(\mathcal{C}\) for some \(0 {\lt} t {\lt} \beta \). By (1) and the angular monotonicity of \(\partial \mathcal{C}\), the line connecting \(F_l\) and \(\mathbf{x}(t)\) only meets \(\partial \mathcal{C}\) at most one point. Since \(F_l\) is inside \(\mathcal{C}\) by (1) and \(\mathbf{x}(t)\) is outside \(\mathcal{C}\) the segment connecting \(F_l\) and \(\mathbf{x}(t)\) meets \(\partial \mathcal{C}\) at exactly one point (*). Likewise, the segment connecting \(F_r\) and \(\mathbf{x}(t)\) meets \(\partial \mathcal{C}\) at exactly one point (**). Let \(P_l\) and \(P_r\) be the points in \(S\) touching \(c(t)\) and \(a(t)\) respectively. Then the connected component of \(P_l\) and \(P_r\) in \(S\) are disjoint by (*) and (**), leading to contradiction (we want more rigor for this step). <span style="color:#0000FF">TODO: this needs pictures</span> </p>
 
   </div>
 </div>
-<p>It is worth noting that the normalization of a normal sofa is itself. That is, the normalization is a projection from the collection of sofas to the collection of normal sofas. <div class="corollary_thmwrapper theorem-style-plain" id="cor:norm-proj">
-  <div class="corollary_thmheading">
-    <span class="corollary_thmcaption">
-    Corollary
+<p><div class="definition_thmwrapper theorem-style-definition" id="a0000000042">
+  <div class="definition_thmheading">
+    <span class="definition_thmcaption">
+    Definition
     </span>
-    <span class="corollary_thmlabel">2.3</span>
+    <span class="definition_thmlabel">2.11</span>
   </div>
-  <div class="corollary_thmcontent">
-  <p> Take any sofa \(S\). The canonical movement of \(S\) that <em>defines</em> the normal sofa \(N(S)\) as in (??) is identical to the canonical movement <em>of</em> the normal sofa \(N(S)\). Consequently, for any normal sofa \(S\), \(N(S) = S\). </p>
+  <div class="definition_thmcontent">
+  <p>Any sofa \(S\) with monotone movement \(f_t\) is a <em>monotone sofa</em> if \(S\) is exactly same as the set \(M(S)\) in Equation <a href="sect0008.html#eq:monotone-sofa">2.1</a>. </p>
+
+  </div>
+</div> <div class="theorem_thmwrapper theorem-style-plain" id="a0000000043">
+  <div class="theorem_thmheading">
+    <span class="theorem_thmcaption">
+    Theorem
+    </span>
+    <span class="theorem_thmlabel">2.12</span>
+  </div>
+  <div class="theorem_thmcontent">
+  <p>Any sofa of rotation angle in \([0, \pi / 2]\) is, after some reposition by some orientation-preserving isometry, is contained in a monotone sofa. </p>
 
   </div>
 </div> </p>
-<div class="proof_wrapper" id="a0000000039">
+<div class="proof_wrapper" id="a0000000044">
   <div class="proof_heading">
     <span class="proof_caption">
     Proof
@@ -147,11 +226,11 @@
     <span class="expand-proof">▼</span>
   </div>
   <div class="proof_content">
-  <p>By definition, the canonical movement \(f_t\) (the continuum of isometries that move a sofa) of \(S\) is a valid movement of \(N(S)\). Since \(N(S) \supset S\), the moving copy \(f_t(N(S))\) is rotated clockwise by \(t\) and always touches the sides \(a\) and \(c\) of \(L\). This identifies \(f_t\) with the canonical movement of \(N(S)\). </p>
+  <p>Take any sofa \(S\). After some reposition, \(S\) admits a monotone movement \(f_t\) by Theorem <a href="sect0007.html#thm:monotone-movement">2.6</a>. By Theorem <a href="sect0008.html#thm:monotone-sofa-connected">2.7</a>, the shape \(M(S)\) is also a sofa with the same movement \(f_t\). By Theorem <a href="sect0008.html#thm:monotone-sofa-structure">2.10</a>, the support function of \(S\) and \(M(S)\) matches. Now note that a monotone movement solely depends on the support function of the sofa’s shape by definition. So \(f_t\) is not only the monotone movement of \(S\), but also of \(M(S)\). Now \((M(S), f_t)\) is a sofa with monotone movement. Consequently, \(M(M(S)) = M(S)\) and so \((M(S), f_t)\) is a monotone sofa. </p>
 
   </div>
 </div>
-<p>With this, it is natural for us to work with normal sofas only as normalizing a sofa does not decrease the area. </p>
+<p> Thus, it suffices to look for monotone sofas if we want to find a sofa of maximum area. </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -159,11 +238,11 @@
 </div> <!-- wrapper -->
 
 <nav class="prev_up_next">
-  <a href="sect0007.html" title="Monotone Sofas"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+  <a href="sect0007.html" title="Monotone Movement"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
 </a>
-  <a href="sect0007.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+  <a href="sect0006.html" title="Monotone Sofas"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0009.html" title="General shape of a normal sofa"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0009.html" title="Space of Monotone Sofas"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 

@@ -9,10 +9,10 @@
 <meta name="generator" content="plasTeX" />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blueprint for Sofa: History</title>
-<link rel="next" href="sect0007.html" title="Monotone Sofas" />
-<link rel="prev" href="sect0005.html" title="Monotone Movement" />
-<link rel="up" href="sect0001.html" title="Setup" />
+<title>Blueprint for Sofa: Monotone Sofas</title>
+<link rel="next" href="sect0007.html" title="Monotone Movement" />
+<link rel="prev" href="sect0005.html" title="History" />
+<link rel="up" href="index.html" title="Blueprint for Sofa" />
 <link rel="stylesheet" href="styles/theme-white.css" />
 <link rel="stylesheet" href="styles/amsthm.css" />
 </head>
@@ -26,10 +26,10 @@
 <div class="wrapper">
 <nav class="toc">
 <ul class="sub-toc-0">
-<li class=" active">
+<li class="">
   <a href="sect0001.html"><span class="toc_ref">1</span> <span class="toc_entry">Setup</span></a>
-  <span class="expand-toc">▼</span>
-  <ul class="sub-toc-1 active">
+  <span class="expand-toc">▶</span>
+  <ul class="sub-toc-1">
      <li class="">
   <a href="sect0002.html"><span class="toc_ref">1.1</span> <span class="toc_entry">The Problem</span></a>
  </li>
@@ -40,26 +40,26 @@
   <a href="sect0004.html"><span class="toc_ref">1.3</span> <span class="toc_entry">Moving Hallway</span></a>
  </li>
 <li class="">
-  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">Monotone Movement</span></a>
- </li>
-<li class=" active current">
-  <a href="sect0006.html"><span class="toc_ref">1.5</span> <span class="toc_entry">History</span></a>
+  <a href="sect0005.html"><span class="toc_ref">1.4</span> <span class="toc_entry">History</span></a>
  </li>
 
   </ul>
  </li>
-<li class="">
-  <a href="sect0007.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
-  <span class="expand-toc">▶</span>
-  <ul class="sub-toc-1">
+<li class=" active current">
+  <a href="sect0006.html"><span class="toc_ref">2</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <span class="expand-toc">▼</span>
+  <ul class="sub-toc-1 active">
      <li class="">
-  <a href="sect0008.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Sofas</span></a>
+  <a href="sect0007.html"><span class="toc_ref">2.1</span> <span class="toc_entry">Monotone Movement</span></a>
  </li>
 <li class="">
-  <a href="sect0009.html"><span class="toc_ref">2.2</span> <span class="toc_entry">General shape of a normal sofa</span></a>
+  <a href="sect0008.html"><span class="toc_ref">2.2</span> <span class="toc_entry">Monotone Sofas</span></a>
  </li>
 <li class="">
-  <a href="sect0010.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Differential geometry of a normal sofa and its movement</span></a>
+  <a href="sect0009.html"><span class="toc_ref">2.3</span> <span class="toc_entry">Space of Monotone Sofas</span></a>
+ </li>
+<li class="">
+  <a href="sect0010.html"><span class="toc_ref">2.4</span> <span class="toc_entry">Differential Geometry of a Monotone Sofa</span></a>
  </li>
 
   </ul>
@@ -84,43 +84,9 @@
 
 
 <div class="main-text">
-<h2 id="a0000000007">1.5 History</h2>
-<p>The area of an explicit sofa gives a lower bound of the maximum sofa area. Since the problem was introduced, sofas of area \(2.2074\dots \) (by Hammersley <span class="cite">
-	[
-	<a href="sect0014.html#hammersley1968enfeeblement" >Ham68</a>
-	]
-</span>), \(2.21563\dots \) (by C. Francis <span class="cite">
-	[
-	<a href="sect0014.html#guy1977monthly" >Guy77</a>
-	]
-</span>) and \(2.215649\dots \) (by R. Guy <span class="cite">
-	[
-	<a href="sect0014.html#guy1977monthly" >Guy77</a>
-	]
-</span>) were successively constructed over time. In 1997, Gerver <span class="cite">
-	[
-	<a href="sect0014.html#gerver1992moving" >Ger92</a>
-	]
-</span> found the sofa of currently best known area \(2.2195\dots \) by considerations of the local maximality of a sofa. The boundary of Gerver’s sofa consists of 3 line segments and 15 analytic curves, making its derivation complicated. Romik <span class="cite">
-	[
-	<a href="sect0014.html#romik2018differential" >Rom18</a>
-	]
-</span> simplified the derivation of Gerver’s sofa in his work on ambidextrous sofa. </p>
-<p>On the other hand, the current best known upper bound \(2.37\) of sofa area is found by Kallus and Romik in 2017 <span class="cite">
-	[
-	<a href="sect0014.html#kallus2018improved" >KR18</a>
-	]
-</span> by a computer-assisted proof. It is conjectured that the Gerver’s sofa indeed attains the maximum sofa area, a speculation held by authors worked on this problem <span class="cite">
-	[
-	<a href="sect0014.html#gerver1992moving" >Ger92</a>
-	, 
-	<a href="sect0014.html#romik2018differential" >Rom18</a>
-	]
-</span> that is supported experimentally by gradient descent computation on the problem’s polygonal variant <span class="cite">
-	[
-	<a href="sect0014.html#gibbs2014computational" >Gib14</a>
-	]
-</span>. Thus, under the assumption that Gerver’s sofa, the resolution of moving sofa problem boils down to improving the upper bound of possible sofa area.  </p>
+<h1 id="a0000000007">2 Monotone Sofas</h1>
+<p>In this section, we build up the notion of <em>monotone sofas</em>, a special subcollection \(\mathcal{S}_0\) of sofas with additional structure on its shape and movement. In terms of geometry, a monotone sofa \(S\) consists of its <em>cap</em> \(\mathcal{C}(S)\), a convex set of a particular shape, subtracted by the sofa’s <em>niche</em> \(\mathcal{N}(S)\), an uncountable union of triangles. In terms of movement, a monotone sofa always rotates clockwise while touching the outer sides \(a\) and \(c\) of the hallway \(L\). We prove that any sofa of maximum area is contained in a monotone sofa, so that it is sufficient to maximize the area of a monotone sofa. It turns out that the collection \(\mathcal{S}_0\) of monotone sofas can be embedded as a closed, convex subset of an affine space \(\mathcal{T}_0\). This way, we will later be able to maximize or solve for concave quadratic functional \(\mathcal{A}_1 \colon \mathcal{T}_0 \rightarrow \mathbb {R}\), which is an upper bound of the actual area functional \(\mathcal{A}\colon \mathcal{S}\rightarrow \mathbb {R}\). </p>
+<p><span style="color:#FF0000">Add figure here, and likely an animation that describes the concept briefly</span> </p>
 
 </div> <!--main-text -->
 </div> <!-- content-wrapper -->
@@ -128,11 +94,11 @@
 </div> <!-- wrapper -->
 
 <nav class="prev_up_next">
-  <a href="sect0005.html" title="Monotone Movement"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
+  <a href="sect0005.html" title="History"><svg  class="icon icon-arrow-left "><use xlink:href="symbol-defs.svg#icon-arrow-left"></use></svg>
 </a>
-  <a href="sect0001.html" title="Setup"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
+  <a href="index.html" title="Blueprint for Sofa"><svg  class="icon icon-arrow-up "><use xlink:href="symbol-defs.svg#icon-arrow-up"></use></svg>
 </a>
-  <a href="sect0007.html" title="Monotone Sofas"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
+  <a href="sect0007.html" title="Monotone Movement"><svg  class="icon icon-arrow-right "><use xlink:href="symbol-defs.svg#icon-arrow-right"></use></svg>
 </a>
 </nav>
 

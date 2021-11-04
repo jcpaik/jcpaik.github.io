@@ -14,10 +14,12 @@ The goal of this project is to prove that the Gerver's sofa indeed attains the m
 The main strategy to successfully control the area function $\cA \colon \cS \ra \RR$ on the space of all sofas $\cS$ is \emph{bootstrapping} the upper bound $\cA_i$ of $\cA$. 
 We successively develop more refined upper bounds $\cA_i$ of $\cA$ which are easier to control, as we also narrow down the scope $\cS_i \subset \cS$ of sofas that contains a maximum sofa.
 From a possibly crude upper bound $\cA_i$ of area $\cA$, we obtain that a maximal sofa should be in the set $\cS_i = \{\cA_i \geq 2.2195\dots \}$. 
-Using particular properties of $\cA_i$ and $\cS_i$, we develop an upper bound $\cA_{i+1}$ that is more closer to $\cA$ than from $\cA_i$. 
+Using particular properties of $\cA_i$ and $\cS_i$, we develop an upper bound $\cA_{i+1}$ that is more closer to $\cA$ than $\cA_i$. 
 This also refines the possible scope $\cS_{i + 1} = \{\cA_{i + 1} \geq 2.2195\dots \}$ from $\cS_i$, which allows to further develop more refined bounds and regions.
 
 \textcolor{blue}{Note that the following plan has not been executed fully at this moment.}
+
+\textcolor{red}{TODO: elaborate the monotone step further once a full writeup is completed}
 
 Due to the complicated and somewhat artificial nature of the optimum, computer assistance is involved in different steps of the bootstrapping process. 
 In the first step, a C++ program is developed to estimate the area of sofas from above with polygonal area $\cA_0$.
