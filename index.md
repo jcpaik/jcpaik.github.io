@@ -1,6 +1,6 @@
 # Jineon Baek
 
-I am a second-year mathematics grad student at the University of Michigan, Ann Arbor. My advisor is [Michael Zieve](http://www.math.lsa.umich.edu/~zieve/).
+I am a second-year mathematics graduate student at the University of Michigan, Ann Arbor. My advisor is [Michael Zieve](http://www.math.lsa.umich.edu/~zieve/).
 
 I am generally interested in combinatorics and computer science. 
 Specifically, I have worked or am working on: discrete geometry, enumerative combinatorics, computer-assisted proofs, neural networks and programming language.
