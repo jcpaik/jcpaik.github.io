@@ -27,11 +27,13 @@ For any $t \in \RR$, let $u_t$ be the vector $(\cos t, \sin t)$ and $v_t$ be the
 \end{definition}
 In particular, we define the support functions $p_S, q_S$ of a sofa $S$ as the following.
 \begin{definition}
+\label{def:support}
 For any $t \in \RR$ and a closed, compact set $S \subset \RR^2$, define the support functions $p_S, q_S \colon \RR \ra \RR$ as
 $$p_S(t) = \max_{x \in S} x \cdot u_t$$
 and
 $$q_S(t) = \max_{x \in S} x \cdot v_t.$$
-
+Note that $q_S(t) = p_S(t + \pi / 2)$ is just the shift of $p_S$ by $\pi / 2$.
+Also, both $p_S$ and $q_S$ can be considered as real-valued functions on $\RR / 2 \pi \RR$.
 If the sofa $S$ is clear from the context, we omit the subscript and denote the support functions as $p$ and $q$.
 \end{definition}
 \begin{theorem}

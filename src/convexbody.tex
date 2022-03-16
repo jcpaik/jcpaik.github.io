@@ -1,0 +1,37 @@
+\section{Planar convex bodies}
+
+In this section, we build up a theory for planar convex bodies that will be used extensively later.
+We do not claim originality of the results described here.
+
+\subsection{Convex body}
+
+\begin{definition}
+A set $C \subseteq \RR^2$ is \emph{convex} 
+if for any two points $x, y \in C$, any point
+$\lambda x + (1 - \lambda) y$ with arbitrary $0 \leq \lambda \leq 1$ on the line segment connecting $x$ and $y$ also belongs to $C$.
+A set $C \subseteq \RR^2$ is a \emph{convex body} if it is a nonempty convex set which is compact.
+\end{definition}
+While convex polygons and convex regions of smooth (or piecewise $C^1$) boundaries are examples, the definition also allows more wildly behaving boundaries as well. 
+A main goal of this section is to analyze such cases inclusively.
+
+Remark that for a convex body $C$, $p_C \colon \RR / 2 \pi \ZZ \ra \RR$ is the support function of $C$.
+We can define the tangent lines of $C$ using this function.
+\begin{definition}
+For a convex body $C$ and arbitrary $t \in \RR / 2 \pi \ZZ$, define the \emph{tangent line} $l_C(t) = \{x \in \RR^2 \colon x \cdot u_t = p_C(t)\}$ with the normal vector $u_t$.
+
+By the convexity and compactness of $C$, the intersection $e_C(t) = C \cap l_C(t)$ at an angle $t \in \RR / 2 \pi \ZZ$ is either a proper line segment or a point. If it is a point, we can consider it as a degenerate line segment with same endpoints.
+Let the point $v_C^+(t)$ be the endpoint of $e_C(t)$ located at the farthest in the direction of $u_{t + \pi / 2}$.
+Likewise, let the point $v_C^-(t)$ be the endpoint of $e_C(t)$ located at the farthest in the direction of $u_{t - \pi / 2}$.
+\end{definition}
+Note that if $C$ is a convex polygon, the points $v_C^+(t), v_C^-(t)$ for all $t \in \RR / 2 \pi \ZZ$ will describe the vertices of the polygon. 
+
+\begin{proposition}
+For any convex body $C$ and angle $t \in \RR / 2 \pi \ZZ$,
+the following equalities holds.
+$$v_C^+(t) = p_C(t) + $$
+$$sss$$
+\end{proposition}
+
+\begin{definition}
+	
+\end{definition}
