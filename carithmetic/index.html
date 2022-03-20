@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: darkslategray;
+    }
+
+    div.top {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      margin: 20px;
+    }
+
+    div.middle {
+      position: fixed;
+      top: 50%;
+      transform: translate(0, -50%);
+      height: 300px;
+      width: 100%;
+      display: flex;
+    }
+
+    div.flexbox {
+      flex: 1;
+      background: transparent;
+      height: 100%;
+    }
+
+    div.card {
+      position: relative;
+      background: peachpuff;
+      border: 4px solid brown;
+      left: 50%;
+      transform: translate(-50%, 0);
+      height: 100%;
+      line-height: 300px;
+      width: 250px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 100px;
+    }
+
+    div.bottom {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      margin: 20px;
+    }
+
+    div.text {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      font-size: 60px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top">
+    <div class="text" id="title">
+      1. Hello!
+    </div>
+    <div class="text" id="objective">
+      Make a number greater than 10.
+    </div>
+  </div>
+
+  <div class="middle" id="cards">
+    <div class="flexbox">
+      <div class="card">+7</div>
+    </div>
+    <div class="flexbox">
+      <div class="card">-8</div>
+    </div>
+    <div class="flexbox">
+      <div class="card">+9</div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="text" id="equation">
+      -4 * -5 = 20
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="view.js"></script>
+</body>
+
+</html>
