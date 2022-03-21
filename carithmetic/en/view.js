@@ -126,7 +126,7 @@ async function onWon() {
         level++;
         view.loadLevel(levels[level]);
     } else {
-        view.equation.innerHTML = 'You finished the game. Here's a cake! 🎂'
+        view.equation.innerHTML = "You finished the game. Here's a cake! 🎂";
     }
 }
 async function onLost() {
