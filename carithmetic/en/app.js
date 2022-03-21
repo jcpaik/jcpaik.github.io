@@ -82,5 +82,3 @@ class Game {
         this.round_idx++;
     }
 }
-
-const g = new Game(deck, goal);
