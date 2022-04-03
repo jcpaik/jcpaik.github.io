@@ -11,7 +11,7 @@ if for any two points $x, y \in C$, any point
 $\lambda x + (1 - \lambda) y$ with arbitrary $0 \leq \lambda \leq 1$ on the line segment connecting $x$ and $y$ also belongs to $C$.
 A set $C \subseteq \RR^2$ is a \emph{convex body} if it is a nonempty convex set which is compact.
 \end{definition}
-While convex polygons and convex regions of smooth (or piecewise $C^1$) boundaries are examples, the definition also allows more wildly behaving boundaries as well. 
+While convex polygons and convex regions of smooth (or piecewise $C^1$) boundaries are examples, the definition also allows the boundary to behave more wildly as well. 
 A main goal of this section is to analyze such cases inclusively.
 
 Remark that for a convex body $C$, $p_C \colon \RR / 2 \pi \ZZ \ra \RR$ is the support function of $C$.
@@ -32,6 +32,49 @@ $$v_C^+(t) = p_C(t) + $$
 $$sss$$
 \end{proposition}
 
+
+
+We shall construct the \emph{surface area measure} $\beta$ of an arbitrary convex body $C$. 
+Informally speaking, for any closed interval $I = [a, b]$ of $S^1$, $\beta(I)$ will be the length of the curve on the boundary of $C$ from $v^-(t_1)$ to $v^+(t_2)$.
+In particular, the measure $\beta(\{t\})$ of a singleton $\{t\}$ is the distance between $v^-(t)$ and $v^+(t)$.
+Consequently, $\beta([a, b))$ is the distance between $v^-(a)$ and $v^-(b)$ on the boundary, and $\beta((a, b])$ is the distance between $v^+(a)$ and $v^+(b)$ on the boundary.
+The construction of such a measure is already known for $n$-dimensional convex bodies \textcolor{red}{TODO: Put citations}. 
+However, as we will need show some formulas involving $\beta$ that specifically works for dimension 2, we will construct the surface area measure for dimension 2 in a different way and show later that it matches with the original definition.
+
+Assume for a moment that $p_C$ is twice continuously differentiable.
+Then for any angle $t \in S^1$ the tangent line $l_C(t)$ touches $C$ at the unique point $v_C(t) = v_C^+(t) = v_C^-(t) = p_C(t)u_t + p'_C(t)v_t$ on the boundary of $C$.
+In particular, $v_C(t)$ parametrizes the boundary points of $C$.
+Note that $v'_C(t) = (p_C(t) + p''_C(t))v_t$,
+so that the length of the curve that connects $v_C(a)$ and $v_C(b)$ on the boundary of $C$ is 
+$$\int_a^b ||v'_C(t)||dt 
+= \int_a^b (p_C(t) + p''_C(t)) dt.
+= \int_a^b p_C(t) dt + p'_C(b) - p'_C(a)$$
+Therefore, in this case, we can say that $p_C(t) + p''_C(t)$ is the density function of the surface are measure $\beta$ we are looking for.
+
+Now let's get back to the general setting where $C$ is an arbitrary convex body and $p_C(t)$ may not differentiable.
+From the equation above, we can suspect that this will hold.
+$$
+\beta((a, b]) = \int_a^b p_C(t) dt + \partial^+_t p_C(b) - \partial^-_t p_C(a)
+$$
+We will now use this guess to actually define $\beta$.
+
 \begin{definition}
-	
+For an arbitrary convex body $C$,
+define the function $F_C \colon \RR \ra \RR$ as 
+$$
+F_C(x) = \int_0^x p_C(t)dt + \partial^+_t p_C(x) - \partial^-_t p_C(0)
+$$
+so that in particular, 
+$$
+F_C(b) - F(a) = \int_a^b p_C(t)dt + \partial^+_t p_C(b) - \partial^-_t p_C(a)
+$$
+follows for arbitrary $a, b \in \RR$.
 \end{definition}
+
+\begin{theorem}
+For any convex body $C$, $F_C$ is monotonically increasing.
+\end{theorem}
+\begin{proof}
+
+\end{proof}
+
