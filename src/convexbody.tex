@@ -12,18 +12,30 @@ $\lambda x + (1 - \lambda) y$ with arbitrary $0 \leq \lambda \leq 1$ on the line
 A set $C \subseteq \RR^2$ is a \emph{convex body} if it is a nonempty convex set which is compact.
 \end{definition}
 While convex polygons and convex regions of smooth (or piecewise $C^1$) boundaries are examples, the definition also allows the boundary to behave more wildly as well. 
-A main goal of this section is to analyze such cases inclusively.
+A main goal of this section is to analyze all possibilities including such cases inclusively.
 
 Remark that for a convex body $C$, $p_C \colon \RR / 2 \pi \ZZ \ra \RR$ is the support function of $C$.
 We can define the tangent lines of $C$ using this function.
 \begin{definition}
 For a convex body $C$ and arbitrary $t \in \RR / 2 \pi \ZZ$, define the \emph{tangent line} $l_C(t) = \{x \in \RR^2 \colon x \cdot u_t = p_C(t)\}$ with the normal vector $u_t$.
+\end{definition}
 
+\begin{definition}
 By the convexity and compactness of $C$, the intersection $e_C(t) = C \cap l_C(t)$ at an angle $t \in \RR / 2 \pi \ZZ$ is either a proper line segment or a point. If it is a point, we can consider it as a degenerate line segment with same endpoints.
 Let the point $v_C^+(t)$ be the endpoint of $e_C(t)$ located at the farthest in the direction of $u_{t + \pi / 2}$.
 Likewise, let the point $v_C^-(t)$ be the endpoint of $e_C(t)$ located at the farthest in the direction of $u_{t - \pi / 2}$.
 \end{definition}
+
+\begin{definition}
+For any $t_1, t_2 \in S^1$ such that $t_2 = t_1 + \theta$ for nonzero $\theta \in (-\pi, \pi)$,
+the lines $l_C(t_1)$ and $l_C(t_2)$ are not parallel so they intersect.
+Let $v_C(t_1, t_2)$ be the intersection point of two lines.
+\end{definition}
+
 Note that if $C$ is a convex polygon, the points $v_C^+(t), v_C^-(t)$ for all $t \in \RR / 2 \pi \ZZ$ will describe the vertices of the polygon. 
+\begin{proposition}
+For any $t_1, t_2 \in S^1$ such that $t_2 \neq t_1, t_1 + \pi$, 
+\end{proposition}
 
 \begin{definition}
 For any function $f \colon \RR \ra \RR$, denote its left derivative as $\partial_+f$ and right derivative as $\partial_- f$.
