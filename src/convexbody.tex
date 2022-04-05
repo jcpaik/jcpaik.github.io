@@ -25,13 +25,35 @@ Likewise, let the point $v_C^-(t)$ be the endpoint of $e_C(t)$ located at the fa
 \end{definition}
 Note that if $C$ is a convex polygon, the points $v_C^+(t), v_C^-(t)$ for all $t \in \RR / 2 \pi \ZZ$ will describe the vertices of the polygon. 
 
+\begin{definition}
+For any function $f \colon \RR \ra \RR$, denote its left derivative as $\partial_+f$ and right derivative as $\partial_- f$.
+\end{definition}
 \begin{proposition}
 For any convex body $C$ and angle $t \in \RR / 2 \pi \ZZ$,
 the following equalities holds.
-$$v_C^+(t) = p_C(t) + $$
-$$sss$$
+$$v_C^+(t) = p_C(t)u_t + \partial_+p_C(t)u_{t+\pi/2}$$
+$$v_C^-(t) = p_C(t)u_t + \partial_-p_C(t)u_{t+\pi/2}.$$
 \end{proposition}
+\begin{proof}
+\textcolor{red}{TODO: fill out the proof.}
+\end{proof}
 
-\begin{definition}
-	
-\end{definition}
+Most tangent lines touch $C$ at a single vertex.
+\begin{proposition}
+For any planar convex body $C$, there is only a countable number of angles $t \in S^1$ with the edge $e_C(t)$ being a proper line segment.
+So the tangent line $l_C(t)$ touches $C$ at the unique point $v^+_C(t) = v^-_C(t)$ for all but a countable number of values of $t \in S^1$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+Use the monotonicity: for any $0 < t < \pi$, $v_C^+(t)$ has strictly lesser $x$-coordinate than $v_C^-(t)$ unless $v_C^+(t) = v_C^-(t)$. Also for any $0 < t < t' < \pi$, $v_C^-(t')$ has lesser or equal $x$-coordinate than $v_C^+(t)$.
+Now if $v_C^+(t) \neq v_C^-(t)$ for uncountably many $t$'s, the $x$-coordinate of $v_C^-(\pi / 2)$ descends from the $x$-coordinate of $v_C^+(0)$ `uncountably many times', contradicting that $C$ is bounded. 
+\end{proof}
+
+\begin{corollary}
+\label{cor:func}
+For any planar convex body $C$, its support function $p_C$ is both left-differentiable and right-differentiable, and has only a countable number of $t \in S^1$ where the left and right differentiation do not match.
+
+Also, if $C$ lies inside the ball of radius $R \geq 0$ centered at origin, then the functions $p_C, \partial_+p_C, \partial_-p_C$ are all bounded by $R$.
+\end{corollary}
+
+\subsection{Surface area measure}
+

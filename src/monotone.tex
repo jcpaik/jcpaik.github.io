@@ -44,10 +44,16 @@ For any closed, compact $S \subset \RR^2$, the support functions $p_S$ and $q_S$
 (omitted)
 \end{proof}
 
-We will use the following definition often as well.
+We will use the following `basic' polygons often as well. 
 \begin{definition}
-Define the quadrants $Q^+ = (-\infty, 1] \times (-\infty, 1]$ and $Q^- = (-\infty, 0) \times (-\infty, 0)$.
-With this, $L$ can be expressed as $Q^+ \setminus Q^-$.
+\label{def:polygons}
+Define the \emph{quadrants} $Q^+ = (-\infty, 1] \times (-\infty, 1]$ and $Q^- = (-\infty, 0) \times (-\infty, 0)$.
+With this, the hallway $L$ can be expressed as $Q^+ \setminus Q^-$.
+Also, define the \emph{half-planes} $R_H = \RR \times [0, \infty)$ and $R_V = [0, \infty) \times \RR$.
+
+For any angle $\beta \in [0, \pi / 2]$, define the set $P_\beta = H \cap \Rot_\beta(V)$. The set $P$ is a parallelogram for $\beta < \pi / 2$, and is the horizontal strip $P = H$ for $\beta = \pi / 2$.
+We will omit the subscript $\beta$ when it is clear from the context, and call such $P$ a \emph{parallelogram} no matter whether $\beta = \pi / 2$ or not.
+Likewise, define the \emph{fan} $F_\beta = R_H \cap \Rot_\beta(R_V)$, for which we will also omit the subscript if possible.
 \end{definition}
 
 Now we show that any sofa with rotation angle in between $0$ and $\pi / 2$ can be repositioned to have the following \emph{monotone movement}.
@@ -57,7 +63,7 @@ A sofa $(S, f_t)$ with hallway movement $g_t = f_t^{-1}$ and rotation angle $\be
 \begin{itemize}
 	\item The sofa movement $f_t$ is parametrized by angles $t \in [0, \beta]$.
 	\item $q_{S}(0) = p_{S}(\beta) = 1$. That is, $S$ touches the sides $c(0) = g_0(c)$ and $a(\beta) = g_\beta(a)$ of $L_0$ and $L_\beta$ respectively.
-	\item $g_{t} = R_t \circ T_{(p_{S}(t) -1, q_{S}(t) -1)}$. That is, the hallway $L_{t} = g_t(L)$ at time $t$ is $L$ rotated counterclockwise by an angle of $t$ and translated to touch $S$ on the sides $a(t)$ and $c(t)$.
+	\item $g_{t} = \Rot_t \circ T_{(p_{S}(t) -1, q_{S}(t) -1)}$. That is, the hallway $L_{t} = g_t(L)$ at time $t$ is $L$ rotated counterclockwise by an angle of $t$ and translated to touch $S$ on the sides $a(t)$ and $c(t)$.
 \end{itemize}
 \end{definition}
 
@@ -117,28 +123,34 @@ By the definition of $g_\theta$, we have $L_\theta$
 
 We observed in Theorem \ref{thm:monotone-movement} that any sofa $S$ with rotation angle in $[0, \pi / 2]$ can be repositioned to have a monotone movement $f_t$.
 Equation \ref{eq:intersection} then tells us that $S$ is contained in the following intersection of rotated stripes and hallways.
+\begin{definition}
+\label{def:monotonization}
+For any sofa $S$ with rotation angle $\beta \in [0, \pi / 2]$ and monotone movement $f_t$, define the following set $M(S)$ as the \emph{monotonization} of sofa $(S, f_t)$.
 \begin{equation}
 \label{eq:monotone-sofa}
-M(S) = H \cap R_\beta(V) \cap \bigcap_{0 \leq t \leq \beta} L_t
+M(S) = H \cap \Rot_\beta(V) \cap \bigcap_{0 \leq t \leq \beta} L_t
 \end{equation}
-We show that this set is itself a sofa.
+Here, we follow the notations of Definition \ref{def:moving-hallway}.
+\end{definition}
+We show that monotonization of any sofa with monotone movement is also a sofa.
 
 \begin{theorem}
-\label{thm:monotone-sofa-connected}
+\label{thm:monotonization-connected}
 Let $(S, f_t)$ be a sofa with monotone movement, so that it has a rotation angle $\beta \in [0, \pi / 2]$ and sofa (and hallway) movement of $f_t$ (and $g_t = f_t^{-1}$) respectively.
 Denote the moving sofa as $S_t = f_t(S)$ and the moving hallway as $L_t = g_t(L)$.
-Then the set $M(S)$ containing $S$ is itself a sofa with movement $f_t$.
+Then the monotonization $M(S)$ contains $S$, and is itself a sofa with the same movement $f_t$.
 \end{theorem}
 \begin{proof}
 The set $M(S)$ is closed by definition, and it is bounded as $H \cap R_\beta(V)$ is bounded for $\beta < 0$ and $H \cap L_{\pi / 4}$ is bounded for $\beta = \pi / 2$.
+Also, the set $M(S)$ contains $S$ by Definition \ref{def:moving-hallway}.
 So it suffices to show that $M(S)$ is connected.
-Then, by Definition \ref{def:moving-hallway}, the movement $f_t$ is a valid movement of $M(S)$ and so $(M(S), f_t)$ is a sofa.
+Then, by Definition \ref{def:moving-hallway}, the movement $f_t$ is a valid movement of sofa shape $M(S)$ and $(M(S), f_t)$ is a sofa.
 
 Fix an arbitrary point $v \in N(S)$.
 We will show that there is a line segment inside $M(S)$ connecting $v$ to a point in $S$. This completes the proof of connectedness of $M(S)$, as $M(S)$ is the union of $S$ with line segments extending from $S$.
 
 Let $l_\theta$ be the line through $v$ that makes an angle $\theta \in [\beta, \pi / 2]$ in counterclockwise direction from the $x$-axis. 
-Regardless of $\theta$, the intersection $s_\theta = l_\theta \cap M(S)$ is either a line segment or an empty set. This is because $s_\theta$ is the intersection of $l_\theta \cap H$, $l_\theta \cap R_\beta(V)$, and $l_\theta \cap L_t$ for all $t \in [0, \beta]$, all line segments contained in $l_\theta$.
+Regardless of $\theta$, the intersection $s_\theta = l_\theta \cap M(S)$ is either a line segment or an empty set. This is because $s_\theta$ is the intersection of $l_\theta \cap H$, $l_\theta \cap \Rot_\beta(V)$, and $l_\theta \cap L_t$ for all $t \in [0, \beta]$, all line segments contained in $l_\theta$.
 
 \textcolor{blue}{TODO: 'Sanitize': add figures, but make sure that the argument does not appeal much to some hidden geometric assumption.}
 
@@ -151,29 +163,53 @@ A similar argument with the side $c(\beta)$ of $L_\beta$ shows that $S$ is on th
 Now move $l_\theta$ continuously, taking $\theta$ from $\beta$ to $\pi / 2$. As $S$ is on the different sides of $l_\theta$ for $\theta = \beta$ and $\pi / 2$, at some point the line $l_\theta$ will pass through $S$. This completes the proof.
 \end{proof}
 
+With the following definition, monotonization is a process of (potentially) enlarging any sofa with monotone movement to a monotone sofa, while keeping the same movement.
 \begin{definition}
-Let $(S, f_t)$ be any sofa that follows the setting of Theorem \ref{thm:monotone-sofa-connected}.
-Also, let $P = H \cap R_\beta(V)$ be the parallelogram (or strip for $\beta = \pi / 2$). 
-Rewriting $L_t$ as $Q^+_t \setminus Q^-_t$ where $Q^+_t = g_t(Q^+)$ and $Q^-_t = g_t(Q^-)$, we have the following equality. 
+Call a sofa \emph{monotone} if it is the monotonization $(M(S), f_t)$ of any sofa $(S, f_t)$ with rotation angle $\beta \in [0, \pi / 2]$ and monotone movement $f_t$.
 \end{definition}
+We will show that monotonization is a \emph{projection} from all sofas with monotone movement to monotone sofas.
+That is, monotonization not only maps any sofa to a monotone sofa, but also fixes any monotone sofa.
+In other words, $M(M(S)) = M(S)$.
+To do that, we need to first analyze the geometry of monotone sofas.
+
+Let $(S, f_t)$ be any sofa with monotone movement and rotation angle $\beta \in [0, \pi / 2]$.
+We use Definition \ref{def:polygons} in the following discussion.
+Rewriting $L_t$ as $Q^+_t \setminus Q^-_t$ where $Q^+_t = g_t(Q^+)$ and $Q^-_t = g_t(Q^-)$, we have the following equality on the monotone sofa $M(S)$. 
 \begin{align}
-\label{eq:monotone-sofa-structure}
 M(S) & = H \cap R_\beta(V) \cap \bigcap_{0 \leq t \leq \beta} L_t \\
-& = \left(P \cap \bigcap_{0 \leq t \leq \beta} Q^+_t \right) \setminus \bigcup_{0 \leq t \leq \beta} \left(P \cap Q^-_t \right) 
+\label{eq:monotone-sofa-structure}
+& = \left(P \cap \bigcap_{0 \leq t \leq \beta} Q^+_t \right) \setminus \bigcup_{0 \leq t \leq \beta} \left(F \cap Q^-_t \right) 
 \end{align}
 \begin{definition}
 \label{def:cap-niche}
-Let $(S, f_t)$ be any sofa with monotone movement and rotation angle in $[0, \pi / 2]$. Define the \emph{cap} of $S$ as
+Let $(S, f_t)$ be any sofa with monotone movement and rotation angle $\beta \in [0, \pi / 2]$. Define the \emph{cap} of $S$ as
 $$\cC(S) = P \cap \bigcap_{0 \leq t \leq \beta} Q^+_t$$
 and the \emph{niche} of $S$ as
-$$\cN(S) = \bigcup_{0 \leq t \leq \beta} \left(P \cap Q^-_t \right).$$
-For each $t \in [0, \beta]$, let $T_t = P \cap Q^-_t$ be the \emph{wedge} of $S$ at angle $t$.
-Consequently, $M(S) = \cC(S) \setminus \cN(S)$ and $\cN(S) = \cup_{0 \leq t \leq \beta} T_t$.
-
-\textcolor{blue}{TODO: this is not obvious. We need to develop sufficient language on convex sets and its boundary.} 
-Let the \emph{boundary $\partial \cC(S)$ of the cap $\cC(S)$} be the set of all points $x \in \cC(S)$ such that there is some $t \in [0, \beta]$ so that either $x \cdot u_t = p(t)$ or $x \cdot v_t = q(t)$.
-It turns out that $\partial \cC(S)$ is a closed convex curve that looks like \textcolor{blue}{TODO: add some figure and description}
+$$\cN(S) = \bigcup_{0 \leq t \leq \beta} \left(F \cap Q^-_t \right).$$
+For each $t \in [0, \beta]$, let $T_t = F \cap Q^-_t$ be the \emph{wedge} of $S$ at angle $t$.
+Consequently, $M(S) = \cC(S) \setminus \cN(S)$ and $\cN(S) = \cup_{0 \leq t \leq \beta} T_t$ by Equation \ref{eq:monotone-sofa-structure}.
 \end{definition}
+
+\begin{definition}
+\label{def:boundary}
+For each sofa $S$ with a monotone movement and a rotation angle $\beta \in [0, \pi / 2]$, let $I_\beta = [0, \beta] \cup [\pi / 2, \pi / 2 + \beta]$ be the set of \emph{fundamental angles} of $S$.
+
+Let the \emph{boundary} $\partial \cC(S)$ of the cap $\cC(S)$ be the set of all points $x \in \cC(S)$ such that there is some $t \in [0, \beta]$ so that either $x \cdot u_t = p(t)$ or $x \cdot v_t = q(t)$.
+\end{definition}
+
+The cap of a sofa is a convex set.  
+\begin{lemma}
+
+\end{lemma}
+
+\begin{theorem}
+For any sofa 
+\end{theorem}
+
+\textcolor{blue}{TODO: this is not obvious. We need to develop sufficient language on convex sets and its boundary.}
+It turns out that $\partial \cC(S)$ is a closed convex curve that looks like \textcolor{blue}{TODO: add some figure and description}
+
+The `interesting set' for each $\beta \in [0, \pi/2]$ is 
 
 \begin{theorem}
 \label{thm:monotone-sofa-structure}

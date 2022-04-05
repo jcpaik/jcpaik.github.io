@@ -32,12 +32,12 @@ First, we use the following notations for translation and rotation maps.
 \begin{definition}
 For any vector $v \in \RR^2$, let $T_v$ be the translation map $T_v(w) = w + v$ of the plane by $v$.
 For any $v \in \RR^2$ and $C \subset \RR^2$, write $T_v(C)$ as $C + v$.
-For any angle $\theta \in \RR / 2 \pi \ZZ$, let $R_\theta$ be the rotation map of $\RR^2$ along the center of the plane with a counterclockwise angle $\theta$.
+For any angle $\theta \in \RR / 2 \pi \ZZ$, let $\Rot_\theta$ be the rotation map of $\RR^2$ along the center of the plane with a counterclockwise angle $\theta$.
 \end{definition}
 We adopt the following equivalent definition of an orientation-preserving isometry of $\RR^2$. For the proof of equivalence to a usual definition, see \textcolor{blue}{[Insert a suitable geometry book here]}.
 \begin{definition}
 A map $f \colon \RR^2 \ra \RR^2$ is called a orientation-preserving isometry of $\RR^2$ if
-it is the composition $T_v \circ R_\theta$ of a rotation followed by a translation.
+it is the composition $T_v \circ \Rot_\theta$ of a rotation followed by a translation.
 \end{definition}
 The following theorem allows us to identify the space $\cT$ of all orientation-preserving isometries of $\RR^2$ with $\RR^2 \times \RR / 2 \pi \ZZ$.
 \begin{theorem}
@@ -151,6 +151,12 @@ So for example, $a(t) = g_t(a)$ and $\xx(t) = g_t(\xx)$.
 Note that this notation is ambiguous if there are more than one sofa $(S, f_t)$ being mentioned. 
 We will put much emphasis on the inner corner $\xx(t)$ as a curve parametrized by $t$ later.
 
+\subsection{Planar Convex Bodies}
+
+In this section, we develop the theory of planar convex bodies. 
+We will build the space of 
+
+Notion of pointed corners
 
 \subsection{History}
 
