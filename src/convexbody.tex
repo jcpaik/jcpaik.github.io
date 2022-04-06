@@ -12,7 +12,7 @@ $\lambda x + (1 - \lambda) y$ with arbitrary $0 \leq \lambda \leq 1$ on the line
 A set $C \subseteq \RR^2$ is a \emph{convex body} if it is a nonempty convex set which is compact.
 \end{definition}
 While convex polygons and convex regions of smooth (or piecewise $C^1$) boundaries are examples, the definition also allows the boundary to behave more wildly as well. 
-A main goal of this section is to analyze all possibilities including such cases inclusively.
+A main goal of this section is to analyze such cases inclusively.
 
 Remark that for a convex body $C$, $p_C \colon \RR / 2 \pi \ZZ \ra \RR$ is the support function of $C$.
 We can define the tangent lines of $C$ using this function.
@@ -25,29 +25,60 @@ By the convexity and compactness of $C$, the intersection $e_C(t) = C \cap l_C(t
 Let the point $v_C^+(t)$ be the endpoint of $e_C(t)$ located at the farthest in the direction of $u_{t + \pi / 2}$.
 Likewise, let the point $v_C^-(t)$ be the endpoint of $e_C(t)$ located at the farthest in the direction of $u_{t - \pi / 2}$.
 \end{definition}
+Note that if $C$ is a convex polygon, the points $v_C^+(t), v_C^-(t)$ for all $t \in \RR / 2 \pi \ZZ$ will describe the vertices of the polygon. 
 
 \begin{definition}
 For any $t_1, t_2 \in S^1$ such that $t_2 = t_1 + \theta$ for nonzero $\theta \in (-\pi, \pi)$,
 the lines $l_C(t_1)$ and $l_C(t_2)$ are not parallel so they intersect.
 Let $v_C(t_1, t_2)$ be the intersection point of two lines.
 \end{definition}
-
-Note that if $C$ is a convex polygon, the points $v_C^+(t), v_C^-(t)$ for all $t \in \RR / 2 \pi \ZZ$ will describe the vertices of the polygon. 
 \begin{proposition}
-For any $t_1, t_2 \in S^1$ such that $t_2 \neq t_1, t_1 + \pi$, 
+For any $t_1, t_2 \in S^1$ such that $t_2 = t_1 + \theta$ for nonzero $\theta \in (-\pi, \pi)$, we have 
+$$
+v_C(t_1, t_2) = p_C(t_1) u_{t_1} + \frac{p_C(t_2) - p_C(t_1) \cos \theta}{\sin \theta} v_{t_1}.
+$$
 \end{proposition}
+\begin{proof}
+Because the point $v = v_C(t_1, t_2)$ is on the line $l_C(t_1)$,
+we have $v = p_C(t_1) u_{t_1} + \alpha v_{t_1}$
+for some constant $\alpha \in \RR$.
+We use $v \cdot u_2 = p_C(t_2)$ to derive $\alpha$.
+\begin{align*}
+p_C(t_2) &= v \cdot u_2 \\
+&= p_C(t_1) (u_{t_1} \cdot u_{t_2}) + \alpha (v_{t_1} \cdot u_{t_2}) \\
+&= p_C(t_1) \cos \theta + \alpha \sin \theta
+\end{align*}
+This gives $\alpha = p_C(t_2) \csc \theta - p_C(t_1) \cot \theta$ and completes the proof.
+\end{proof}
+
+\begin{proposition}
+For any point $w \in \RR^2$ outside $C$, $w$ is equal to $v_C(t_1, t_2)$	
+\end{proposition}
+
 
 \begin{definition}
 For any function $f \colon \RR \ra \RR$, denote its left derivative as $\partial_+f$ and right derivative as $\partial_- f$.
 \end{definition}
 \begin{proposition}
 For any convex body $C$ and angle $t \in \RR / 2 \pi \ZZ$,
-the following equalities holds.
-$$v_C^+(t) = p_C(t)u_t + \partial_+p_C(t)u_{t+\pi/2}$$
-$$v_C^-(t) = p_C(t)u_t + \partial_-p_C(t)u_{t+\pi/2}.$$
+the following equalities hold.
+$$v_C^+(t) = \lim_{t' \ra t^+} v_C(t, t') = p_C(t)u_t + \partial_+p_C(t)v_t$$
+$$v_C^-(t) = \lim_{t' \ra t^-} v_C(t, t') = p_C(t)u_t + \partial_-p_C(t)v_t.$$
+
+Moreover, 
+for any $t \in S^1$ and $0 < \theta < \pi$,
+if we define the values
+$$l_C^+(t, t+\theta) = \frac{p_C(t_2) - p_C(t_1) \cos \theta}{\sin \theta} - \partial_+p_C(t)$$
+and
+$$l_C^-(t, t-\theta) = -\frac{p_C(t_2) - p_C(t_1) \cos \theta}{\sin \theta} + \partial_-p_C(t)$$
+then $l_C^+(t, t+\theta)$ is the distance between $v^+_C(t)$ and $v_C(t, t+\theta)$,
+and $l_C^-(t, t-\theta)$ is the distance
+between $v^-_C(t)$ and $v_C(t, t-\theta)$,
+and the values $l_C^+(t, t+\theta)$ and 
+$l_C^-(t, t-\theta)$ are 
 \end{proposition}
 \begin{proof}
-\textcolor{red}{TODO: fill out the proof.}
+We first observe that 
 \end{proof}
 
 Most tangent lines touch $C$ at a single vertex.
@@ -101,14 +132,43 @@ F_C(x) = \int_0^x p_C(t)dt + \partial^+_t p_C(x) - \partial^-_t p_C(0)
 $$
 so that in particular, 
 $$
-F_C(b) - F(a) = \int_a^b p_C(t)dt + \partial^+_t p_C(b) - \partial^-_t p_C(a)
+F_C(b) - F_C(a) = \int_a^b p_C(t)dt + \partial^+_t p_C(b) - \partial^-_t p_C(a)
 $$
 follows for arbitrary $a, b \in \RR$.
 \end{definition}
 
 \begin{theorem}
 For any convex body $C$, $F_C$ is monotonically increasing.
+For any $a \in \RR$ and $b \in \RR$ so that $0 < b - a < \pi$,
+we have $F_C(b) - F_C(a) \geq 0$.
 \end{theorem}
 \begin{proof}
+Key ideas: 
+First, the value is invariant under
+translations of $C$.
+That is, adding or subtracting multiples of $\cos t$ and $\sin t$ does not affect the value of $F_C(x)$.
 
+Second, now we can set origin to any point that we want.
+So we move $C$ and assume that $v_C(a, b)$ is the origin.
+A consequence is that $p_C(t) \leq 0$ for all $t \in [a, b]$.
+Another consequence is that $l_C^+(a) = \partial^+_tp_C(b)$, or whatever, that it will give us a positive number as well. This concludes the proof.  
 \end{proof}
+
+\begin{theorem}
+$F_C$ is right-continuous.	
+\end{theorem}
+\begin{proof}
+\url{https://math.stackexchange.com/questions/1757987/how-to-prove-that-the-right-derivative-of-a-convex-function-is-right-continuous}	
+\end{proof}
+
+Now $F_C$ gives rise to a measure $\beta_C$ (standard real analysis result -- need to search references).
+
+Goal: NOT to show that $\beta_C$ measures boundary perimeter directly.
+We do not use that.
+Instead, observe that it works linearly,
+and that for the area we do have the formula that is expected.
+
+Trapezodial region, bounded by (i) the segment connecting origin and $v_C^+(a)$, (ii) the segment connecting origin and $v_C^+(b)$, and $l_C(a)$, and $l_C(b)$.
+The area of this thing will have a closed form.
+
+
