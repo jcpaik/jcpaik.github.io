@@ -90,7 +90,7 @@ class View {
             if (i > 0) {
                 s += " / "
             }
-            let r = this.game.deck[i].map(replaceCardOperator).join(", ")
+            let r = this.game.deck[i].map(replaceCardOperator).join(" ")
             if (i == this.game.round_idx) {
                 r = "<b>" + r + "</b>"
             }
