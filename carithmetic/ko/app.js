@@ -11,6 +11,8 @@ function isNumber(value) {
     return (typeof value === 'number');
 }
 
+// For in-game logic, always use characters in "+-*/=()" 
+// (so e.g. no multiplication / division Unicode symbols) 
 function isOperator(value) {
     return (typeof value === 'string') && 
         (value.length == 1) &&
@@ -19,19 +21,20 @@ function isOperator(value) {
 
 const Running = Symbol("Game is running");
 const Won = Symbol("Game is finished, and user won");
-const Lost = Symbol("Game is finished, and user is lost");
+const Lost = Symbol("Game is finished, and user lost");
 
 class Game {
-    // Returns: { equation: "-5 x 4"}
     constructor(deck, goal) {
         this.deck = deck;
         this.goal = goal;
         this.round_num = deck.length;
         this.round_idx = 0;
         this.status = Running;
+        // Pure expression the user got
         this.expression = "";
     }
 
+    // User expression with equality information
     get equation() {
         if (this.expression === "") {
             return "";
@@ -47,12 +50,7 @@ class Game {
         }
     }
 
-    get fullDescription() {
-        return {
-            equation: this.equation,
-        };
-    }
-
+    // All cards on table
     get field() {
         if (this.status === Running) {
             return this.deck[this.round_idx];
@@ -70,6 +68,7 @@ class Game {
         }
     }
 
+    // Choose i'th card from the field
     chooseCard(card_idx) {
         if (this.status !== Running) {
             return;
@@ -83,9 +82,11 @@ class Game {
         if (card === "=") {
             this._onGameEnd();
             return;
+        } else if (card == "()") {
+            this.expression = "(" + this.expression + ")";
+        } else { // All arithmetic operators / numbers
+            this.expression += card;
         }
-
-        this.expression += card;
         this.round_idx++;
     }
 }

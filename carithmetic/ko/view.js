@@ -1,17 +1,17 @@
 'use strict';
 
 function replaceOperator(str) {
-    let nstr = String(str).replace('*', '×').replace('/', '÷');
+    let nstr = String(str).replaceAll('*', '×').replaceAll('/', '÷');
     return nstr;
 }
 
 function replaceCardOperator(str) {
-    let nstr = String(str).replace('*', '×').replace('/', '÷');
-    // TODO: take care of this ad-hoc removal of brackets
-    if (nstr.length > 0 && nstr[0] == '(') {
+    let nstr = String(str).replaceAll('*', '×').replaceAll('/', '÷');
+    // TODO: fix this ad-hoc removal of brackets
+    if (nstr.length > 2 && nstr[0] == '(') {
         nstr = nstr.substring(1, nstr.length - 1);
     }
-    return nstr.replace('=', '✔️');
+    return nstr.replaceAll('=', '✔️');
 }
 
 class View {
@@ -19,6 +19,7 @@ class View {
         this.title = document.getElementById('title');
         this.objective = document.getElementById('objective');
         this.cards = document.getElementById('cards');
+        this.deck = document.getElementById('deck');
         this.equation = document.getElementById('equation');
 
         this.onWon = null;
@@ -29,20 +30,28 @@ class View {
         this.game = new Game(level.deck, level.goal);
         this.title.innerHTML = level.title;
         this.objective.innerHTML = level.goal.description;
+        this.frozen = false; // freeze/unfreeze clickable buttons
         this.updateStep();
     }
 
+    freeze() {
+        this.frozen = true;
+    }
+
+    unfreeze() {
+        this.frozen = false;
+    }
+
     updateStep() {
+        this.drawDeck();
         if (this.game.status === Running) {
             this.drawCards(this.game.field);
             this.equation.innerHTML = replaceOperator(this.game.equation);
         } else if (this.game.status === Won) {
-            this.equation.innerHTML = '이겼습니다!';
             if (this.onWon !== null) {
                 this.onWon();
             }
         } else if (this.game.status === Lost) {
-            this.equation.innerHTML = '다시!';
             if (this.onLost !== null) {
                 this.onLost();
             }
@@ -50,6 +59,9 @@ class View {
     }
 
     selectCard(i) {
+        if (this.frozen)
+            return;
+
         this.game.chooseCard(i);
         this.updateStep();
     }
@@ -70,7 +82,26 @@ class View {
             }
         });
     }
+
+    drawDeck() {
+        // TODO: Is it really the duty of view
+        let s = "";
+        for (let i = 0; i < this.game.round_num; i++) {
+            if (i > 0) {
+                s += " / "
+            }
+            let r = this.game.deck[i].map(replaceCardOperator).join(", ")
+            if (i == this.game.round_idx) {
+                r = "<b>" + r + "</b>"
+            }
+            s += r
+        }
+
+        this.deck.innerHTML = s;
+    }
 }
+
+// TODO: move to controller
 
 const levels = [
     {
@@ -113,6 +144,38 @@ const levels = [
             check: x => x > 45
         },
     },
+    {
+        title: "6. 사칙연산",
+        deck: [[5], ['/', '*', '+', '-'], ['(-4)'], ['+', '-'], [7], ['=']],
+        goal: {
+            description: "2를 만드세요",
+            check: x => x === 2
+        },
+    },
+    {
+        title: "7. 두뇌 풀 가동",
+        deck: [[4], ['+'], [2], ['*'], [4, 2], ['=']],
+        goal: {
+            description: "12를 만드세요",
+            check: x => x === 12
+        },
+    },
+    {
+        title: "8. 괄호",
+        deck: [[4], ['+'], [2], ['()'], ['*'], [4, 2], ['=']],
+        goal: {
+            description: "12를 만드세요",
+            check: x => x === 12
+        },
+    },
+    {
+        title: "9. 신뢰의 도약",
+        deck: [[3], ['+', '-', '*', '/'], [8], ['+', '-', '*'], [3], ['()'], ['+', '-', '*', '/'], [8], ['=']],
+        goal: {
+            description: "27을 만드세요",
+            check: x => x === 27
+        },
+    },
 ];
 
 let level = 0;
@@ -121,6 +184,8 @@ view.loadLevel(levels[level]);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function onWon() {
+    view.freeze();
+    this.equation.innerHTML = '이겼습니다!';
     await sleep(1200);
     if (level < levels.length - 1) {
         level++;
@@ -130,7 +195,11 @@ async function onWon() {
     }
 }
 async function onLost() {
-    await sleep(1200);
+    view.freeze();
+    for (let i = 4; i > 0; i--) {
+        this.equation.innerHTML = '다시! ' + i + "...";
+        await sleep(1000);
+    }
     view.loadLevel(levels[level]);
 }
 view.onWon = onWon;
