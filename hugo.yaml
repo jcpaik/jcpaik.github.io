@@ -12,9 +12,6 @@ menu:
     - name: Home
       url: ""
       weight: 1
-    - name: About
-      url: "about/"
-      weight: 2
 
 params:
   description: "Built using [Hugo](https://github.com/gohugoio/hugo) with [XMin](https://github.com/yihui/hugo-xmin) theme."
