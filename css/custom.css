@@ -2,6 +2,12 @@ body {
   background-color: #f9f9f9;
 }
 
+blockquote {
+  padding: 0px 1em 0px;
+  margin-inline-start: 20px;
+  margin-inline-end: 20px;
+}
+
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   body {
