@@ -10,10 +10,21 @@ post = "/post/:year/:month/:day/:slug/"
 [menu]
 [[menu.main]]
 name = "Home"
-url = ""
+url = "/"
 weight = 1
+[[menu.main]]
+name = "Curriculum Viate"
+url = "/CV.pdf"
+weight = 2
+# [[menu.main]]
+# name = "Moving Sofa Problem"
+# url = "/sofa/"
+# weight = 3
+# [[menu.main]]
+# name = "Proof Formalization"
+# url = "/formal/"
+# weight = 4
 
 [params]
 description = "Built using [Hugo](https://github.com/gohugoio/hugo) with [XMin](https://github.com/yihui/hugo-xmin) theme."
 footer = "&copy; [Jineon Baek](mailto:jineon@umich.edu) 2023 -- {Year} | [Github](https://github.com/jcpaik)"
-customCSS = ["css/dark.css"]
