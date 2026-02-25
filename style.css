@@ -21,6 +21,14 @@ h1 {
   font-weight: normal;
 }
 
+h1 .name {
+  font-weight: bold;
+}
+
+h1 .title-rest {
+  color: #888;
+}
+
 p {
   margin: 1em 0;
 }
@@ -35,7 +43,7 @@ a:hover {
 }
 
 hr {
-  margin: 40px 0;
+  margin: 1.5em 0;
   border: none;
   border-top: 1px solid #ccc;
 }
@@ -46,7 +54,7 @@ nav {
 }
 
 nav a {
-  margin-right: 24px;
+  margin: 0 1em;
   text-decoration: none;
 }
 
