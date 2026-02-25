@@ -49,13 +49,19 @@ hr {
 }
 
 nav {
-  font-size: 16px;
+  font-size: 18px;
   text-align: center;
 }
 
 nav a {
-  margin: 0 1em;
+  margin: 0 0.7em;
   text-decoration: none;
+}
+
+nav .sep {
+  color: #ccc;
+  font-size: 0.4em;
+  vertical-align: middle;
 }
 
 nav a:hover {
