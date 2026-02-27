@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moving Sofa Optimizer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+      background: #0a0d11;
+      color: #f2f6ff;
+    }
+
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #view {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: radial-gradient(circle at 10% 10%, #172033 0%, #0a0d11 55%);
+    }
+
+    #hud {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 10px 12px;
+      background: rgba(5, 9, 16, 0.72);
+      border: 1px solid rgba(173, 191, 229, 0.25);
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+      min-width: 260px;
+      backdrop-filter: blur(4px);
+    }
+
+    #hud .row {
+      white-space: nowrap;
+    }
+
+    #controls {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #sliders {
+      margin-top: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .slider-row {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .slider-row input[type="range"] {
+      width: 170px;
+      margin: 0;
+    }
+
+    .drag-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .drag-num {
+      padding: 1px 6px;
+      border-radius: 5px;
+      border: 1px solid rgba(173, 191, 229, 0.45);
+      background: rgba(24, 36, 61, 0.75);
+      cursor: ns-resize;
+      user-select: none;
+      touch-action: none;
+    }
+
+    button {
+      border: 1px solid rgba(173, 191, 229, 0.5);
+      background: #18243d;
+      color: #f2f6ff;
+      border-radius: 6px;
+      padding: 5px 9px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #22345b;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="view"></canvas>
+    <div id="hud">
+      <div class="row" id="status"></div>
+      <div class="row" id="area"></div>
+      <div class="row" id="step"></div>
+      <div class="row" id="fps"></div>
+      <div class="row" id="cfg"></div>
+      <div id="sliders">
+        <label class="slider-row" for="n-slider">
+          <span>n</span>
+          <input id="n-slider" type="range" min="4" max="40" step="1" value="18">
+          <span id="n-value">18</span>
+        </label>
+        <label class="slider-row" for="alpha-slider">
+          <span>alpha</span>
+          <input id="alpha-slider" type="range" min="0.0010" max="0.0100" step="0.0001" value="0.0020">
+          <span id="alpha-value">0.0020</span>
+        </label>
+        <div class="drag-row">
+          <span>alpha bounds</span>
+          <span id="alpha-min-bound" class="drag-num" title="Drag right/up: ×10, left/down: ÷10">0.0010</span>
+          <span>to</span>
+          <span id="alpha-max-bound" class="drag-num" title="Drag right/up: ×10, left/down: ÷10">0.0100</span>
+        </div>
+      </div>
+      <div id="controls">
+        <button id="toggle">Pause</button>
+        <button id="reset">Reset</button>
+      </div>
+      <div class="row">Space: toggle</div>
+      <div class="row">Drag canvas: pan | Wheel: zoom</div>
+    </div>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
