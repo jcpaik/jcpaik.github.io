@@ -334,6 +334,22 @@ console.log('--- optimizer ---');
   assert(a10000 > 2.2195, `optimizer area should exceed 2.2195, got ${a10000.toFixed(6)}`);
   assert(a10000 < 2.30, `optimizer area should be only slightly above 2.2195, got ${a10000.toFixed(6)}`);
 }
+{
+  // getState() should be read-only from callers.
+  const { createOptimizer } = await import('./optimizer.js');
+  const opt = createOptimizer(6, 0.002);
+  const state0 = opt.getState();
+  const pBefore = state0.hallways[0].p;
+  let threw = false;
+  try {
+    state0.hallways[0].p = 12345;
+  } catch {
+    threw = true;
+  }
+  const state1 = opt.getState();
+  near(state1.hallways[0].p, pBefore, 'getState hallway snapshot is immutable');
+  assert(threw, 'mutating hallway snapshot throws');
+}
 
 // ─── summary ───
 console.log(`\n=== ${pass} passed, ${fail} failed ===`);

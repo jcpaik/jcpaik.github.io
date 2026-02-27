@@ -1,14 +1,13 @@
 // Edge ownership — determine which constraint boundary each edge of S belongs to
 //
-// For each edge, test the midpoint against all constraint boundaries.
-// Uses the owner label propagated through clipping/notching.
+// For each edge, test whether both endpoints lie on each boundary.
+// Falls back to owner labels propagated through clipping/notching.
 
 import { toLocal } from './hallway.js';
-
-const EPS_OWNER = 1e-6;
+import { CLASSIFY_EPS } from './constants.js';
 
 function onLevel(aVal, bVal, target = 0) {
-  return Math.abs(aVal - target) < EPS_OWNER && Math.abs(bVal - target) < EPS_OWNER;
+  return Math.abs(aVal - target) <= CLASSIFY_EPS && Math.abs(bVal - target) <= CLASSIFY_EPS;
 }
 
 function parseOwnerLabel(label) {

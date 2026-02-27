@@ -6,8 +6,7 @@
 
 import { edgeLength, outwardNormal } from './polygon.js';
 import { classifyAllEdges } from './ownership.js';
-
-const EPS_EDGE = 1e-9;
+import { GEOM_EPS } from './constants.js';
 
 export function computeGradients(poly, hallways) {
   const edges = classifyAllEdges(poly, hallways);
@@ -23,7 +22,7 @@ export function computeGradients(poly, hallways) {
     if (!forces.has(edge.hallwayIndex)) continue;
 
     const len = edgeLength(edge.a, edge.b);
-    if (len < EPS_EDGE) continue;
+    if (len < GEOM_EPS) continue;
 
     const n = outwardNormal(edge.a, edge.b);
     const f = forces.get(edge.hallwayIndex);

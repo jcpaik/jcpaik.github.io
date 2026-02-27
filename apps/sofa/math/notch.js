@@ -6,15 +6,14 @@
 
 import { toLocal } from './hallway.js';
 import { vec, lerp } from './vec2.js';
-
-const EPS = 1e-9;
+import { GEOM_EPS } from './constants.js';
 
 // Compute interval {t ∈ [0,1] : f(t) > 0} where f(t) = f0 + (f1-f0)*t is linear
 function positiveInterval(f0, f1) {
-  if (f0 > EPS && f1 > EPS) return [0, 1];
-  if (f0 <= EPS && f1 <= EPS) return null;
+  if (f0 > GEOM_EPS && f1 > GEOM_EPS) return [0, 1];
+  if (f0 <= GEOM_EPS && f1 <= GEOM_EPS) return null;
   const tCross = f0 / (f0 - f1);
-  if (f0 > EPS) {
+  if (f0 > GEOM_EPS) {
     return [0, tCross];
   } else {
     return [tCross, 1];
@@ -26,7 +25,7 @@ function intersectIntervals(a, b) {
   if (!a || !b) return null;
   const lo = Math.max(a[0], b[0]);
   const hi = Math.min(a[1], b[1]);
-  if (lo >= hi - EPS) return null;
+  if (lo >= hi - GEOM_EPS) return null;
   return [lo, hi];
 }
 
@@ -53,8 +52,8 @@ export function notch(poly, hw) {
     const b = poly[(idx + 1) % n];
     const locA = toLocal(hw, a.x, a.y);
     const locB = toLocal(hw, b.x, b.y);
-    const aIn = locA.u < -EPS && locA.v < -EPS;
-    const bIn = locB.u < -EPS && locB.v < -EPS;
+    const aIn = locA.u < -GEOM_EPS && locA.v < -GEOM_EPS;
+    const bIn = locB.u < -GEOM_EPS && locB.v < -GEOM_EPS;
     if (!aIn && bIn) {
       startIdx = idx;
       break;
@@ -70,8 +69,8 @@ export function notch(poly, hw) {
     const locB = toLocal(hw, b.x, b.y);
 
     // Classify endpoints: strictly inside the forbidden quadrant?
-    const aIn = locA.u < -EPS && locA.v < -EPS;
-    const bIn = locB.u < -EPS && locB.v < -EPS;
+    const aIn = locA.u < -GEOM_EPS && locA.v < -GEOM_EPS;
+    const bIn = locB.u < -GEOM_EPS && locB.v < -GEOM_EPS;
 
     // Reuse positiveInterval by applying it to (-u) and (-v).
     const iu = positiveInterval(-locA.u, -locB.u);
@@ -107,8 +106,8 @@ export function notch(poly, hw) {
         entryWall = null;
       }
 
-      const entryPt = tLo > EPS ? lerp(a, b, tLo) : a;
-      const exitPt = tHi < 1 - EPS ? lerp(a, b, tHi) : b;
+      const entryPt = tLo > GEOM_EPS ? lerp(a, b, tLo) : a;
+      const exitPt = tHi < 1 - GEOM_EPS ? lerp(a, b, tHi) : b;
       const eWall = wallAt(hw, entryPt.x, entryPt.y);
       const xWall = wallAt(hw, exitPt.x, exitPt.y);
 
@@ -117,7 +116,7 @@ export function notch(poly, hw) {
         out.push({ ...corner, owner: `L${hw.i}_corner` });
       }
       out.push({ ...exitPt, owner: `L${hw.i}_${xWall}0` });
-      if (tHi < 1 - EPS) {
+      if (tHi < 1 - GEOM_EPS) {
         out.push(b);
       }
       continue;
@@ -134,7 +133,7 @@ export function notch(poly, hw) {
         entryWall = null;
       }
 
-      const entryPt = tLo > EPS ? lerp(a, b, tLo) : a;
+      const entryPt = tLo > GEOM_EPS ? lerp(a, b, tLo) : a;
       const eWall = wallAt(hw, entryPt.x, entryPt.y);
       out.push({ ...entryPt, owner: `L${hw.i}_${eWall}0` });
       entryWall = eWall;
@@ -143,14 +142,14 @@ export function notch(poly, hw) {
 
     if (aIn && !bIn) {
       // A inside forbidden, B outside → emit corner + exit clip + B
-      const exitPt = tHi < 1 - EPS ? lerp(a, b, tHi) : b;
+      const exitPt = tHi < 1 - GEOM_EPS ? lerp(a, b, tHi) : b;
       const xWall = wallAt(hw, exitPt.x, exitPt.y);
 
       if (entryWall !== null && entryWall !== xWall) {
         out.push({ ...corner, owner: `L${hw.i}_corner` });
       }
       out.push({ ...exitPt, owner: `L${hw.i}_${xWall}0` });
-      if (tHi < 1 - EPS) {
+      if (tHi < 1 - GEOM_EPS) {
         out.push(b);
       }
       entryWall = null;

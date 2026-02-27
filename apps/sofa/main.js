@@ -286,11 +286,9 @@ toggleBtn.addEventListener('click', toggleRun);
 
 resetBtn.addEventListener('click', () => {
   optimizer.reset(currentN, currentAlpha);
-  const s0 = optimizer.getState();
-  if (!s0.running) optimizer.toggle();
-  const s1 = optimizer.getState();
-  drawFrame(s1);
-  updateHud(s1);
+  const state = optimizer.getState();
+  drawFrame(state);
+  updateHud(state);
 });
 
 nSlider.addEventListener('input', (e) => applyN(e.target.value));

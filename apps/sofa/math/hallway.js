@@ -47,14 +47,3 @@ export function outerWallHalfPlanes(hw) {
     halfPlane(-s, c, 1 - s * p + c * q, `L${i}_v1`),
   ];
 }
-
-// Inner wall half-planes (for notch — boundaries of the forbidden quadrant)
-// u_i = 0: cos(θ)·x + sin(θ)·y = cos(θ)·p + sin(θ)·q
-// v_i = 0: -sin(θ)·x + cos(θ)·y = -sin(θ)·p + cos(θ)·q
-export function innerWallHalfPlanes(hw) {
-  const { c, s, p, q, i } = hw;
-  return {
-    uWall: halfPlane(c, s, c * p + s * q, `L${i}_u0`),
-    vWall: halfPlane(-s, c, -s * p + c * q, `L${i}_v0`),
-  };
-}

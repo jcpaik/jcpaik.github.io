@@ -6,9 +6,36 @@ import { computeSofa } from './sofa.js';
 import { computeGradients } from './gradient.js';
 import { area } from './polygon.js';
 
-export function createOptimizer(n = 18, alpha = 0.001) {
-  let hallways = createInitialHallways(n);
-  let poly = computeSofa(hallways);
+function freezeHallway(hw) {
+  return Object.freeze({
+    i: hw.i,
+    theta: hw.theta,
+    c: hw.c,
+    s: hw.s,
+    p: hw.p,
+    q: hw.q,
+  });
+}
+
+function freezeHallways(hallways) {
+  return Object.freeze(hallways.map(freezeHallway));
+}
+
+function freezePoint(p) {
+  return Object.freeze({
+    x: p.x,
+    y: p.y,
+    owner: p.owner ?? null,
+  });
+}
+
+function freezePoly(poly) {
+  return Object.freeze(poly.map(freezePoint));
+}
+
+export function createOptimizer(n = 18, alpha = 0.002) {
+  let hallways = freezeHallways(createInitialHallways(n));
+  let poly = freezePoly(computeSofa(hallways));
   let currentArea = area(poly);
   let stepCount = 0;
   let running = false;
@@ -16,13 +43,13 @@ export function createOptimizer(n = 18, alpha = 0.001) {
   function step() {
     const gradients = computeGradients(poly, hallways);
 
-    hallways = hallways.map(hw => {
+    hallways = freezeHallways(hallways.map(hw => {
       const f = gradients.get(hw.i);
       if (!f) return hw;
       return makeHallway(hw.i, n, hw.p + alpha * f.fx, hw.q + alpha * f.fy);
-    });
+    }));
 
-    poly = computeSofa(hallways);
+    poly = freezePoly(computeSofa(hallways));
     currentArea = area(poly);
     stepCount++;
   }
@@ -32,7 +59,7 @@ export function createOptimizer(n = 18, alpha = 0.001) {
   }
 
   function getState() {
-    return {
+    return Object.freeze({
       poly,
       hallways,
       area: currentArea,
@@ -40,21 +67,23 @@ export function createOptimizer(n = 18, alpha = 0.001) {
       running,
       n,
       alpha,
-    };
+    });
   }
 
   function setAlpha(newAlpha) {
-    alpha = newAlpha;
+    const value = Number(newAlpha);
+    if (!Number.isFinite(value) || value <= 0) return;
+    alpha = value;
   }
 
   function reset(newN, newAlpha) {
     n = newN ?? n;
-    alpha = newAlpha ?? alpha;
-    hallways = createInitialHallways(n);
-    poly = computeSofa(hallways);
+    if (newAlpha !== undefined) setAlpha(newAlpha);
+    hallways = freezeHallways(createInitialHallways(n));
+    poly = freezePoly(computeSofa(hallways));
     currentArea = area(poly);
     stepCount = 0;
   }
 
-  return { step, toggle, getState, setAlpha, reset, get running() { return running; } };
+  return { step, toggle, getState, setAlpha, reset };
 }

@@ -4,8 +4,7 @@
 // owner tracks which constraint boundary created this vertex (null for original vertices)
 
 import { signedDist } from './halfplane.js';
-
-const EPS = 1e-9;
+import { GEOM_EPS } from './constants.js';
 
 function intersect(a, b, hp) {
   const da = signedDist(hp, a);
@@ -25,8 +24,8 @@ export function clipByHalfPlane(poly, hp) {
   for (let i = 0; i < poly.length; i++) {
     const a = poly[i];
     const b = poly[(i + 1) % poly.length];
-    const aIn = signedDist(hp, a) <= EPS;
-    const bIn = signedDist(hp, b) <= EPS;
+    const aIn = signedDist(hp, a) <= GEOM_EPS;
+    const bIn = signedDist(hp, b) <= GEOM_EPS;
     if (aIn && bIn) {
       out.push(b);
     } else if (aIn && !bIn) {
