@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curve Controller</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; width: 100%; height: 100%; overflow: hidden;
+      font-family: Menlo, Monaco, Consolas, monospace;
+      background: #0a0d11; color: #f2f6ff;
+    }
+    canvas {
+      width: 100%; height: 100%; display: block;
+      background: radial-gradient(circle at 10% 10%, #172033 0%, #0a0d11 55%);
+    }
+    #hud {
+      position: absolute; top: 14px; left: 14px;
+      padding: 10px 12px;
+      background: rgba(5,9,16,0.72);
+      border: 1px solid rgba(173,191,229,0.25);
+      border-radius: 8px; font-size: 13px; line-height: 1.6;
+      backdrop-filter: blur(4px); min-width: 220px;
+    }
+    #hud .row { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <canvas id="view"></canvas>
+  <div id="hud">
+    <div class="row">Drag p1/p2 handle to set tangent</div>
+    <div class="row">Click curve to grab + deform</div>
+    <div class="row">Drag empty space: pan | Wheel: zoom</div>
+    <div class="row" id="info"></div>
+  </div>
+
+  <script>
+  const TAU = 2 * Math.PI;
+
+  // Antiderivatives: ∫ t^k cos t dt,  ∫ t^k sin t dt
+  function intCos0(t) { return Math.sin(t); }
+  function intSin0(t) { return -Math.cos(t); }
+  function intCos1(t) { return Math.cos(t) + t * Math.sin(t); }
+  function intSin1(t) { return Math.sin(t) - t * Math.cos(t); }
+  function intCos2(t) { return 2 * t * Math.cos(t) + (t * t - 2) * Math.sin(t); }
+  function intSin2(t) { return 2 * t * Math.sin(t) - (t * t - 2) * Math.cos(t); }
+
+  function defInt(F, t1, t2) { return F(t2) - F(t1); }
+
+  function solve2x2(r0, r1, d) {
+    const det = r0[0] * r1[1] - r0[1] * r1[0];
+    if (Math.abs(det) < 1e-14) return null;
+    return [(d[0] * r1[1] - d[1] * r0[1]) / det,
+            (r0[0] * d[1] - r1[0] * d[0]) / det];
+  }
+
+  function solveAB(t1, t2, c, delta) {
+    const IC0 = defInt(intCos0, t1, t2);
+    const IS0 = defInt(intSin0, t1, t2);
+    const IC1 = defInt(intCos1, t1, t2);
+    const IS1 = defInt(intSin1, t1, t2);
+    const IC2 = defInt(intCos2, t1, t2);
+    const IS2 = defInt(intSin2, t1, t2);
+    return solve2x2([IC2, IC1], [IS2, IS1], [delta.x - c * IC0, delta.y - c * IS0]);
+  }
+
+  function evalCurve(t1, t, a, b, c, p1) {
+    const dx = a * defInt(intCos2, t1, t) + b * defInt(intCos1, t1, t) + c * defInt(intCos0, t1, t);
+    const dy = a * defInt(intSin2, t1, t) + b * defInt(intSin1, t1, t) + c * defInt(intSin0, t1, t);
+    return { x: p1.x + dx, y: p1.y + dy };
+  }
+
+  function speed(t, a, b, c) { return a * t * t + b * t + c; }
+
+  function minSpeedOnInterval(t1, t2, a, b, c) {
+    let m = Math.min(speed(t1, a, b, c), speed(t2, a, b, c));
+    if (a !== 0) {
+      const tv = -b / (2 * a);
+      if (tv > t1 && tv < t2) m = Math.min(m, speed(tv, a, b, c));
+    }
+    return m;
+  }
+
+  // --- Extreme curve solvers ---
+
+  // Smoothest: s(t1) = 0 → 3x3 linear system
+  function solveSmoothStart(t1, t2, p1, p2) {
+    const delta = { x: p2.x - p1.x, y: p2.y - p1.y };
+    const IC0 = defInt(intCos0, t1, t2), IS0 = defInt(intSin0, t1, t2);
+    const IC1 = defInt(intCos1, t1, t2), IS1 = defInt(intSin1, t1, t2);
+    const IC2 = defInt(intCos2, t1, t2), IS2 = defInt(intSin2, t1, t2);
+    // a*IC2 + b*IC1 + c*IC0 = dx
+    // a*IS2 + b*IS1 + c*IS0 = dy
+    // a*t1² + b*t1  + c      = 0
+    const t1s = t1 * t1;
+    const det = IC2*(IS1 - IS0*t1) - IC1*(IS2 - IS0*t1s) + IC0*(IS2*t1 - IS1*t1s);
+    if (Math.abs(det) < 1e-14) return null;
+    const a = (delta.x*(IS1 - IS0*t1) - IC1*(delta.y - 0) + IC0*(delta.y*t1 - IS1*0))
+    // Actually let me just use Cramer's rule properly
+    const M = [
+      [IC2, IC1, IC0],
+      [IS2, IS1, IS0],
+      [t1s, t1,  1  ]
+    ];
+    const d = [delta.x, delta.y, 0];
+    return solve3x3(M, d);
+  }
+
+  // Smoothest: s(t2) = 0
+  function solveSmoothEnd(t1, t2, p1, p2) {
+    const delta = { x: p2.x - p1.x, y: p2.y - p1.y };
+    const IC0 = defInt(intCos0, t1, t2), IS0 = defInt(intSin0, t1, t2);
+    const IC1 = defInt(intCos1, t1, t2), IS1 = defInt(intSin1, t1, t2);
+    const IC2 = defInt(intCos2, t1, t2), IS2 = defInt(intSin2, t1, t2);
+    const t2s = t2 * t2;
+    const M = [
+      [IC2, IC1, IC0],
+      [IS2, IS1, IS0],
+      [t2s, t2,  1  ]
+    ];
+    const d = [delta.x, delta.y, 0];
+    return solve3x3(M, d);
+  }
+
+  // 3x3 linear solver via Cramer's rule
+  function solve3x3(M, d) {
+    function det3(m) {
+      return m[0][0]*(m[1][1]*m[2][2] - m[1][2]*m[2][1])
+           - m[0][1]*(m[1][0]*m[2][2] - m[1][2]*m[2][0])
+           + m[0][2]*(m[1][0]*m[2][1] - m[1][1]*m[2][0]);
+    }
+    const D = det3(M);
+    if (Math.abs(D) < 1e-14) return null;
+    function replaceCol(col, v) {
+      return M.map((row, i) => row.map((val, j) => j === col ? v[i] : val));
+    }
+    const a = det3(replaceCol(0, d)) / D;
+    const b = det3(replaceCol(1, d)) / D;
+    const c = det3(replaceCol(2, d)) / D;
+    return { a, b, c };
+  }
+
+  // Pointiest: s(t) = α(t - t*)², solve for t* then α
+  function solvePointy(t1, t2, p1, p2) {
+    const delta = { x: p2.x - p1.x, y: p2.y - p1.y };
+    // Search for t* where Fx/Fy = dx/dy, i.e. dx*Fy - dy*Fx = 0
+    // F(t*) = ∫(τ-t*)² (cos τ, sin τ) dτ
+    // Expand: (τ-t*)² = τ² - 2t*τ + t*²
+    function residual(ts) {
+      const Fx = defInt(intCos2, t1, t2) - 2*ts*defInt(intCos1, t1, t2) + ts*ts*defInt(intCos0, t1, t2);
+      const Fy = defInt(intSin2, t1, t2) - 2*ts*defInt(intSin1, t1, t2) + ts*ts*defInt(intSin0, t1, t2);
+      return delta.x * Fy - delta.y * Fx;
+    }
+    // Bisection + Newton on (t1, t2)
+    // Sample to find sign change
+    const N = 50;
+    let bestTs = null;
+    for (let i = 0; i < N; i++) {
+      const ta = t1 + (t2 - t1) * i / N;
+      const tb = t1 + (t2 - t1) * (i + 1) / N;
+      const fa = residual(ta), fb = residual(tb);
+      if (fa * fb <= 0) {
+        // Bisect
+        let lo = ta, hi = tb;
+        for (let j = 0; j < 50; j++) {
+          const mid = (lo + hi) / 2;
+          if (residual(mid) * residual(lo) <= 0) hi = mid; else lo = mid;
+        }
+        bestTs = (lo + hi) / 2;
+        break;
+      }
+    }
+    if (bestTs == null) return null;
+    const ts = bestTs;
+    const Fx = defInt(intCos2, t1, t2) - 2*ts*defInt(intCos1, t1, t2) + ts*ts*defInt(intCos0, t1, t2);
+    const Fy = defInt(intSin2, t1, t2) - 2*ts*defInt(intSin1, t1, t2) + ts*ts*defInt(intSin0, t1, t2);
+    const alpha = Math.abs(Fx) > Math.abs(Fy) ? delta.x / Fx : delta.y / Fy;
+    if (alpha <= 0) return null;
+    return { a: alpha, b: -2*alpha*ts, c: alpha*ts*ts };
+  }
+
+  // Solve free (no passthrough): fix c, solve a,b
+  function solveFreeC(t1, t2, p1, p2, c) {
+    const delta = { x: p2.x - p1.x, y: p2.y - p1.y };
+    const ab = solveAB(t1, t2, c, delta);
+    if (!ab) return null;
+    return { a: ab[0], b: ab[1], c };
+  }
+
+  // Solve with passthrough (Newton on (c, tStar))
+  function solveWithPassthrough(t1, t2, p1, p2, pStar, tStarInit, cInit) {
+    let tStar = tStarInit;
+    let c = cInit != null ? cInit : 1.0;
+    const delta = { x: p2.x - p1.x, y: p2.y - p1.y };
+    const target = { x: pStar.x - p1.x, y: pStar.y - p1.y };
+
+    for (let iter = 0; iter < 50; iter++) {
+      const ab = solveAB(t1, t2, c, delta);
+      if (!ab) return null;
+      const [a, b] = ab;
+
+      const pos = evalCurve(t1, tStar, a, b, c, { x: 0, y: 0 });
+      const rx = pos.x - target.x;
+      const ry = pos.y - target.y;
+      if (Math.hypot(rx, ry) < 1e-10) return { a, b, c, tStar };
+
+      const sStar = speed(tStar, a, b, c);
+      const dRdtStar_x = sStar * Math.cos(tStar);
+      const dRdtStar_y = sStar * Math.sin(tStar);
+
+      const IC0f = defInt(intCos0, t1, t2), IS0f = defInt(intSin0, t1, t2);
+      const IC1f = defInt(intCos1, t1, t2), IS1f = defInt(intSin1, t1, t2);
+      const IC2f = defInt(intCos2, t1, t2), IS2f = defInt(intSin2, t1, t2);
+
+      const dadb_dc = solve2x2([IC2f, IC1f], [IS2f, IS1f], [-IC0f, -IS0f]);
+      if (!dadb_dc) return null;
+      const [da_dc, db_dc] = dadb_dc;
+
+      const IC0s = defInt(intCos0, t1, tStar), IS0s = defInt(intSin0, t1, tStar);
+      const IC1s = defInt(intCos1, t1, tStar), IS1s = defInt(intSin1, t1, tStar);
+      const IC2s = defInt(intCos2, t1, tStar), IS2s = defInt(intSin2, t1, tStar);
+
+      const dRdc_x = da_dc * IC2s + db_dc * IC1s + IC0s;
+      const dRdc_y = da_dc * IS2s + db_dc * IS1s + IS0s;
+
+      const step = solve2x2([dRdc_x, dRdtStar_x], [dRdc_y, dRdtStar_y], [-rx, -ry]);
+      if (!step) return null;
+
+      c += step[0];
+      tStar += step[1];
+      tStar = Math.max(t1 + 0.01, Math.min(t2 - 0.01, tStar));
+    }
+    return null;
+  }
+
+  // Normalize angle pair so at2 > at1 within one turn
+  function normAngles(t1, t2) {
+    let at2 = t2;
+    while (at2 <= t1) at2 += TAU;
+    while (at2 - t1 > TAU) at2 -= TAU;
+    return [t1, at2];
+  }
+
+  // Test if a candidate state is valid (has a solution with positive speed)
+  function tryState(p1, p2, t1, t2, freeC, pStar, tStarHint, lastSolveC) {
+    const [at1, at2] = normAngles(t1, t2);
+    let result;
+    if (pStar) {
+      result = solveWithPassthrough(at1, at2, p1, p2, pStar, tStarHint, lastSolveC);
+    } else {
+      result = solveFreeC(at1, at2, p1, p2, freeC);
+    }
+    if (!result) return null;
+    if (minSpeedOnInterval(at1, at2, result.a, result.b, result.c) < 0) return null;
+    return result;
+  }
+
+  // --- Sample curve points for hit-testing ---
+  function sampleCurvePoints(at1, at2, a, b, c, p1, N) {
+    const pts = [];
+    for (let i = 0; i <= N; i++) {
+      const t = at1 + (at2 - at1) * i / N;
+      const pt = evalCurve(at1, t, a, b, c, p1);
+      pts.push({ x: pt.x, y: pt.y, t });
+    }
+    return pts;
+  }
+
+  function closestOnCurve(sx, sy, curvePts) {
+    let best = { dist: Infinity, t: 0 };
+    for (const cp of curvePts) {
+      const s = toScreen(cp);
+      const d = Math.hypot(sx - s.x, sy - s.y);
+      if (d < best.dist) best = { dist: d, t: cp.t };
+    }
+    return best;
+  }
+
+  // --- Canvas / interaction ---
+  const canvas = document.getElementById('view');
+  const ctx = canvas.getContext('2d');
+  const info = document.getElementById('info');
+
+  let W, H;
+  function resize() {
+    const dpr = devicePixelRatio;
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  let camX = 0, camY = 0, camScale = 150;
+
+  function toScreen(p) {
+    return { x: W / 2 + (p.x - camX) * camScale, y: H / 2 - (p.y - camY) * camScale };
+  }
+  function toWorld(sx, sy) {
+    return { x: camX + (sx - W / 2) / camScale, y: camY - (sy - H / 2) / camScale };
+  }
+
+  // --- State (initial values chosen to give positive speed) ---
+  let p1 = { x: 0, y: 0 };
+  let p2 = { x: 1, y: 1 };
+  let t1 = 0;
+  let t2 = Math.PI / 2;
+  let freeC = 2.0;
+
+  const HANDLE_LEN = 0.6;
+  function tangentHandle(p, angle) {
+    return { x: p.x + HANDLE_LEN * Math.cos(angle), y: p.y + HANDLE_LEN * Math.sin(angle) };
+  }
+
+  // Dragging
+  let dragging = null; // 'p1' | 'p2' | 'handle1' | 'handle2' | 'curve' | 'pan'
+  let dragStart = null;
+
+  // Passthrough state (only while dragging curve)
+  let pStar = null;
+  let tStarHint = null;
+  let lastSolveC = null;
+
+  // Cached curve for rendering and hit-testing
+  let curSolution = null;
+  let curCurvePts = [];
+  let curAt1 = 0, curAt2 = 0;
+
+  const HANDLE_R = 8;
+  const CURVE_HIT_DIST = 12;
+
+  function hitTest(sx, sy) {
+    const h1 = toScreen(tangentHandle(p1, t1));
+    if (Math.hypot(sx - h1.x, sy - h1.y) < HANDLE_R + 4) return 'handle1';
+    const h2 = toScreen(tangentHandle(p2, t2));
+    if (Math.hypot(sx - h2.x, sy - h2.y) < HANDLE_R + 4) return 'handle2';
+    const s1 = toScreen(p1);
+    if (Math.hypot(sx - s1.x, sy - s1.y) < HANDLE_R + 4) return 'p1';
+    const s2 = toScreen(p2);
+    if (Math.hypot(sx - s2.x, sy - s2.y) < HANDLE_R + 4) return 'p2';
+    if (curCurvePts.length > 0) {
+      const hit = closestOnCurve(sx, sy, curCurvePts);
+      if (hit.dist < CURVE_HIT_DIST) return 'curve';
+    }
+    return null;
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    const sx = e.offsetX, sy = e.offsetY;
+    const hit = hitTest(sx, sy);
+
+    if (hit === 'handle1' || hit === 'handle2' || hit === 'p1' || hit === 'p2') {
+      dragging = hit;
+    } else if (hit === 'curve') {
+      const candidatePStar = toWorld(sx, sy);
+      const closest = closestOnCurve(sx, sy, curCurvePts);
+      const candidateTStar = closest.t;
+      const candidateC = curSolution ? curSolution.c : freeC;
+      const result = tryState(p1, p2, t1, t2, freeC, candidatePStar, candidateTStar, candidateC);
+      if (result) {
+        dragging = 'curve';
+        pStar = candidatePStar;
+        tStarHint = result.tStar;
+        lastSolveC = result.c;
+      }
+      // else: ignore the click
+    } else {
+      dragging = 'pan';
+      dragStart = { x: sx, y: sy, camX, camY };
+    }
+    canvas.setPointerCapture(e.pointerId);
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!dragging) {
+      const hit = hitTest(e.offsetX, e.offsetY);
+      canvas.style.cursor = hit ? 'pointer' : 'default';
+      return;
+    }
+    const sx = e.offsetX, sy = e.offsetY;
+    const w = toWorld(sx, sy);
+
+    if (dragging === 'pan') {
+      camX = dragStart.camX - (sx - dragStart.x) / camScale;
+      camY = dragStart.camY + (sy - dragStart.y) / camScale;
+      return;
+    }
+
+    // Save old state
+    const oldP1 = p1, oldP2 = p2, oldT1 = t1, oldT2 = t2, oldFreeC = freeC;
+    const oldPStar = pStar, oldTStarHint = tStarHint, oldLastSolveC = lastSolveC;
+
+    // Apply candidate
+    if (dragging === 'p1') p1 = w;
+    else if (dragging === 'p2') p2 = w;
+    else if (dragging === 'handle1') t1 = Math.atan2(w.y - p1.y, w.x - p1.x);
+    else if (dragging === 'handle2') t2 = Math.atan2(w.y - p2.y, w.x - p2.x);
+    else if (dragging === 'curve') pStar = w;
+
+    // Validate
+    const result = tryState(p1, p2, t1, t2, freeC, pStar, tStarHint, lastSolveC);
+    if (result) {
+      // Accept — update warm-start hints
+      if (pStar && result.tStar != null) {
+        tStarHint = result.tStar;
+        lastSolveC = result.c;
+      }
+    } else {
+      // Reject — revert
+      p1 = oldP1; p2 = oldP2; t1 = oldT1; t2 = oldT2; freeC = oldFreeC;
+      pStar = oldPStar; tStarHint = oldTStarHint; lastSolveC = oldLastSolveC;
+    }
+  });
+
+  canvas.addEventListener('pointerup', () => {
+    if (dragging === 'curve') {
+      if (lastSolveC != null) freeC = lastSolveC;
+      pStar = null;
+      tStarHint = null;
+      lastSolveC = null;
+    }
+    dragging = null;
+  });
+
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    camScale *= Math.pow(1.001, -e.deltaY);
+    camScale = Math.max(20, Math.min(2000, camScale));
+  }, { passive: false });
+
+  // --- Rendering ---
+  function drawCircle(p, r, color, fill = true) {
+    const s = toScreen(p);
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, r, 0, TAU);
+    if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    else { ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke(); }
+  }
+
+  function drawLine(a, b, color, width, dash) {
+    const sa = toScreen(a), sb = toScreen(b);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.setLineDash(dash || []);
+    ctx.beginPath();
+    ctx.moveTo(sa.x, sa.y);
+    ctx.lineTo(sb.x, sb.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function drawCurveVis(at1, at2, a, b, c, p1) {
+    const N = 200;
+    const dt = (at2 - at1) / N;
+    let minS = Infinity, maxS = -Infinity;
+
+    const pts = [];
+    for (let i = 0; i <= N; i++) {
+      const t = at1 + i * dt;
+      const pt = evalCurve(at1, t, a, b, c, p1);
+      const sp = speed(t, a, b, c);
+      pts.push({ pt, sp });
+      minS = Math.min(minS, sp);
+      maxS = Math.max(maxS, sp);
+    }
+
+    // Speed coloring underlay
+    for (let i = 0; i < N; i++) {
+      const sA = toScreen(pts[i].pt), sB = toScreen(pts[i + 1].pt);
+      const sp = (pts[i].sp + pts[i + 1].sp) / 2;
+      const frac = maxS > minS ? (sp - minS) / (maxS - minS) : 0.5;
+      const r = Math.round(255 * (1 - frac));
+      const g = Math.round(255 * frac);
+      ctx.strokeStyle = `rgba(${r},${g},80,0.5)`;
+      ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(sA.x, sA.y); ctx.lineTo(sB.x, sB.y); ctx.stroke();
+    }
+
+    // Main line
+    ctx.strokeStyle = '#8af';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const s = toScreen(pts[i].pt);
+      if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+    }
+    ctx.stroke();
+    return { minS, maxS };
+  }
+
+  // Draw a ghost (translucent) curve
+  function drawGhostCurve(at1, at2, a, b, c, p1, color) {
+    const N = 100;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const t = at1 + (at2 - at1) * i / N;
+      const pt = evalCurve(at1, t, a, b, c, p1);
+      const s = toScreen(pt);
+      if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function drawSpeedGraph(at1, at2, a, b, c, tStar) {
+    const pad = 14;
+    const gw = 180, gh = 100;
+    const gx = W - gw - pad, gy = pad;
+
+    // Background
+    ctx.fillStyle = 'rgba(5,9,16,0.75)';
+    ctx.strokeStyle = 'rgba(173,191,229,0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(gx, gy, gw, gh, 6);
+    ctx.fill(); ctx.stroke();
+
+    // Compute speed range
+    const N = 100;
+    let minS = Infinity, maxS = -Infinity;
+    for (let i = 0; i <= N; i++) {
+      const t = at1 + (at2 - at1) * i / N;
+      const s = speed(t, a, b, c);
+      minS = Math.min(minS, s); maxS = Math.max(maxS, s);
+    }
+    // Pad range a bit
+    const sRange = maxS - minS || 1;
+    const sLo = minS - sRange * 0.1;
+    const sHi = maxS + sRange * 0.1;
+
+    const ix = pad + 4, iy = pad + 16;
+    const iw = gw - 8, ih = gh - 24;
+
+    // Zero line if visible
+    if (sLo < 0 && sHi > 0) {
+      const zy = gy + iy - pad + ih - ih * (0 - sLo) / (sHi - sLo);
+      ctx.strokeStyle = 'rgba(255,100,100,0.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(gx + ix - pad, zy); ctx.lineTo(gx + ix - pad + iw, zy); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Speed curve
+    ctx.strokeStyle = '#8af';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const t = at1 + (at2 - at1) * i / N;
+      const s = speed(t, a, b, c);
+      const px = gx + ix - pad + iw * i / N;
+      const py = gy + iy - pad + ih - ih * (s - sLo) / (sHi - sLo);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Mark tStar if present
+    if (tStar != null) {
+      const frac = (tStar - at1) / (at2 - at1);
+      const sx = gx + ix - pad + iw * frac;
+      const sv = speed(tStar, a, b, c);
+      const sy = gy + iy - pad + ih - ih * (sv - sLo) / (sHi - sLo);
+      ctx.fillStyle = '#ff0';
+      ctx.beginPath(); ctx.arc(sx, sy, 3, 0, TAU); ctx.fill();
+    }
+
+    // Labels
+    ctx.font = '10px monospace';
+    ctx.fillStyle = 'rgba(173,191,229,0.7)';
+    ctx.fillText('s(t)', gx + 4, gy + 12);
+    ctx.fillText(sHi.toFixed(1), gx + gw - 30, gy + 12);
+    ctx.fillText(sLo.toFixed(1), gx + gw - 30, gy + gh - 2);
+    ctx.fillText('t₁', gx + ix - pad, gy + gh - 2);
+    ctx.fillText('t₂', gx + ix - pad + iw - 10, gy + gh - 2);
+  }
+
+  function drawGrid() {
+    ctx.strokeStyle = 'rgba(173,191,229,0.08)';
+    ctx.lineWidth = 1;
+    const step = Math.pow(10, Math.floor(Math.log10(5 / camScale * 100)));
+    const x0 = Math.floor((camX - W / 2 / camScale) / step) * step;
+    const x1 = Math.ceil((camX + W / 2 / camScale) / step) * step;
+    const y0 = Math.floor((camY - H / 2 / camScale) / step) * step;
+    const y1 = Math.ceil((camY + H / 2 / camScale) / step) * step;
+    for (let x = x0; x <= x1; x += step) {
+      const s = toScreen({ x, y: 0 });
+      ctx.beginPath(); ctx.moveTo(s.x, 0); ctx.lineTo(s.x, H); ctx.stroke();
+    }
+    for (let y = y0; y <= y1; y += step) {
+      const s = toScreen({ x: 0, y });
+      ctx.beginPath(); ctx.moveTo(0, s.y); ctx.lineTo(W, s.y); ctx.stroke();
+    }
+  }
+
+  function frame() {
+    resize();
+    ctx.clearRect(0, 0, W, H);
+    drawGrid();
+
+    const [at1, at2] = normAngles(t1, t2);
+    curAt1 = at1; curAt2 = at2;
+
+    // Solve (should always succeed — pointermove guarantees valid state)
+    let result;
+    if (pStar) {
+      result = solveWithPassthrough(at1, at2, p1, p2, pStar, tStarHint, lastSolveC);
+    } else {
+      result = solveFreeC(at1, at2, p1, p2, freeC);
+    }
+    curSolution = result;
+
+    // Draw extreme curves as ghosts
+    const smooth1 = solveSmoothStart(at1, at2, p1, p2);
+    const smooth2 = solveSmoothEnd(at1, at2, p1, p2);
+    const pointy = solvePointy(at1, at2, p1, p2);
+
+    if (smooth1 && minSpeedOnInterval(at1, at2, smooth1.a, smooth1.b, smooth1.c) >= -1e-9) {
+      drawGhostCurve(at1, at2, smooth1.a, smooth1.b, smooth1.c, p1, 'rgba(100,255,100,0.35)');
+    }
+    if (smooth2 && minSpeedOnInterval(at1, at2, smooth2.a, smooth2.b, smooth2.c) >= -1e-9) {
+      drawGhostCurve(at1, at2, smooth2.a, smooth2.b, smooth2.c, p1, 'rgba(100,200,255,0.35)');
+    }
+    if (pointy) {
+      drawGhostCurve(at1, at2, pointy.a, pointy.b, pointy.c, p1, 'rgba(255,100,100,0.35)');
+    }
+
+    if (result) {
+      const { a, b, c } = result;
+      curCurvePts = sampleCurvePoints(at1, at2, a, b, c, p1, 200);
+      const { minS, maxS } = drawCurveVis(at1, at2, a, b, c, p1);
+
+      if (pStar && result.tStar != null) {
+        const ptStar = evalCurve(at1, result.tStar, a, b, c, p1);
+        drawCircle(ptStar, 5, '#ff0', true);
+      }
+
+      drawSpeedGraph(at1, at2, a, b, c, result.tStar != null ? result.tStar : null);
+      info.textContent = `s(t) = ${a.toFixed(3)}t\u00B2 + ${b.toFixed(3)}t + ${c.toFixed(3)}  speed:[${minS.toFixed(2)}, ${maxS.toFixed(2)}]`;
+    } else {
+      curCurvePts = [];
+      info.textContent = 'No solution';
+    }
+
+    // Tangent handles
+    const h1 = tangentHandle(p1, at1);
+    const h2 = tangentHandle(p2, at2);
+    drawLine(p1, h1, 'rgba(68,204,255,0.4)', 1.5, [4, 4]);
+    drawLine(p2, h2, 'rgba(255,136,68,0.4)', 1.5, [4, 4]);
+    drawCircle(h1, 6, '#4cf', true);
+    drawCircle(h2, 6, '#f84', true);
+
+    // Endpoints
+    drawCircle(p1, HANDLE_R, '#4cf', true);
+    drawCircle(p2, HANDLE_R, '#f84', true);
+
+    const s1 = toScreen(p1), s2 = toScreen(p2);
+    ctx.font = '12px monospace';
+    ctx.fillStyle = '#4cf'; ctx.fillText('p1', s1.x + 12, s1.y - 8);
+    ctx.fillStyle = '#f84'; ctx.fillText('p2', s2.x + 12, s2.y - 8);
+
+    requestAnimationFrame(frame);
+  }
+
+  // Verify initial state is valid before starting
+  console.log('Initial solve:', tryState(p1, p2, t1, t2, freeC, null, null, null));
+  requestAnimationFrame(frame);
+  </script>
+</body>
+</html>
