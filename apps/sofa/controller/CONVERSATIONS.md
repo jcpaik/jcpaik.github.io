@@ -53,3 +53,22 @@ This adds **2 equations** but also **1 new unknown** (t*).
 Balance: 4 unknowns (a, b, c, t*) − 4 equations = **exactly determined**.
 
 Though the system is nonlinear in t*, so you may get discrete multiple solutions (or none).
+
+---
+
+## Smoothest Extreme Collapsing Bug
+
+**User:** As I move p1 in the negative x direction (from p1.x ≈ −0.45 to −0.65, with p2 = (1,1), t1 = 0, t2 = π/2, λ = 0.5), the two extremal ghost curves suddenly collapse into one curve. Is this a bug?
+
+**Assistant:**
+
+Yes — the issue is in `getValidSmooth`. It only tried speed-zero at the two endpoints:
+
+- `solveSmooth(t1, t2, p1, p2, t1)` — s(t1) = 0
+- `solveSmooth(t1, t2, p1, p2, t2)` — s(t2) = 0
+
+Around p1.x ≈ −0.50, the s(t2) = 0 solution develops negative speed in the interior, so both endpoint solutions become infeasible. Then `getValidSmooth` returns null, and `solveFromLambda` collapses to just the pointy extreme (ignoring λ).
+
+But there is still a valid smooth extreme: s(t) = a(t − t_v)² where t_v ∈ (t1, t2) is the vertex of the speed parabola. This speed is non-negative by construction (perfect square). The equation for t_v is the same as for the pointy extreme — but we pick the root with **smallest** α (smoothest) rather than largest (pointiest).
+
+**Fix:** Added `solveSmoothInterior()` to `solver.ts` which finds this interior-vertex solution. `getValidSmooth()` now falls back to it when both endpoint solutions are infeasible. The interior smooth ghost is drawn in purple.

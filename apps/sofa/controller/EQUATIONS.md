@@ -79,13 +79,23 @@ $$\frac{\int_{t_1}^{t_2}(\tau-t_*)^2 \cos\tau\, d\tau}{\int_{t_1}^{t_2}(\tau-t_*
 
 One equation in one unknown $t_*$. Then $\alpha$ is determined from either component. The curve has a cusp (infinite curvature) at $t_*$.
 
-### Smoothest extreme: zero at endpoint
+### Smoothest extreme: zero speed at the boundary of feasibility
 
-**Case $s(t_1) = 0$:** The constraint $at_1^2 + bt_1 + c = 0$ is linear. Combined with the 2 integral equations, this gives a $3 \times 3$ linear system for $(a, b, c)$, uniquely determined.
+The smoothest extreme is the valid speed function $s(t) \geq 0$ on $[t_1, t_2]$ that has the smallest leading coefficient $a$ (i.e., the least curved speed profile). There are three cases, tried in order of preference:
 
-**Case $s(t_2) = 0$:** Similarly, $at_2^2 + bt_2 + c = 0$ yields a $3 \times 3$ linear system.
+**Case 1: $s(t_1) = 0$ (zero at left endpoint).** The constraint $at_1^2 + bt_1 + c = 0$ is linear. Combined with the 2 integral equations, this gives a $3 \times 3$ linear system for $(a, b, c)$, uniquely determined.
 
-Pick whichever case gives $s(t) \geq 0$ on the full interval (one or both may be valid).
+**Case 2: $s(t_2) = 0$ (zero at right endpoint).** Similarly, $at_2^2 + bt_2 + c = 0$ yields a $3 \times 3$ linear system.
+
+**Case 3: $s(t_v) = 0$ at interior vertex (zero at parabola minimum).** When neither endpoint-zero solution maintains $s(t) \geq 0$ on the full interval, the smoothest feasible extreme has $s(t) = a(t - t_v)^2$ where $t_v = -b/(2a) \in (t_1, t_2)$ is the vertex of the speed parabola. This is the same algebraic form as the pointiest extreme, but selects the root $t_v$ that minimizes $a$ (rather than the root giving the pointiest cusp). The speed is non-negative by construction since it is a perfect square.
+
+The equation for $t_v$ is identical to the pointiest case:
+
+$$\frac{\int_{t_1}^{t_2}(\tau-t_v)^2 \cos\tau\, d\tau}{\int_{t_1}^{t_2}(\tau-t_v)^2 \sin\tau\, d\tau} = \frac{\Delta_x}{\Delta_y}$$
+
+When multiple roots $t_v$ exist in $(t_1, t_2)$, the pointiest extreme picks the root giving the largest $\alpha$, while the interior smooth extreme picks the root giving the smallest $\alpha$.
+
+Pick whichever case gives $s(t) \geq 0$ on the full interval (one or more may be valid).
 
 ### Convex combination
 
@@ -97,5 +107,5 @@ This satisfies the endpoint constraint for all $\lambda$ (by linearity) and $s_\
 
 $$a_\lambda = (1-\lambda)a_0 + \lambda a_1, \quad b_\lambda = (1-\lambda)b_0 + \lambda b_1, \quad c_\lambda = (1-\lambda)c_0 + \lambda c_1$$
 
-- $\lambda = 0$: smoothest (zero speed at endpoint, smooth interior)
+- $\lambda = 0$: smoothest (zero speed at endpoint or interior vertex)
 - $\lambda = 1$: pointiest (cusp at interior double zero)
