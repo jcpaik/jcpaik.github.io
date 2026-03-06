@@ -111,25 +111,72 @@ export function solveSmoothInterior(t1: number, t2: number, p1: Point, p2: Point
   return bestResult;
 }
 
+// Collect ALL valid boundary solutions of the feasible set s(t) >= 0
+export function findExtremes(at1: number, at2: number, p1: Point, p2: Point): { smooth: ABC; pointy: ABC } | null {
+  const candidates: ABC[] = [];
+
+  // Case 1: s(t1) = 0
+  const s1 = solveSmooth(at1, at2, p1, p2, at1);
+  if (s1 && minSpeedOnInterval(at1, at2, s1.a, s1.b, s1.c) >= -1e-9) candidates.push(s1);
+
+  // Case 2: s(t2) = 0
+  const s2 = solveSmooth(at1, at2, p1, p2, at2);
+  if (s2 && minSpeedOnInterval(at1, at2, s2.a, s2.b, s2.c) >= -1e-9) candidates.push(s2);
+
+  // Case 3: interior double roots s(t) = α(t - tv)²
+  const delta = { x: p2.x - p1.x, y: p2.y - p1.y };
+  const IC0 = defInt(intCos0, at1, at2), IS0 = defInt(intSin0, at1, at2);
+  const IC1 = defInt(intCos1, at1, at2), IS1 = defInt(intSin1, at1, at2);
+  const IC2 = defInt(intCos2, at1, at2), IS2 = defInt(intSin2, at1, at2);
+
+  function residual(tv: number) {
+    const Fx = IC2 - 2 * tv * IC1 + tv * tv * IC0;
+    const Fy = IS2 - 2 * tv * IS1 + tv * tv * IS0;
+    return delta.x * Fy - delta.y * Fx;
+  }
+
+  const N = 50;
+  for (let i = 0; i < N; i++) {
+    const ta = at1 + (at2 - at1) * i / N;
+    const tb = at1 + (at2 - at1) * (i + 1) / N;
+    if (residual(ta) * residual(tb) <= 0) {
+      let lo = ta, hi = tb;
+      for (let j = 0; j < 50; j++) {
+        const mid = (lo + hi) / 2;
+        if (residual(mid) * residual(lo) <= 0) hi = mid; else lo = mid;
+      }
+      const tv = (lo + hi) / 2;
+      if (tv <= at1 + 1e-10 || tv >= at2 - 1e-10) continue;
+      const Fx = IC2 - 2 * tv * IC1 + tv * tv * IC0;
+      const Fy = IS2 - 2 * tv * IS1 + tv * tv * IS0;
+      const alpha = Math.abs(Fx) > Math.abs(Fy) ? delta.x / Fx : delta.y / Fy;
+      if (alpha <= 0) continue;
+      candidates.push({ a: alpha, b: -2 * alpha * tv, c: alpha * tv * tv });
+    }
+  }
+
+  if (candidates.length === 0) return null;
+
+  // Pick extremes by coefficient a: smallest a = smoothest, largest a = pointiest
+  let smooth = candidates[0], pointy = candidates[0];
+  for (const c of candidates) {
+    if (c.a < smooth.a) smooth = c;
+    if (c.a > pointy.a) pointy = c;
+  }
+  return { smooth, pointy };
+}
+
 // Get the valid smooth extreme for the current geometry
 export function getValidSmooth(at1: number, at2: number, p1: Point, p2: Point): ABC | null {
-  const s1 = solveSmooth(at1, at2, p1, p2, at1);
-  if (s1 && minSpeedOnInterval(at1, at2, s1.a, s1.b, s1.c) >= -1e-9) return s1;
-  const s2 = solveSmooth(at1, at2, p1, p2, at2);
-  if (s2 && minSpeedOnInterval(at1, at2, s2.a, s2.b, s2.c) >= -1e-9) return s2;
-  // Fallback: interior vertex touching zero
-  const si = solveSmoothInterior(at1, at2, p1, p2);
-  if (si && minSpeedOnInterval(at1, at2, si.a, si.b, si.c) >= -1e-9) return si;
-  return null;
+  const ex = findExtremes(at1, at2, p1, p2);
+  return ex ? ex.smooth : null;
 }
 
 // Solve from lambda ∈ [0,1]: interpolate between smooth (λ=0) and pointy (λ=1)
 export function solveFromLambda(at1: number, at2: number, p1: Point, p2: Point, lambda: number): ABC | null {
-  const smooth = getValidSmooth(at1, at2, p1, p2);
-  const pointy = solvePointy(at1, at2, p1, p2);
-  if (!smooth && !pointy) return null;
-  if (!smooth) return pointy;
-  if (!pointy) return smooth;
+  const ex = findExtremes(at1, at2, p1, p2);
+  if (!ex) return null;
+  const { smooth, pointy } = ex;
   return {
     a: (1 - lambda) * smooth.a + lambda * pointy.a,
     b: (1 - lambda) * smooth.b + lambda * pointy.b,
@@ -139,9 +186,9 @@ export function solveFromLambda(at1: number, at2: number, p1: Point, p2: Point, 
 
 // Compute lambda from a given (a,b,c) relative to smooth/pointy extremes
 export function computeLambda(at1: number, at2: number, p1: Point, p2: Point, a: number, b: number, c: number): number {
-  const smooth = getValidSmooth(at1, at2, p1, p2);
-  const pointy = solvePointy(at1, at2, p1, p2);
-  if (!smooth || !pointy) return 0.5;
+  const ex = findExtremes(at1, at2, p1, p2);
+  if (!ex) return 0.5;
+  const { smooth, pointy } = ex;
   const da = pointy.a - smooth.a, db = pointy.b - smooth.b, dc = pointy.c - smooth.c;
   let lam: number;
   if (Math.abs(da) >= Math.abs(db) && Math.abs(da) >= Math.abs(dc)) {

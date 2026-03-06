@@ -25,8 +25,16 @@
       backdrop-filter: blur(4px); min-width: 220px;
     }
     #hud .row { white-space: nowrap; }
+    #state-input {
+      width: 100%; margin-top: 6px; padding: 4px 6px;
+      background: rgba(255,255,255,0.08); color: #f2f6ff;
+      border: 1px solid rgba(173,191,229,0.3); border-radius: 4px;
+      font: 12px Menlo, Monaco, Consolas, monospace;
+      outline: none;
+    }
+    #state-input:focus { border-color: rgba(136,170,255,0.6); }
   </style>
-  <script type="module" crossorigin src="/assets/index-D4ameGiw.js"></script>
+  <script type="module" crossorigin src="/assets/index-CXp_P2UW.js"></script>
 </head>
 <body>
   <canvas id="view"></canvas>
@@ -35,6 +43,8 @@
     <div class="row">Click curve to grab + deform</div>
     <div class="row">Drag empty space: pan | Wheel: zoom</div>
     <div class="row" id="info"></div>
+    <div class="row" id="state"></div>
+    <input id="state-input" type="text" placeholder="Paste state to restore...">
   </div>
 </body>
 </html>

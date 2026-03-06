@@ -1,5 +1,5 @@
 import { type Point, type CurvePoint, normAngles, sampleCurvePoints, closestOnCurve, evalCurve, minSpeedOnInterval } from './curve';
-import { type ABC, solveSmooth, solvePointy, solveSmoothInterior, solveFromLambda, computeLambda, solveWithPassthrough } from './solver';
+import { type ABC, findExtremes, solveFromLambda, computeLambda, solveWithPassthrough } from './solver';
 import { drawCircle, drawLine, drawCurveVis, drawGhostCurve, drawSpeedGraph, drawGrid } from './render';
 
 // --- Canvas ---
@@ -80,18 +80,17 @@ canvas.addEventListener('pointerdown', e => {
 
   if (hit === 'handle1' || hit === 'handle2' || hit === 'p1' || hit === 'p2') {
     dragging = hit;
-  } else if (hit === 'curve') {
+  } else if (hit === 'curve' && curSolution) {
     const [at1, at2] = normAngles(t1, t2);
-    const candidatePStar = toWorld(sx, sy);
     const closest = closestOnCurve(sx, sy, curCurvePts, toScreen);
-    const candidateC = curSolution ? curSolution.c : 1.0;
-    const result = solveWithPassthrough(at1, at2, p1, p2, candidatePStar, closest.t, candidateC);
-    if (result && minSpeedOnInterval(at1, at2, result.a, result.b, result.c) >= 0) {
-      dragging = 'curve';
-      pStar = candidatePStar;
-      tStarHint = result.tStar;
-      lastSolveC = result.c;
-    }
+    // Use the actual on-curve point (not cursor position) to initiate the drag.
+    // Near the pointy extreme, the speed minimum is close to zero; using the
+    // off-curve cursor position can push the solved speed negative.
+    const onCurve = evalCurve(at1, closest.t, curSolution.a, curSolution.b, curSolution.c, p1);
+    dragging = 'curve';
+    pStar = onCurve;
+    tStarHint = closest.t;
+    lastSolveC = curSolution.c;
   } else {
     dragging = 'pan';
     dragStart = { x: sx, y: sy, camX, camY };
@@ -119,7 +118,7 @@ canvas.addEventListener('pointermove', e => {
     pStar = w;
     const [at1, at2] = normAngles(t1, t2);
     const result = solveWithPassthrough(at1, at2, p1, p2, pStar, tStarHint!, lastSolveC);
-    if (result && minSpeedOnInterval(at1, at2, result.a, result.b, result.c) >= 0) {
+    if (result && minSpeedOnInterval(at1, at2, result.a, result.b, result.c) >= -1e-9) {
       tStarHint = result.tStar;
       lastSolveC = result.c;
     } else {
@@ -197,21 +196,10 @@ function frame() {
   curSolution = result;
 
   // Draw extreme ghosts
-  const smooth1 = solveSmooth(at1, at2, p1, p2, at1);
-  const smooth2 = solveSmooth(at1, at2, p1, p2, at2);
-  const smoothInt = solveSmoothInterior(at1, at2, p1, p2);
-  const pointy = solvePointy(at1, at2, p1, p2);
-
-  if (smooth1 && minSpeedOnInterval(at1, at2, smooth1.a, smooth1.b, smooth1.c) >= -1e-9) {
-    drawGhostCurve(ctx, toScreen, at1, at2, smooth1.a, smooth1.b, smooth1.c, p1, 'rgba(100,255,100,0.35)');
-  }
-  if (smooth2 && minSpeedOnInterval(at1, at2, smooth2.a, smooth2.b, smooth2.c) >= -1e-9) {
-    drawGhostCurve(ctx, toScreen, at1, at2, smooth2.a, smooth2.b, smooth2.c, p1, 'rgba(100,200,255,0.35)');
-  }
-  if (smoothInt && minSpeedOnInterval(at1, at2, smoothInt.a, smoothInt.b, smoothInt.c) >= -1e-9) {
-    drawGhostCurve(ctx, toScreen, at1, at2, smoothInt.a, smoothInt.b, smoothInt.c, p1, 'rgba(200,100,255,0.35)');
-  }
-  if (pointy) {
+  const extremes = findExtremes(at1, at2, p1, p2);
+  if (extremes) {
+    const { smooth, pointy } = extremes;
+    drawGhostCurve(ctx, toScreen, at1, at2, smooth.a, smooth.b, smooth.c, p1, 'rgba(100,255,100,0.35)');
     drawGhostCurve(ctx, toScreen, at1, at2, pointy.a, pointy.b, pointy.c, p1, 'rgba(255,100,100,0.35)');
   }
 

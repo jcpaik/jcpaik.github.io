@@ -65,37 +65,33 @@ which have closed-form antiderivatives in terms of $t^j \cos t$ and $t^j \sin t$
 
 ## Pointedness parametrization
 
-The endpoint constraint is **linear in $s$**, so any convex combination of valid speed functions also satisfies it. We identify two extreme curves bounding the feasible region $s(t) \geq 0$.
+The endpoint constraint is **linear in $s$**, so any convex combination of valid speed functions also satisfies it. The feasible region is the set of $(a, b, c)$ satisfying the endpoint constraint and $s(t) \geq 0$ on $[t_1, t_2]$. Since the endpoint constraint fixes a 1D affine subspace, the feasible set is a 1D interval. We find its two boundary extremes.
 
-### Pointiest extreme: double zero at interior $t_*$
+### Boundary solutions
 
-Set $s(t) = \alpha(t - t_*)^2$ for $t_* \in (t_1, t_2)$. This has $a = \alpha$, $b = -2\alpha t_*$, $c = \alpha t_*^2$. Substituting into the endpoint constraint:
+A boundary solution has $s(t) \geq 0$ on $[t_1, t_2]$ with $s(t) = 0$ for some $t \in [t_1, t_2]$. There are three types:
 
-$$\alpha \int_{t_1}^{t_2} (\tau - t_*)^2 \begin{pmatrix} \cos\tau \\ \sin\tau \end{pmatrix} d\tau = \Delta$$
+**Type A: $s(t_1) = 0$ (zero at left endpoint).** The constraint $at_1^2 + bt_1 + c = 0$ is linear. Combined with the 2 integral equations, this gives a $3 \times 3$ linear system for $(a, b, c)$, uniquely determined. Valid if $s(t) \geq 0$ on $[t_1, t_2]$.
 
-Dividing the two components eliminates $\alpha$:
+**Type B: $s(t_2) = 0$ (zero at right endpoint).** Similarly, $at_2^2 + bt_2 + c = 0$ yields a $3 \times 3$ linear system. Valid if $s(t) \geq 0$ on $[t_1, t_2]$.
+
+**Type C: $s(t_*) = 0$ with double root at interior $t_* \in (t_1, t_2)$.** Set $s(t) = \alpha(t - t_*)^2$, so $a = \alpha$, $b = -2\alpha t_*$, $c = \alpha t_*^2$. Substituting into the endpoint constraint and dividing the two components eliminates $\alpha$:
 
 $$\frac{\int_{t_1}^{t_2}(\tau-t_*)^2 \cos\tau\, d\tau}{\int_{t_1}^{t_2}(\tau-t_*)^2 \sin\tau\, d\tau} = \frac{\Delta_x}{\Delta_y}$$
 
-One equation in one unknown $t_*$. Then $\alpha$ is determined from either component. The curve has a cusp (infinite curvature) at $t_*$.
+This is a quadratic equation in $t_*$, yielding 0, 1, or 2 roots in $(t_1, t_2)$. Each root with $\alpha > 0$ gives a valid solution (non-negative by construction as a perfect square). The curve has a cusp (infinite curvature) at $t_*$.
 
-### Smoothest extreme: zero speed at the boundary of feasibility
+### Finding the two extremes
 
-The smoothest extreme is the valid speed function $s(t) \geq 0$ on $[t_1, t_2]$ that has the smallest leading coefficient $a$ (i.e., the least curved speed profile). There are three cases, tried in order of preference:
+Collect **all** valid boundary solutions from Types A, B, and C. Order them by the leading coefficient $a$:
 
-**Case 1: $s(t_1) = 0$ (zero at left endpoint).** The constraint $at_1^2 + bt_1 + c = 0$ is linear. Combined with the 2 integral equations, this gives a $3 \times 3$ linear system for $(a, b, c)$, uniquely determined.
+- **Smoothest extreme** ($s_0$): the valid boundary solution with the smallest $a$
+- **Pointiest extreme** ($s_1$): the valid boundary solution with the largest $a$
 
-**Case 2: $s(t_2) = 0$ (zero at right endpoint).** Similarly, $at_2^2 + bt_2 + c = 0$ yields a $3 \times 3$ linear system.
-
-**Case 3: $s(t_v) = 0$ at interior vertex (zero at parabola minimum).** When neither endpoint-zero solution maintains $s(t) \geq 0$ on the full interval, the smoothest feasible extreme has $s(t) = a(t - t_v)^2$ where $t_v = -b/(2a) \in (t_1, t_2)$ is the vertex of the speed parabola. This is the same algebraic form as the pointiest extreme, but selects the root $t_v$ that minimizes $a$ (rather than the root giving the pointiest cusp). The speed is non-negative by construction since it is a perfect square.
-
-The equation for $t_v$ is identical to the pointiest case:
-
-$$\frac{\int_{t_1}^{t_2}(\tau-t_v)^2 \cos\tau\, d\tau}{\int_{t_1}^{t_2}(\tau-t_v)^2 \sin\tau\, d\tau} = \frac{\Delta_x}{\Delta_y}$$
-
-When multiple roots $t_v$ exist in $(t_1, t_2)$, the pointiest extreme picks the root giving the largest $\alpha$, while the interior smooth extreme picks the root giving the smallest $\alpha$.
-
-Pick whichever case gives $s(t) \geq 0$ on the full interval (one or more may be valid).
+Depending on geometry, the two extremes may come from any combination of types. For example:
+- Both extremes from Type A and Type B (when no interior double root exists)
+- One from Type A or B, one from Type C
+- Both from Type C (two interior roots with different $\alpha$)
 
 ### Convex combination
 
@@ -107,5 +103,5 @@ This satisfies the endpoint constraint for all $\lambda$ (by linearity) and $s_\
 
 $$a_\lambda = (1-\lambda)a_0 + \lambda a_1, \quad b_\lambda = (1-\lambda)b_0 + \lambda b_1, \quad c_\lambda = (1-\lambda)c_0 + \lambda c_1$$
 
-- $\lambda = 0$: smoothest (zero speed at endpoint or interior vertex)
-- $\lambda = 1$: pointiest (cusp at interior double zero)
+- $\lambda = 0$: smoothest extreme
+- $\lambda = 1$: pointiest extreme
