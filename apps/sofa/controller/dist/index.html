@@ -5,48 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerver Hull Controller</title>
   <style>
-    :root { color-scheme: dark; }
+    :root { color-scheme: light; }
     * { box-sizing: border-box; }
     html, body {
-      margin: 0; width: 100%; height: 100%; overflow: hidden;
-      font-family: Menlo, Monaco, Consolas, monospace;
-      background: #0a0d11; color: #f2f6ff;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #f5f5f7;
+      color: #1f2937;
     }
     canvas {
-      width: 100%; height: 100%; display: block;
-      background: radial-gradient(circle at 10% 10%, #172033 0%, #0a0d11 55%);
+      width: 100%;
+      height: 100%;
+      display: block;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 32%),
+        linear-gradient(180deg, #fbfbfd 0%, #eef2f7 100%);
     }
-    #hud {
-      position: absolute; top: 14px; left: 14px;
-      padding: 10px 12px;
-      background: rgba(5,9,16,0.72);
-      border: 1px solid rgba(173,191,229,0.25);
-      border-radius: 8px; font-size: 13px; line-height: 1.6;
-      backdrop-filter: blur(4px); min-width: 220px;
-    }
-    #hud .row { white-space: nowrap; }
-    #state-input {
-      width: 100%; margin-top: 6px; padding: 4px 6px;
-      background: rgba(255,255,255,0.08); color: #f2f6ff;
-      border: 1px solid rgba(173,191,229,0.3); border-radius: 4px;
-      font: 12px Menlo, Monaco, Consolas, monospace;
-      outline: none;
-    }
-    #state-input:focus { border-color: rgba(136,170,255,0.6); }
   </style>
-  <script type="module" crossorigin src="/assets/index-BnQDKtw9.js"></script>
+  <script type="module" crossorigin src="/assets/index-BIhr8L0g.js"></script>
 </head>
 <body>
   <canvas id="view"></canvas>
-  <div id="hud">
-    <div class="row">Mirror-symmetric convex hull for Gerver&apos;s sofa</div>
-    <div class="row">Drag p0-p9 points and tangent handles</div>
-    <div class="row">Drag an arc to change its feasible family</div>
-    <div class="row">p0/p9 stay on y=0, p4/p5 stay on y=1</div>
-    <div class="row">Drag empty space: pan | Wheel: zoom</div>
-    <div class="row" id="info"></div>
-    <div class="row" id="state"></div>
-    <input id="state-input" type="text" placeholder="Paste state to restore...">
-  </div>
 </body>
 </html>

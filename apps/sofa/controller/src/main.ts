@@ -1,14 +1,10 @@
 import { type Point, type CurvePoint, TAU, normAngles, sampleCurvePoints, closestOnCurve, evalCurve } from './curve';
 import { type ABC, computeLambda, solveFromLambda, solveWithPassthrough } from './solver';
 import { getGerverCapInitialization } from './gerver';
-import { drawCircle, drawLine, drawCurveVis, drawSpeedGraph, drawGrid } from './render';
+import { drawLine, drawCurveVis, drawGrid, drawSquare } from './render';
 
-// --- Canvas ---
 const canvas = document.getElementById('view') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
-const info = document.getElementById('info')!;
-const stateEl = document.getElementById('state')!;
-const stateInput = document.getElementById('state-input') as HTMLInputElement;
 
 let W: number;
 let H: number;
@@ -25,7 +21,6 @@ function resize() {
 resize();
 addEventListener('resize', resize);
 
-// --- Camera ---
 let camX = 0;
 let camY = 0.55;
 let camScale = 185;
@@ -38,7 +33,6 @@ function toWorld(sx: number, sy: number): Point {
   return { x: camX + (sx - W / 2) / camScale, y: camY - (sy - H / 2) / camScale };
 }
 
-// --- Hull state ---
 interface ControlNode {
   point: Point;
   angle: number;
@@ -79,8 +73,6 @@ interface ArcRenderState {
   at2: number;
   solution: (ABC & { tStar?: number }) | null;
   curvePts: CurvePoint[];
-  minS: number | null;
-  maxS: number | null;
 }
 
 type DragState =
@@ -95,15 +87,20 @@ type Hit =
   | { kind: 'arc'; segmentIndex: number; t: number }
   | null;
 
-const HANDLE_LEN = 0.46;
-const HANDLE_R = 8;
-const POINT_R = 8;
+const HANDLE_HALF_LEN = 0.12;
+const HANDLE_R = 7;
+const POINT_R = 7;
+const SELECTED_POINT_R = 10;
 const CURVE_HIT_DIST = 12;
 const X_GAP = 0.04;
 const Y_GAP = 0.04;
 const ANGLE_GAP = 0.04;
 
-const ARC_COLORS = ['#72d3ff', '#7ae7c3', '#e2e46e', '#ffcd76'];
+const CURVE_INACTIVE = 'rgba(10, 10, 10, 0.68)';
+const CURVE_ACTIVE = 'rgba(10, 10, 10, 0.96)';
+const CURVE_HALO = 'rgba(255, 255, 255, 0.88)';
+const CONTROL_FILL = 'rgba(22, 22, 22, 0.96)';
+const CONTROL_STROKE = 'rgba(255, 255, 255, 0.92)';
 
 const gerverCap = getGerverCapInitialization();
 
@@ -131,7 +128,8 @@ const ARC_SEGMENT_MAP = new Map(ARC_SEGMENTS.map(segment => [segment.index, segm
 
 let dragging: DragState | null = null;
 let hoveredArcSegment: number | null = null;
-let focusedArcSegment = 0;
+let focusedArcSegment: number | null = null;
+let selectedNodeIndex: number | null = null;
 let arcRenderStates = new Map<number, ArcRenderState>();
 
 function clamp(value: number, min: number, max: number) {
@@ -144,26 +142,31 @@ function wrapTau(angle: number) {
   return value;
 }
 
-function tangentHandle(p: Point, angle: number): Point {
-  return { x: p.x + HANDLE_LEN * Math.cos(angle), y: p.y + HANDLE_LEN * Math.sin(angle) };
+function tangentSegmentEndpoints(p: Point, angle: number) {
+  const dx = HANDLE_HALF_LEN * Math.cos(angle);
+  const dy = HANDLE_HALF_LEN * Math.sin(angle);
+  return {
+    negative: { x: p.x - dx, y: p.y - dy },
+    positive: { x: p.x + dx, y: p.y + dy }
+  };
 }
 
 function mirroredAngle(angle: number) {
   return angle === Math.PI ? Math.PI : TAU - angle;
 }
 
-function buildVisibleNodes(): VisibleNode[] {
+function buildVisibleNodes(controlState: ControlNode[] = controls): VisibleNode[] {
   return [
-    { index: 0, point: controls[0].point, angle: controls[0].angle, sourceIndex: 0, mirrored: false, pinnedY: 0, handleLocked: false },
-    { index: 1, point: controls[1].point, angle: controls[1].angle, sourceIndex: 1, mirrored: false, pinnedY: null, handleLocked: false },
-    { index: 2, point: controls[2].point, angle: controls[2].angle, sourceIndex: 2, mirrored: false, pinnedY: null, handleLocked: false },
-    { index: 3, point: controls[3].point, angle: controls[3].angle, sourceIndex: 3, mirrored: false, pinnedY: null, handleLocked: false },
-    { index: 4, point: controls[4].point, angle: Math.PI, sourceIndex: 4, mirrored: false, pinnedY: 1, handleLocked: true },
-    { index: 5, point: { x: -controls[4].point.x, y: controls[4].point.y }, angle: Math.PI, sourceIndex: 4, mirrored: true, pinnedY: 1, handleLocked: true },
-    { index: 6, point: { x: -controls[3].point.x, y: controls[3].point.y }, angle: mirroredAngle(controls[3].angle), sourceIndex: 3, mirrored: true, pinnedY: null, handleLocked: false },
-    { index: 7, point: { x: -controls[2].point.x, y: controls[2].point.y }, angle: mirroredAngle(controls[2].angle), sourceIndex: 2, mirrored: true, pinnedY: null, handleLocked: false },
-    { index: 8, point: { x: -controls[1].point.x, y: controls[1].point.y }, angle: mirroredAngle(controls[1].angle), sourceIndex: 1, mirrored: true, pinnedY: null, handleLocked: false },
-    { index: 9, point: { x: -controls[0].point.x, y: controls[0].point.y }, angle: mirroredAngle(controls[0].angle), sourceIndex: 0, mirrored: true, pinnedY: 0, handleLocked: false }
+    { index: 0, point: controlState[0].point, angle: controlState[0].angle, sourceIndex: 0, mirrored: false, pinnedY: 0, handleLocked: false },
+    { index: 1, point: controlState[1].point, angle: controlState[1].angle, sourceIndex: 1, mirrored: false, pinnedY: null, handleLocked: false },
+    { index: 2, point: controlState[2].point, angle: controlState[2].angle, sourceIndex: 2, mirrored: false, pinnedY: null, handleLocked: false },
+    { index: 3, point: controlState[3].point, angle: controlState[3].angle, sourceIndex: 3, mirrored: false, pinnedY: null, handleLocked: false },
+    { index: 4, point: controlState[4].point, angle: Math.PI, sourceIndex: 4, mirrored: false, pinnedY: 1, handleLocked: true },
+    { index: 5, point: { x: -controlState[4].point.x, y: controlState[4].point.y }, angle: Math.PI, sourceIndex: 4, mirrored: true, pinnedY: 1, handleLocked: true },
+    { index: 6, point: { x: -controlState[3].point.x, y: controlState[3].point.y }, angle: mirroredAngle(controlState[3].angle), sourceIndex: 3, mirrored: true, pinnedY: null, handleLocked: false },
+    { index: 7, point: { x: -controlState[2].point.x, y: controlState[2].point.y }, angle: mirroredAngle(controlState[2].angle), sourceIndex: 2, mirrored: true, pinnedY: null, handleLocked: false },
+    { index: 8, point: { x: -controlState[1].point.x, y: controlState[1].point.y }, angle: mirroredAngle(controlState[1].angle), sourceIndex: 1, mirrored: true, pinnedY: null, handleLocked: false },
+    { index: 9, point: { x: -controlState[0].point.x, y: controlState[0].point.y }, angle: mirroredAngle(controlState[0].angle), sourceIndex: 0, mirrored: true, pinnedY: 0, handleLocked: false }
   ];
 }
 
@@ -171,46 +174,73 @@ function preferredArcForNode(index: number) {
   const outgoing = ARC_SEGMENTS.find(segment => segment.from === index);
   if (outgoing) return outgoing.index;
   const incoming = ARC_SEGMENTS.find(segment => segment.to === index);
-  return incoming ? incoming.index : 0;
+  return incoming ? incoming.index : null;
 }
 
 function sourcePointFromVisible(node: VisibleNode, world: Point): Point {
   return node.mirrored ? { x: -world.x, y: world.y } : world;
 }
 
-function applyPointConstraints(sourceIndex: number, target: Point): Point {
-  const minX = sourceIndex === controls.length - 1 ? X_GAP : controls[sourceIndex + 1].point.x + X_GAP;
-  const maxX = sourceIndex === 0 ? Number.POSITIVE_INFINITY : controls[sourceIndex - 1].point.x - X_GAP;
+function constrainPoint(sourceIndex: number, target: Point, controlState: ControlNode[] = controls): Point {
+  const minX = sourceIndex === controlState.length - 1 ? X_GAP : controlState[sourceIndex + 1].point.x + X_GAP;
+  const maxX = sourceIndex === 0 ? Number.POSITIVE_INFINITY : controlState[sourceIndex - 1].point.x - X_GAP;
   const x = clamp(Math.max(X_GAP, target.x), minX, maxX);
 
   if (sourceIndex === 0) return { x, y: 0 };
-  if (sourceIndex === controls.length - 1) return { x, y: 1 };
+  if (sourceIndex === controlState.length - 1) return { x, y: 1 };
 
-  const minY = controls[sourceIndex - 1].point.y + Y_GAP;
-  const maxY = controls[sourceIndex + 1].point.y - Y_GAP;
+  const minY = controlState[sourceIndex - 1].point.y + Y_GAP;
+  const maxY = controlState[sourceIndex + 1].point.y - Y_GAP;
   return { x, y: clamp(target.y, minY, maxY) };
 }
 
-function applyAngleConstraints(sourceIndex: number, rawAngle: number) {
-  if (sourceIndex === controls.length - 1) return;
-  const minAngle = sourceIndex === 0 ? Math.PI / 2 + ANGLE_GAP : controls[sourceIndex - 1].angle + ANGLE_GAP;
-  const maxAngle = sourceIndex === controls.length - 2 ? Math.PI - ANGLE_GAP : controls[sourceIndex + 1].angle - ANGLE_GAP;
-  controls[sourceIndex].angle = clamp(wrapTau(rawAngle), minAngle, maxAngle);
+function constrainAngle(sourceIndex: number, rawAngle: number, controlState: ControlNode[] = controls) {
+  if (sourceIndex === controlState.length - 1) return Math.PI;
+  const minAngle = sourceIndex === 0 ? Math.PI / 2 + ANGLE_GAP : controlState[sourceIndex - 1].angle + ANGLE_GAP;
+  const maxAngle = sourceIndex === controlState.length - 2 ? Math.PI - ANGLE_GAP : controlState[sourceIndex + 1].angle - ANGLE_GAP;
+  return clamp(wrapTau(rawAngle), minAngle, maxAngle);
 }
 
 function nodeColor(node: VisibleNode) {
-  if (node.index === 4 || node.index === 5) return '#ffe29a';
-  return node.mirrored ? '#ffb08a' : '#79ddff';
+  return node.index === 4 || node.index === 5 ? 'rgba(22, 22, 22, 0.96)' : CONTROL_FILL;
 }
 
-function solveArc(def: ArcSegmentDef, nodes: VisibleNode[], drag: Extract<DragState, { kind: 'arc' }> | null): ArcRenderState {
+function angleDistance(a: number, b: number) {
+  const diff = Math.abs(wrapTau(a - b));
+  return Math.min(diff, TAU - diff);
+}
+
+function resolveHandleAngle(node: VisibleNode, visibleAngle: number) {
+  const visibleCandidates = [wrapTau(visibleAngle), wrapTau(visibleAngle + Math.PI)];
+  const sourceCandidates = visibleCandidates.map(candidate =>
+    node.mirrored ? wrapTau(TAU - candidate) : candidate
+  );
+
+  let best = sourceCandidates[0];
+  let bestDist = angleDistance(sourceCandidates[0], controls[node.sourceIndex].angle);
+  for (let i = 1; i < sourceCandidates.length; i++) {
+    const dist = angleDistance(sourceCandidates[i], controls[node.sourceIndex].angle);
+    if (dist < bestDist) {
+      best = sourceCandidates[i];
+      bestDist = dist;
+    }
+  }
+  return best;
+}
+
+function solveArc(
+  def: ArcSegmentDef,
+  nodes: VisibleNode[],
+  lambdaState: number[] = lambdas,
+  drag: Extract<DragState, { kind: 'arc' }> | null = null
+): ArcRenderState {
   const from = nodes[def.from];
   const to = nodes[def.to];
   const [at1, at2] = normAngles(from.angle, to.angle);
 
   const solution = drag && drag.segmentIndex === def.index
     ? solveWithPassthrough(at1, at2, from.point, to.point, drag.pStar, drag.tStarHint, drag.lastSolveC)
-    : solveFromLambda(at1, at2, from.point, to.point, lambdas[def.lambdaIndex]);
+    : solveFromLambda(at1, at2, from.point, to.point, lambdaState[def.lambdaIndex]);
 
   return {
     def,
@@ -219,10 +249,62 @@ function solveArc(def: ArcSegmentDef, nodes: VisibleNode[], drag: Extract<DragSt
     at1,
     at2,
     solution,
-    curvePts: solution ? sampleCurvePoints(at1, at2, solution.a, solution.b, solution.c, from.point, 160) : [],
-    minS: null,
-    maxS: null
+    curvePts: solution ? sampleCurvePoints(at1, at2, solution.a, solution.b, solution.c, from.point, 160) : []
   };
+}
+
+function cloneControls(controlState: ControlNode[] = controls) {
+  return controlState.map(control => ({
+    point: { ...control.point },
+    angle: control.angle
+  }));
+}
+
+function interpolateControls(fromControls: ControlNode[], toControls: ControlNode[], alpha: number) {
+  return fromControls.map((control, index) => ({
+    point: {
+      x: control.point.x + (toControls[index].point.x - control.point.x) * alpha,
+      y: control.point.y + (toControls[index].point.y - control.point.y) * alpha
+    },
+    angle: control.angle + (toControls[index].angle - control.angle) * alpha
+  }));
+}
+
+function areAllArcsSolvable(controlState: ControlNode[]) {
+  const nodes = buildVisibleNodes(controlState);
+  for (const segment of ARC_SEGMENTS) {
+    if (!solveArc(segment, nodes, lambdas).solution) return false;
+  }
+  return true;
+}
+
+function tryCommitControlUpdate(mutator: (nextControls: ControlNode[]) => void) {
+  const startControls = cloneControls();
+  const nextControls = cloneControls();
+  mutator(nextControls);
+
+  if (areAllArcsSolvable(nextControls)) {
+    controls = nextControls;
+    return true;
+  }
+
+  let lo = 0;
+  let hi = 1;
+  let bestControls = startControls;
+
+  for (let i = 0; i < 18; i++) {
+    const mid = (lo + hi) / 2;
+    const midControls = interpolateControls(startControls, nextControls, mid);
+    if (areAllArcsSolvable(midControls)) {
+      lo = mid;
+      bestControls = midControls;
+    } else {
+      hi = mid;
+    }
+  }
+
+  controls = bestControls;
+  return lo > 0;
 }
 
 function closestArcHit(sx: number, sy: number): { segmentIndex: number; t: number; dist: number } | null {
@@ -238,12 +320,17 @@ function closestArcHit(sx: number, sy: number): { segmentIndex: number; t: numbe
 
 function hitTest(sx: number, sy: number): Hit {
   const nodes = buildVisibleNodes();
+  const selectedNode = selectedNodeIndex != null ? nodes[selectedNodeIndex] : null;
 
-  for (const node of nodes) {
-    if (node.handleLocked) continue;
-    const handle = toScreen(tangentHandle(node.point, node.angle));
-    if (Math.hypot(sx - handle.x, sy - handle.y) < HANDLE_R + 4) {
-      return { kind: 'handle', index: node.index };
+  if (selectedNode && !selectedNode.handleLocked) {
+    const { negative, positive } = tangentSegmentEndpoints(selectedNode.point, selectedNode.angle);
+    const positiveScreen = toScreen(positive);
+    const negativeScreen = toScreen(negative);
+    if (
+      Math.hypot(sx - positiveScreen.x, sy - positiveScreen.y) < HANDLE_R + 4 ||
+      Math.hypot(sx - negativeScreen.x, sy - negativeScreen.y) < HANDLE_R + 4
+    ) {
+      return { kind: 'handle', index: selectedNode.index };
     }
   }
 
@@ -258,20 +345,21 @@ function hitTest(sx: number, sy: number): Hit {
   return arcHit ? { kind: 'arc', segmentIndex: arcHit.segmentIndex, t: arcHit.t } : null;
 }
 
-function serializeState() {
-  return JSON.stringify({ controls, lambdas });
-}
-
 canvas.addEventListener('pointerdown', e => {
   const hit = hitTest(e.offsetX, e.offsetY);
+  dragging = null;
 
   if (hit?.kind === 'point') {
+    selectedNodeIndex = hit.index;
+    focusedArcSegment = preferredArcForNode(hit.index);
     dragging = { kind: 'point', index: hit.index };
-    focusedArcSegment = preferredArcForNode(hit.index);
   } else if (hit?.kind === 'handle') {
-    dragging = { kind: 'handle', index: hit.index };
+    selectedNodeIndex = hit.index;
     focusedArcSegment = preferredArcForNode(hit.index);
+    dragging = { kind: 'handle', index: hit.index };
   } else if (hit?.kind === 'arc') {
+    selectedNodeIndex = null;
+    focusedArcSegment = hit.segmentIndex;
     const state = arcRenderStates.get(hit.segmentIndex);
     if (state?.solution) {
       const onCurve = evalCurve(state.at1, hit.t, state.solution.a, state.solution.b, state.solution.c, state.from.point);
@@ -283,11 +371,10 @@ canvas.addEventListener('pointerdown', e => {
         tStarHint: hit.t,
         lastSolveC: state.solution.c
       };
-      focusedArcSegment = hit.segmentIndex;
     }
-  }
-
-  if (!dragging) {
+  } else {
+    selectedNodeIndex = null;
+    focusedArcSegment = null;
     dragging = {
       kind: 'pan',
       start: { x: e.offsetX, y: e.offsetY, camX, camY }
@@ -301,7 +388,7 @@ canvas.addEventListener('pointermove', e => {
   if (!dragging) {
     const hit = hitTest(e.offsetX, e.offsetY);
     hoveredArcSegment = hit?.kind === 'arc' ? hit.segmentIndex : null;
-    canvas.style.cursor = hit ? 'pointer' : 'default';
+    canvas.style.cursor = hit?.kind === 'handle' ? 'crosshair' : hit ? 'pointer' : 'default';
     return;
   }
 
@@ -320,7 +407,9 @@ canvas.addEventListener('pointermove', e => {
   if (dragging.kind === 'point') {
     const node = nodes[dragging.index];
     const target = sourcePointFromVisible(node, world);
-    controls[node.sourceIndex].point = applyPointConstraints(node.sourceIndex, target);
+    tryCommitControlUpdate(nextControls => {
+      nextControls[node.sourceIndex].point = constrainPoint(node.sourceIndex, target, nextControls);
+    });
     return;
   }
 
@@ -328,15 +417,18 @@ canvas.addEventListener('pointermove', e => {
     const node = nodes[dragging.index];
     const center = node.point;
     const visibleAngle = Math.atan2(world.y - center.y, world.x - center.x);
-    const sourceAngle = node.mirrored ? wrapTau(TAU - wrapTau(visibleAngle)) : wrapTau(visibleAngle);
-    applyAngleConstraints(node.sourceIndex, sourceAngle);
+    const sourceAngle = resolveHandleAngle(node, visibleAngle);
+    tryCommitControlUpdate(nextControls => {
+      nextControls[node.sourceIndex].angle = constrainAngle(node.sourceIndex, sourceAngle, nextControls);
+    });
     return;
   }
 
   const def = ARC_SEGMENT_MAP.get(dragging.segmentIndex);
   if (!def) return;
+
   const candidate = world;
-  const state = solveArc(def, nodes, { ...dragging, pStar: candidate });
+  const state = solveArc(def, nodes, lambdas, { ...dragging, pStar: candidate });
   if (state.solution) {
     dragging.pStar = candidate;
     dragging.tStarHint = state.solution.tStar ?? dragging.tStarHint;
@@ -344,12 +436,12 @@ canvas.addEventListener('pointermove', e => {
   }
 });
 
-canvas.addEventListener('pointerup', () => {
+function finishDrag() {
   if (dragging?.kind === 'arc') {
     const def = ARC_SEGMENT_MAP.get(dragging.segmentIndex);
     if (def) {
       const nodes = buildVisibleNodes();
-      const state = solveArc(def, nodes, dragging);
+      const state = solveArc(def, nodes, lambdas, dragging);
       if (state.solution) {
         lambdas[dragging.lambdaIndex] = computeLambda(
           state.at1,
@@ -365,6 +457,14 @@ canvas.addEventListener('pointerup', () => {
   }
 
   dragging = null;
+}
+
+canvas.addEventListener('pointerup', finishDrag);
+canvas.addEventListener('pointercancel', finishDrag);
+canvas.addEventListener('pointerleave', () => {
+  if (dragging) return;
+  hoveredArcSegment = null;
+  canvas.style.cursor = 'default';
 });
 
 canvas.addEventListener('wheel', e => {
@@ -373,53 +473,16 @@ canvas.addEventListener('wheel', e => {
   camScale = Math.max(20, Math.min(2000, camScale));
 }, { passive: false });
 
-stateInput.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  try {
-    const parsed = JSON.parse(stateInput.value);
-    if (Array.isArray(parsed.controls) && parsed.controls.length === 5) {
-      controls = parsed.controls.map((control: ControlNode, index: number) => ({
-        point: applyPointConstraints(index, {
-          x: Number(control.point?.x ?? controls[index].point.x),
-          y: Number(control.point?.y ?? controls[index].point.y)
-        }),
-        angle: index === 4 ? Math.PI : controls[index].angle
-      }));
-
-      for (let i = 0; i < 4; i++) {
-        const angle = Number(parsed.controls[i]?.angle ?? controls[i].angle);
-        applyAngleConstraints(i, angle);
-      }
-    }
-
-    if (Array.isArray(parsed.lambdas) && parsed.lambdas.length === 4) {
-      lambdas = parsed.lambdas.map((value: number) => clamp(Number(value), 0, 1));
-    }
-
-    stateInput.value = '';
-    stateInput.blur();
-  } catch {
-    stateInput.style.borderColor = 'rgba(255,100,100,0.8)';
-    setTimeout(() => {
-      stateInput.style.borderColor = '';
-    }, 1000);
-  }
-});
-
-stateInput.addEventListener('pointerdown', e => e.stopPropagation());
-
 function frame() {
   resize();
   ctx.clearRect(0, 0, W, H);
   drawGrid(ctx, toScreen, W, H, camX, camY, camScale);
 
-  drawLine(ctx, toScreen, { x: 0, y: -0.1 }, { x: 0, y: 1.12 }, 'rgba(255,255,255,0.08)', 1, [6, 6]);
+  drawLine(ctx, toScreen, { x: 0, y: -0.1 }, { x: 0, y: 1.12 }, 'rgba(62, 89, 138, 0.18)', 1, [6, 8]);
 
   const nodes = buildVisibleNodes();
   const activeSegmentIndex = dragging?.kind === 'arc' ? dragging.segmentIndex : hoveredArcSegment ?? focusedArcSegment;
   const activeDrag = dragging?.kind === 'arc' ? dragging : null;
-  let solvedCount = 0;
-  let activeArc: ArcRenderState | null = null;
 
   arcRenderStates = new Map();
 
@@ -427,84 +490,60 @@ function frame() {
     if (segment.kind === 'line') {
       const from = nodes[segment.from];
       const to = nodes[segment.to];
-      drawLine(ctx, toScreen, from.point, to.point, 'rgba(255,226,154,0.85)', 4);
+      drawLine(ctx, toScreen, from.point, to.point, CURVE_ACTIVE, 2.8);
       continue;
     }
 
-    const state = solveArc(segment, nodes, activeDrag && activeDrag.segmentIndex === segment.index ? activeDrag : null);
+    const state = solveArc(segment, nodes, lambdas, activeDrag && activeDrag.segmentIndex === segment.index ? activeDrag : null);
     arcRenderStates.set(segment.index, state);
 
     if (!state.solution) {
-      drawLine(ctx, toScreen, state.from.point, state.to.point, 'rgba(255,110,110,0.45)', 1.5, [6, 4]);
+      drawLine(ctx, toScreen, state.from.point, state.to.point, 'rgba(228, 94, 84, 0.55)', 1.5, [6, 5]);
       continue;
     }
 
-    solvedCount += 1;
     const active = segment.index === activeSegmentIndex;
-    const stats = drawCurveVis(
-      ctx,
-      toScreen,
-      state.at1,
-      state.at2,
-      state.solution.a,
-      state.solution.b,
-      state.solution.c,
-      state.from.point,
-      {
-        lineColor: ARC_COLORS[segment.lambdaIndex],
-        lineWidth: active ? 3.2 : 2.1,
-        showSpeed: active
-      }
-    );
 
-    state.minS = stats.minS;
-    state.maxS = stats.maxS;
+    drawCurveVis(ctx, toScreen, state.at1, state.at2, state.solution.a, state.solution.b, state.solution.c, state.from.point, {
+      lineColor: active ? CURVE_HALO : 'rgba(255, 255, 255, 0.52)',
+      lineWidth: active ? 6.2 : 3.4,
+      showSpeed: false,
+      shadowColor: active ? 'rgba(255, 255, 255, 0.52)' : 'transparent',
+      shadowBlur: active ? 6 : 0
+    });
 
-    if (active) activeArc = state;
+    drawCurveVis(ctx, toScreen, state.at1, state.at2, state.solution.a, state.solution.b, state.solution.c, state.from.point, {
+      lineColor: active ? CURVE_ACTIVE : CURVE_INACTIVE,
+      lineWidth: active ? 2.4 : 1.8,
+      showSpeed: false,
+      shadowColor: 'transparent',
+      shadowBlur: 0
+    });
 
     if (activeDrag && activeDrag.segmentIndex === segment.index && state.solution.tStar != null) {
       const pStar = evalCurve(state.at1, state.solution.tStar, state.solution.a, state.solution.b, state.solution.c, state.from.point);
-      drawCircle(ctx, toScreen, pStar, 5, '#fff199', true);
+      drawSquare(ctx, toScreen, pStar, 8, CONTROL_STROKE, true);
+      drawSquare(ctx, toScreen, pStar, 6, CONTROL_FILL, true);
     }
   }
 
   for (const node of nodes) {
     const color = nodeColor(node);
-    const handle = tangentHandle(node.point, node.angle);
-    drawLine(ctx, toScreen, node.point, handle, `${color}55`, 1.5, [4, 4]);
-    drawCircle(ctx, toScreen, node.point, POINT_R, color, true);
-    if (!node.handleLocked) {
-      drawCircle(ctx, toScreen, handle, 6, color, true);
-    } else {
-      drawCircle(ctx, toScreen, handle, 5, color, false);
+    const selected = node.index === selectedNodeIndex;
+    drawSquare(ctx, toScreen, node.point, selected ? SELECTED_POINT_R + 4 : POINT_R + 3, CONTROL_STROKE, true);
+    drawSquare(ctx, toScreen, node.point, selected ? SELECTED_POINT_R : POINT_R, color, true);
+
+    if (selected && !node.handleLocked) {
+      const { negative, positive } = tangentSegmentEndpoints(node.point, node.angle);
+      drawLine(ctx, toScreen, negative, node.point, 'rgba(40, 40, 40, 0.46)', 1.1);
+      drawLine(ctx, toScreen, node.point, positive, 'rgba(40, 40, 40, 0.46)', 1.1);
+      drawSquare(ctx, toScreen, negative, 8, CONTROL_STROKE, true);
+      drawSquare(ctx, toScreen, positive, 8, CONTROL_STROKE, true);
+      drawSquare(ctx, toScreen, negative, 6, color, true);
+      drawSquare(ctx, toScreen, positive, 6, color, true);
     }
-
-    const screen = toScreen(node.point);
-    ctx.font = '12px monospace';
-    ctx.fillStyle = color;
-    ctx.fillText(`p${node.index}`, screen.x + 11, screen.y - 9);
   }
 
-  const lambdaText = lambdas.map((value, index) => `λ${index}=${value.toFixed(2)}`).join('  ');
-  if (activeArc?.solution && activeArc.minS != null && activeArc.maxS != null) {
-    drawSpeedGraph(
-      ctx,
-      W,
-      activeArc.at1,
-      activeArc.at2,
-      activeArc.solution.a,
-      activeArc.solution.b,
-      activeArc.solution.c,
-      activeArc.solution.tStar ?? null
-    );
-    info.textContent =
-      `Quadratic-angle arcs  ${lambdaText}  active:p${activeArc.def.from}->p${activeArc.def.to}` +
-      `  speed:[${activeArc.minS.toFixed(2)}, ${activeArc.maxS.toFixed(2)}]  solved:${solvedCount}/8`;
-  } else {
-    info.textContent = `Quadratic-angle arcs  ${lambdaText}  solved:${solvedCount}/8`;
-  }
-
-  stateEl.textContent = serializeState();
   requestAnimationFrame(frame);
 }
 
