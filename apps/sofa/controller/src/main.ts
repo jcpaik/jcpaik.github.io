@@ -1,6 +1,6 @@
-import { type Point, type CurvePoint, normAngles, sampleCurvePoints, closestOnCurve, evalCurve, minSpeedOnInterval } from './curve';
-import { type ABC, findExtremes, solveFromLambda, computeLambda, solveWithPassthrough } from './solver';
-import { drawCircle, drawLine, drawCurveVis, drawGhostCurve, drawSpeedGraph, drawGrid } from './render';
+import { type Point, type CurvePoint, TAU, normAngles, sampleCurvePoints, closestOnCurve, evalCurve } from './curve';
+import { type ABC, computeLambda, solveFromLambda, solveWithPassthrough } from './solver';
+import { drawCircle, drawLine, drawCurveVis, drawSpeedGraph, drawGrid } from './render';
 
 // --- Canvas ---
 const canvas = document.getElementById('view') as HTMLCanvasElement;
@@ -9,137 +9,361 @@ const info = document.getElementById('info')!;
 const stateEl = document.getElementById('state')!;
 const stateInput = document.getElementById('state-input') as HTMLInputElement;
 
-let W: number, H: number;
+let W: number;
+let H: number;
+
 function resize() {
   const dpr = devicePixelRatio;
-  W = canvas.clientWidth; H = canvas.clientHeight;
-  canvas.width = W * dpr; canvas.height = H * dpr;
+  W = canvas.clientWidth;
+  H = canvas.clientHeight;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
+
 resize();
 addEventListener('resize', resize);
 
 // --- Camera ---
-let camX = 0, camY = 0, camScale = 150;
+let camX = 0;
+let camY = 0.55;
+let camScale = 185;
 
 function toScreen(p: Point): Point {
   return { x: W / 2 + (p.x - camX) * camScale, y: H / 2 - (p.y - camY) * camScale };
 }
+
 function toWorld(sx: number, sy: number): Point {
   return { x: camX + (sx - W / 2) / camScale, y: camY - (sy - H / 2) / camScale };
 }
 
-// --- State ---
-let p1: Point = { x: 0, y: 0 };
-let p2: Point = { x: 1, y: 1 };
-let t1 = 0;
-let t2 = Math.PI / 2;
-let lambda = 0.5;
+// --- Hull state ---
+interface ControlNode {
+  point: Point;
+  angle: number;
+}
 
-const HANDLE_LEN = 0.6;
+interface VisibleNode {
+  index: number;
+  point: Point;
+  angle: number;
+  sourceIndex: number;
+  mirrored: boolean;
+  pinnedY: number | null;
+  handleLocked: boolean;
+}
+
+interface ArcSegmentDef {
+  kind: 'arc';
+  index: number;
+  from: number;
+  to: number;
+  lambdaIndex: number;
+}
+
+interface LineSegmentDef {
+  kind: 'line';
+  index: number;
+  from: number;
+  to: number;
+}
+
+type SegmentDef = ArcSegmentDef | LineSegmentDef;
+
+interface ArcRenderState {
+  def: ArcSegmentDef;
+  from: VisibleNode;
+  to: VisibleNode;
+  at1: number;
+  at2: number;
+  solution: (ABC & { tStar?: number }) | null;
+  curvePts: CurvePoint[];
+  minS: number | null;
+  maxS: number | null;
+}
+
+type DragState =
+  | { kind: 'pan'; start: { x: number; y: number; camX: number; camY: number } }
+  | { kind: 'point'; index: number }
+  | { kind: 'handle'; index: number }
+  | { kind: 'arc'; segmentIndex: number; lambdaIndex: number; pStar: Point; tStarHint: number; lastSolveC: number | null };
+
+type Hit =
+  | { kind: 'point'; index: number }
+  | { kind: 'handle'; index: number }
+  | { kind: 'arc'; segmentIndex: number; t: number }
+  | null;
+
+const HANDLE_LEN = 0.46;
+const HANDLE_R = 8;
+const POINT_R = 8;
+const CURVE_HIT_DIST = 12;
+const X_GAP = 0.04;
+const Y_GAP = 0.04;
+const ANGLE_GAP = 0.04;
+
+const ARC_COLORS = ['#72d3ff', '#7ae7c3', '#e2e46e', '#ffcd76'];
+
+let controls: ControlNode[] = [
+  { point: { x: 2.08, y: 0 }, angle: 2.2 },
+  { point: { x: 1.66512196490524, y: 0.4416042324044667 }, angle: 2.45 },
+  { point: { x: 1.1538868476866024, y: 0.7668375901709685 }, angle: 2.7 },
+  { point: { x: 0.5780807718056917, y: 0.9554786383557533 }, angle: 2.95 },
+  { point: { x: 0.11535373871839627, y: 1 }, angle: Math.PI }
+];
+
+let lambdas = [0.5, 0.5, 0.5, 0.5];
+
+const SEGMENTS: SegmentDef[] = [
+  { kind: 'arc', index: 0, from: 0, to: 1, lambdaIndex: 0 },
+  { kind: 'arc', index: 1, from: 1, to: 2, lambdaIndex: 1 },
+  { kind: 'arc', index: 2, from: 2, to: 3, lambdaIndex: 2 },
+  { kind: 'arc', index: 3, from: 3, to: 4, lambdaIndex: 3 },
+  { kind: 'line', index: 4, from: 4, to: 5 },
+  { kind: 'arc', index: 5, from: 5, to: 6, lambdaIndex: 3 },
+  { kind: 'arc', index: 6, from: 6, to: 7, lambdaIndex: 2 },
+  { kind: 'arc', index: 7, from: 7, to: 8, lambdaIndex: 1 },
+  { kind: 'arc', index: 8, from: 8, to: 9, lambdaIndex: 0 }
+];
+
+const ARC_SEGMENTS = SEGMENTS.filter((segment): segment is ArcSegmentDef => segment.kind === 'arc');
+const ARC_SEGMENT_MAP = new Map(ARC_SEGMENTS.map(segment => [segment.index, segment] as const));
+
+let dragging: DragState | null = null;
+let hoveredArcSegment: number | null = null;
+let focusedArcSegment = 0;
+let arcRenderStates = new Map<number, ArcRenderState>();
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function wrapTau(angle: number) {
+  let value = angle % TAU;
+  if (value < 0) value += TAU;
+  return value;
+}
+
 function tangentHandle(p: Point, angle: number): Point {
   return { x: p.x + HANDLE_LEN * Math.cos(angle), y: p.y + HANDLE_LEN * Math.sin(angle) };
 }
 
-// Dragging
-let dragging: string | null = null;
-let dragStart: { x: number; y: number; camX: number; camY: number } | null = null;
-
-// Passthrough state (only while dragging curve)
-let pStar: Point | null = null;
-let tStarHint: number | null = null;
-let lastSolveC: number | null = null;
-
-// Cached curve for rendering and hit-testing
-let curSolution: (ABC & { tStar?: number }) | null = null;
-let curCurvePts: CurvePoint[] = [];
-
-const HANDLE_R = 8;
-const CURVE_HIT_DIST = 12;
-
-function hitTest(sx: number, sy: number): string | null {
-  const h1 = toScreen(tangentHandle(p1, t1));
-  if (Math.hypot(sx - h1.x, sy - h1.y) < HANDLE_R + 4) return 'handle1';
-  const h2 = toScreen(tangentHandle(p2, t2));
-  if (Math.hypot(sx - h2.x, sy - h2.y) < HANDLE_R + 4) return 'handle2';
-  const s1 = toScreen(p1);
-  if (Math.hypot(sx - s1.x, sy - s1.y) < HANDLE_R + 4) return 'p1';
-  const s2 = toScreen(p2);
-  if (Math.hypot(sx - s2.x, sy - s2.y) < HANDLE_R + 4) return 'p2';
-  if (curCurvePts.length > 0) {
-    const hit = closestOnCurve(sx, sy, curCurvePts, toScreen);
-    if (hit.dist < CURVE_HIT_DIST) return 'curve';
-  }
-  return null;
+function mirroredAngle(angle: number) {
+  return angle === Math.PI ? Math.PI : TAU - angle;
 }
 
-// --- Events ---
-canvas.addEventListener('pointerdown', e => {
-  const sx = e.offsetX, sy = e.offsetY;
-  const hit = hitTest(sx, sy);
+function buildVisibleNodes(): VisibleNode[] {
+  return [
+    { index: 0, point: controls[0].point, angle: controls[0].angle, sourceIndex: 0, mirrored: false, pinnedY: 0, handleLocked: false },
+    { index: 1, point: controls[1].point, angle: controls[1].angle, sourceIndex: 1, mirrored: false, pinnedY: null, handleLocked: false },
+    { index: 2, point: controls[2].point, angle: controls[2].angle, sourceIndex: 2, mirrored: false, pinnedY: null, handleLocked: false },
+    { index: 3, point: controls[3].point, angle: controls[3].angle, sourceIndex: 3, mirrored: false, pinnedY: null, handleLocked: false },
+    { index: 4, point: controls[4].point, angle: Math.PI, sourceIndex: 4, mirrored: false, pinnedY: 1, handleLocked: true },
+    { index: 5, point: { x: -controls[4].point.x, y: controls[4].point.y }, angle: Math.PI, sourceIndex: 4, mirrored: true, pinnedY: 1, handleLocked: true },
+    { index: 6, point: { x: -controls[3].point.x, y: controls[3].point.y }, angle: mirroredAngle(controls[3].angle), sourceIndex: 3, mirrored: true, pinnedY: null, handleLocked: false },
+    { index: 7, point: { x: -controls[2].point.x, y: controls[2].point.y }, angle: mirroredAngle(controls[2].angle), sourceIndex: 2, mirrored: true, pinnedY: null, handleLocked: false },
+    { index: 8, point: { x: -controls[1].point.x, y: controls[1].point.y }, angle: mirroredAngle(controls[1].angle), sourceIndex: 1, mirrored: true, pinnedY: null, handleLocked: false },
+    { index: 9, point: { x: -controls[0].point.x, y: controls[0].point.y }, angle: mirroredAngle(controls[0].angle), sourceIndex: 0, mirrored: true, pinnedY: 0, handleLocked: false }
+  ];
+}
 
-  if (hit === 'handle1' || hit === 'handle2' || hit === 'p1' || hit === 'p2') {
-    dragging = hit;
-  } else if (hit === 'curve' && curSolution) {
-    const [at1, at2] = normAngles(t1, t2);
-    const closest = closestOnCurve(sx, sy, curCurvePts, toScreen);
-    // Use the actual on-curve point (not cursor position) to initiate the drag.
-    // Near the pointy extreme, the speed minimum is close to zero; using the
-    // off-curve cursor position can push the solved speed negative.
-    const onCurve = evalCurve(at1, closest.t, curSolution.a, curSolution.b, curSolution.c, p1);
-    dragging = 'curve';
-    pStar = onCurve;
-    tStarHint = closest.t;
-    lastSolveC = curSolution.c;
-  } else {
-    dragging = 'pan';
-    dragStart = { x: sx, y: sy, camX, camY };
+function preferredArcForNode(index: number) {
+  const outgoing = ARC_SEGMENTS.find(segment => segment.from === index);
+  if (outgoing) return outgoing.index;
+  const incoming = ARC_SEGMENTS.find(segment => segment.to === index);
+  return incoming ? incoming.index : 0;
+}
+
+function sourcePointFromVisible(node: VisibleNode, world: Point): Point {
+  return node.mirrored ? { x: -world.x, y: world.y } : world;
+}
+
+function applyPointConstraints(sourceIndex: number, target: Point): Point {
+  const minX = sourceIndex === controls.length - 1 ? X_GAP : controls[sourceIndex + 1].point.x + X_GAP;
+  const maxX = sourceIndex === 0 ? Number.POSITIVE_INFINITY : controls[sourceIndex - 1].point.x - X_GAP;
+  const x = clamp(Math.max(X_GAP, target.x), minX, maxX);
+
+  if (sourceIndex === 0) return { x, y: 0 };
+  if (sourceIndex === controls.length - 1) return { x, y: 1 };
+
+  const minY = controls[sourceIndex - 1].point.y + Y_GAP;
+  const maxY = controls[sourceIndex + 1].point.y - Y_GAP;
+  return { x, y: clamp(target.y, minY, maxY) };
+}
+
+function applyAngleConstraints(sourceIndex: number, rawAngle: number) {
+  if (sourceIndex === controls.length - 1) return;
+  const minAngle = sourceIndex === 0 ? Math.PI / 2 + ANGLE_GAP : controls[sourceIndex - 1].angle + ANGLE_GAP;
+  const maxAngle = sourceIndex === controls.length - 2 ? Math.PI - ANGLE_GAP : controls[sourceIndex + 1].angle - ANGLE_GAP;
+  controls[sourceIndex].angle = clamp(wrapTau(rawAngle), minAngle, maxAngle);
+}
+
+function nodeColor(node: VisibleNode) {
+  if (node.index === 4 || node.index === 5) return '#ffe29a';
+  return node.mirrored ? '#ffb08a' : '#79ddff';
+}
+
+function solveArc(def: ArcSegmentDef, nodes: VisibleNode[], drag: Extract<DragState, { kind: 'arc' }> | null): ArcRenderState {
+  const from = nodes[def.from];
+  const to = nodes[def.to];
+  const [at1, at2] = normAngles(from.angle, to.angle);
+
+  const solution = drag && drag.segmentIndex === def.index
+    ? solveWithPassthrough(at1, at2, from.point, to.point, drag.pStar, drag.tStarHint, drag.lastSolveC)
+    : solveFromLambda(at1, at2, from.point, to.point, lambdas[def.lambdaIndex]);
+
+  return {
+    def,
+    from,
+    to,
+    at1,
+    at2,
+    solution,
+    curvePts: solution ? sampleCurvePoints(at1, at2, solution.a, solution.b, solution.c, from.point, 160) : [],
+    minS: null,
+    maxS: null
+  };
+}
+
+function closestArcHit(sx: number, sy: number): { segmentIndex: number; t: number; dist: number } | null {
+  let best: { segmentIndex: number; t: number; dist: number } | null = null;
+  for (const state of arcRenderStates.values()) {
+    if (state.curvePts.length === 0) continue;
+    const hit = closestOnCurve(sx, sy, state.curvePts, toScreen);
+    if (hit.dist >= CURVE_HIT_DIST) continue;
+    if (!best || hit.dist < best.dist) best = { segmentIndex: state.def.index, t: hit.t, dist: hit.dist };
   }
+  return best;
+}
+
+function hitTest(sx: number, sy: number): Hit {
+  const nodes = buildVisibleNodes();
+
+  for (const node of nodes) {
+    if (node.handleLocked) continue;
+    const handle = toScreen(tangentHandle(node.point, node.angle));
+    if (Math.hypot(sx - handle.x, sy - handle.y) < HANDLE_R + 4) {
+      return { kind: 'handle', index: node.index };
+    }
+  }
+
+  for (const node of nodes) {
+    const screenPoint = toScreen(node.point);
+    if (Math.hypot(sx - screenPoint.x, sy - screenPoint.y) < POINT_R + 4) {
+      return { kind: 'point', index: node.index };
+    }
+  }
+
+  const arcHit = closestArcHit(sx, sy);
+  return arcHit ? { kind: 'arc', segmentIndex: arcHit.segmentIndex, t: arcHit.t } : null;
+}
+
+function serializeState() {
+  return JSON.stringify({ controls, lambdas });
+}
+
+canvas.addEventListener('pointerdown', e => {
+  const hit = hitTest(e.offsetX, e.offsetY);
+
+  if (hit?.kind === 'point') {
+    dragging = { kind: 'point', index: hit.index };
+    focusedArcSegment = preferredArcForNode(hit.index);
+  } else if (hit?.kind === 'handle') {
+    dragging = { kind: 'handle', index: hit.index };
+    focusedArcSegment = preferredArcForNode(hit.index);
+  } else if (hit?.kind === 'arc') {
+    const state = arcRenderStates.get(hit.segmentIndex);
+    if (state?.solution) {
+      const onCurve = evalCurve(state.at1, hit.t, state.solution.a, state.solution.b, state.solution.c, state.from.point);
+      dragging = {
+        kind: 'arc',
+        segmentIndex: hit.segmentIndex,
+        lambdaIndex: state.def.lambdaIndex,
+        pStar: onCurve,
+        tStarHint: hit.t,
+        lastSolveC: state.solution.c
+      };
+      focusedArcSegment = hit.segmentIndex;
+    }
+  }
+
+  if (!dragging) {
+    dragging = {
+      kind: 'pan',
+      start: { x: e.offsetX, y: e.offsetY, camX, camY }
+    };
+  }
+
   canvas.setPointerCapture(e.pointerId);
 });
 
 canvas.addEventListener('pointermove', e => {
   if (!dragging) {
     const hit = hitTest(e.offsetX, e.offsetY);
+    hoveredArcSegment = hit?.kind === 'arc' ? hit.segmentIndex : null;
     canvas.style.cursor = hit ? 'pointer' : 'default';
     return;
   }
-  const sx = e.offsetX, sy = e.offsetY;
-  const w = toWorld(sx, sy);
 
-  if (dragging === 'pan') {
-    camX = dragStart!.camX - (sx - dragStart!.x) / camScale;
-    camY = dragStart!.camY + (sy - dragStart!.y) / camScale;
+  const sx = e.offsetX;
+  const sy = e.offsetY;
+  const world = toWorld(sx, sy);
+
+  if (dragging.kind === 'pan') {
+    camX = dragging.start.camX - (sx - dragging.start.x) / camScale;
+    camY = dragging.start.camY + (sy - dragging.start.y) / camScale;
     return;
   }
 
-  if (dragging === 'curve') {
-    pStar = w;
-    const [at1, at2] = normAngles(t1, t2);
-    const result = solveWithPassthrough(at1, at2, p1, p2, pStar, tStarHint!, lastSolveC);
-    if (result) {
-      tStarHint = result.tStar;
-      lastSolveC = result.c;
-    }
+  const nodes = buildVisibleNodes();
+
+  if (dragging.kind === 'point') {
+    const node = nodes[dragging.index];
+    const target = sourcePointFromVisible(node, world);
+    controls[node.sourceIndex].point = applyPointConstraints(node.sourceIndex, target);
     return;
   }
 
-  if (dragging === 'p1') p1 = w;
-  else if (dragging === 'p2') p2 = w;
-  else if (dragging === 'handle1') t1 = Math.atan2(w.y - p1.y, w.x - p1.x);
-  else if (dragging === 'handle2') t2 = Math.atan2(w.y - p2.y, w.x - p2.x);
+  if (dragging.kind === 'handle') {
+    const node = nodes[dragging.index];
+    const center = node.point;
+    const visibleAngle = Math.atan2(world.y - center.y, world.x - center.x);
+    const sourceAngle = node.mirrored ? wrapTau(TAU - wrapTau(visibleAngle)) : wrapTau(visibleAngle);
+    applyAngleConstraints(node.sourceIndex, sourceAngle);
+    return;
+  }
+
+  const def = ARC_SEGMENT_MAP.get(dragging.segmentIndex);
+  if (!def) return;
+  const candidate = world;
+  const state = solveArc(def, nodes, { ...dragging, pStar: candidate });
+  if (state.solution) {
+    dragging.pStar = candidate;
+    dragging.tStarHint = state.solution.tStar ?? dragging.tStarHint;
+    dragging.lastSolveC = state.solution.c;
+  }
 });
 
 canvas.addEventListener('pointerup', () => {
-  if (dragging === 'curve') {
-    if (curSolution) {
-      const [at1, at2] = normAngles(t1, t2);
-      lambda = computeLambda(at1, at2, p1, p2, curSolution.a, curSolution.b, curSolution.c);
+  if (dragging?.kind === 'arc') {
+    const def = ARC_SEGMENT_MAP.get(dragging.segmentIndex);
+    if (def) {
+      const nodes = buildVisibleNodes();
+      const state = solveArc(def, nodes, dragging);
+      if (state.solution) {
+        lambdas[dragging.lambdaIndex] = computeLambda(
+          state.at1,
+          state.at2,
+          state.from.point,
+          state.to.point,
+          state.solution.a,
+          state.solution.b,
+          state.solution.c
+        );
+      }
     }
-    pStar = null;
-    tStarHint = null;
-    lastSolveC = null;
   }
+
   dragging = null;
 });
 
@@ -149,93 +373,138 @@ canvas.addEventListener('wheel', e => {
   camScale = Math.max(20, Math.min(2000, camScale));
 }, { passive: false });
 
-// --- State serialization ---
-function serializeState(): string {
-  return JSON.stringify({ p1, p2, t1, t2, lambda });
-}
-
 stateInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    try {
-      const s = JSON.parse(stateInput.value);
-      if (s.p1) p1 = s.p1;
-      if (s.p2) p2 = s.p2;
-      if (s.t1 != null) t1 = s.t1;
-      if (s.t2 != null) t2 = s.t2;
-      if (s.lambda != null) lambda = s.lambda;
-      stateInput.value = '';
-      stateInput.blur();
-    } catch {
-      stateInput.style.borderColor = 'rgba(255,100,100,0.8)';
-      setTimeout(() => stateInput.style.borderColor = '', 1000);
+  if (e.key !== 'Enter') return;
+  try {
+    const parsed = JSON.parse(stateInput.value);
+    if (Array.isArray(parsed.controls) && parsed.controls.length === 5) {
+      controls = parsed.controls.map((control: ControlNode, index: number) => ({
+        point: applyPointConstraints(index, {
+          x: Number(control.point?.x ?? controls[index].point.x),
+          y: Number(control.point?.y ?? controls[index].point.y)
+        }),
+        angle: index === 4 ? Math.PI : controls[index].angle
+      }));
+
+      for (let i = 0; i < 4; i++) {
+        const angle = Number(parsed.controls[i]?.angle ?? controls[i].angle);
+        applyAngleConstraints(i, angle);
+      }
     }
+
+    if (Array.isArray(parsed.lambdas) && parsed.lambdas.length === 4) {
+      lambdas = parsed.lambdas.map((value: number) => clamp(Number(value), 0, 1));
+    }
+
+    stateInput.value = '';
+    stateInput.blur();
+  } catch {
+    stateInput.style.borderColor = 'rgba(255,100,100,0.8)';
+    setTimeout(() => {
+      stateInput.style.borderColor = '';
+    }, 1000);
   }
 });
 
-// Prevent canvas interactions while typing in the input
 stateInput.addEventListener('pointerdown', e => e.stopPropagation());
 
-// --- Frame loop ---
 function frame() {
   resize();
   ctx.clearRect(0, 0, W, H);
   drawGrid(ctx, toScreen, W, H, camX, camY, camScale);
 
-  const [at1, at2] = normAngles(t1, t2);
+  drawLine(ctx, toScreen, { x: 0, y: -0.1 }, { x: 0, y: 1.12 }, 'rgba(255,255,255,0.08)', 1, [6, 6]);
 
-  // Solve
-  let result: (ABC & { tStar?: number }) | null;
-  if (pStar) {
-    result = solveWithPassthrough(at1, at2, p1, p2, pStar, tStarHint!, lastSolveC);
-  } else {
-    result = solveFromLambda(at1, at2, p1, p2, lambda);
-  }
-  curSolution = result;
+  const nodes = buildVisibleNodes();
+  const activeSegmentIndex = dragging?.kind === 'arc' ? dragging.segmentIndex : hoveredArcSegment ?? focusedArcSegment;
+  const activeDrag = dragging?.kind === 'arc' ? dragging : null;
+  let solvedCount = 0;
+  let activeArc: ArcRenderState | null = null;
 
-  // Draw extreme ghosts
-  const extremes = findExtremes(at1, at2, p1, p2);
-  if (extremes) {
-    const { smooth, pointy } = extremes;
-    drawGhostCurve(ctx, toScreen, at1, at2, smooth.a, smooth.b, smooth.c, p1, 'rgba(100,255,100,0.35)');
-    drawGhostCurve(ctx, toScreen, at1, at2, pointy.a, pointy.b, pointy.c, p1, 'rgba(255,100,100,0.35)');
-  }
+  arcRenderStates = new Map();
 
-  if (result) {
-    const { a, b, c } = result;
-    curCurvePts = sampleCurvePoints(at1, at2, a, b, c, p1, 200);
-    const { minS, maxS } = drawCurveVis(ctx, toScreen, at1, at2, a, b, c, p1);
-
-    if (pStar && result.tStar != null) {
-      const ptStar = evalCurve(at1, result.tStar, a, b, c, p1);
-      drawCircle(ctx, toScreen, ptStar, 5, '#ff0', true);
+  for (const segment of SEGMENTS) {
+    if (segment.kind === 'line') {
+      const from = nodes[segment.from];
+      const to = nodes[segment.to];
+      drawLine(ctx, toScreen, from.point, to.point, 'rgba(255,226,154,0.85)', 4);
+      continue;
     }
 
-    drawSpeedGraph(ctx, W, at1, at2, a, b, c, result.tStar != null ? result.tStar : null);
-    info.textContent = `\u03BB=${lambda.toFixed(2)}  s(t)=${a.toFixed(3)}t\u00B2+${b.toFixed(3)}t+${c.toFixed(3)}  speed:[${minS.toFixed(2)},${maxS.toFixed(2)}]`;
+    const state = solveArc(segment, nodes, activeDrag && activeDrag.segmentIndex === segment.index ? activeDrag : null);
+    arcRenderStates.set(segment.index, state);
+
+    if (!state.solution) {
+      drawLine(ctx, toScreen, state.from.point, state.to.point, 'rgba(255,110,110,0.45)', 1.5, [6, 4]);
+      continue;
+    }
+
+    solvedCount += 1;
+    const active = segment.index === activeSegmentIndex;
+    const stats = drawCurveVis(
+      ctx,
+      toScreen,
+      state.at1,
+      state.at2,
+      state.solution.a,
+      state.solution.b,
+      state.solution.c,
+      state.from.point,
+      {
+        lineColor: ARC_COLORS[segment.lambdaIndex],
+        lineWidth: active ? 3.2 : 2.1,
+        showSpeed: active
+      }
+    );
+
+    state.minS = stats.minS;
+    state.maxS = stats.maxS;
+
+    if (active) activeArc = state;
+
+    if (activeDrag && activeDrag.segmentIndex === segment.index && state.solution.tStar != null) {
+      const pStar = evalCurve(state.at1, state.solution.tStar, state.solution.a, state.solution.b, state.solution.c, state.from.point);
+      drawCircle(ctx, toScreen, pStar, 5, '#fff199', true);
+    }
+  }
+
+  for (const node of nodes) {
+    const color = nodeColor(node);
+    const handle = tangentHandle(node.point, node.angle);
+    drawLine(ctx, toScreen, node.point, handle, `${color}55`, 1.5, [4, 4]);
+    drawCircle(ctx, toScreen, node.point, POINT_R, color, true);
+    if (!node.handleLocked) {
+      drawCircle(ctx, toScreen, handle, 6, color, true);
+    } else {
+      drawCircle(ctx, toScreen, handle, 5, color, false);
+    }
+
+    const screen = toScreen(node.point);
+    ctx.font = '12px monospace';
+    ctx.fillStyle = color;
+    ctx.fillText(`p${node.index}`, screen.x + 11, screen.y - 9);
+  }
+
+  const lambdaText = lambdas.map((value, index) => `λ${index}=${value.toFixed(2)}`).join('  ');
+  if (activeArc?.solution && activeArc.minS != null && activeArc.maxS != null) {
+    drawSpeedGraph(
+      ctx,
+      W,
+      activeArc.at1,
+      activeArc.at2,
+      activeArc.solution.a,
+      activeArc.solution.b,
+      activeArc.solution.c,
+      activeArc.solution.tStar ?? null
+    );
+    info.textContent =
+      `Quadratic-angle arcs  ${lambdaText}  active:p${activeArc.def.from}->p${activeArc.def.to}` +
+      `  speed:[${activeArc.minS.toFixed(2)}, ${activeArc.maxS.toFixed(2)}]  solved:${solvedCount}/8`;
   } else {
-    curCurvePts = [];
-    info.textContent = 'No solution';
+    info.textContent = `Quadratic-angle arcs  ${lambdaText}  solved:${solvedCount}/8`;
   }
 
   stateEl.textContent = serializeState();
-
-  // Tangent handles
-  const h1 = tangentHandle(p1, at1);
-  const h2 = tangentHandle(p2, at2);
-  drawLine(ctx, toScreen, p1, h1, 'rgba(68,204,255,0.4)', 1.5, [4, 4]);
-  drawLine(ctx, toScreen, p2, h2, 'rgba(255,136,68,0.4)', 1.5, [4, 4]);
-  drawCircle(ctx, toScreen, h1, 6, '#4cf', true);
-  drawCircle(ctx, toScreen, h2, 6, '#f84', true);
-
-  // Endpoints
-  drawCircle(ctx, toScreen, p1, HANDLE_R, '#4cf', true);
-  drawCircle(ctx, toScreen, p2, HANDLE_R, '#f84', true);
-
-  const s1 = toScreen(p1), s2 = toScreen(p2);
-  ctx.font = '12px monospace';
-  ctx.fillStyle = '#4cf'; ctx.fillText('p1', s1.x + 12, s1.y - 8);
-  ctx.fillStyle = '#f84'; ctx.fillText('p2', s2.x + 12, s2.y - 8);
-
   requestAnimationFrame(frame);
 }
 

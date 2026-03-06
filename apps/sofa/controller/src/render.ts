@@ -2,6 +2,13 @@ import { type Point, TAU, evalCurve, speed } from './curve';
 
 type ToScreen = (p: Point) => Point;
 
+export interface CurveStyle {
+  lineColor?: string;
+  lineWidth?: number;
+  showSpeed?: boolean;
+  speedAlpha?: number;
+}
+
 export function drawCircle(ctx: CanvasRenderingContext2D, toScreen: ToScreen, p: Point, r: number, color: string, fill = true) {
   const s = toScreen(p);
   ctx.beginPath();
@@ -22,7 +29,17 @@ export function drawLine(ctx: CanvasRenderingContext2D, toScreen: ToScreen, a: P
   ctx.setLineDash([]);
 }
 
-export function drawCurveVis(ctx: CanvasRenderingContext2D, toScreen: ToScreen, at1: number, at2: number, a: number, b: number, c: number, p1: Point) {
+export function drawCurveVis(
+  ctx: CanvasRenderingContext2D,
+  toScreen: ToScreen,
+  at1: number,
+  at2: number,
+  a: number,
+  b: number,
+  c: number,
+  p1: Point,
+  style: CurveStyle = {}
+) {
   const N = 200;
   const dt = (at2 - at1) / N;
   let minS = Infinity, maxS = -Infinity;
@@ -37,21 +54,25 @@ export function drawCurveVis(ctx: CanvasRenderingContext2D, toScreen: ToScreen, 
     maxS = Math.max(maxS, sp);
   }
 
-  // Speed coloring underlay
-  for (let i = 0; i < N; i++) {
-    const sA = toScreen(pts[i].pt), sB = toScreen(pts[i + 1].pt);
-    const sp = (pts[i].sp + pts[i + 1].sp) / 2;
-    const frac = maxS > minS ? (sp - minS) / (maxS - minS) : 0.5;
-    const r = Math.round(255 * (1 - frac));
-    const g = Math.round(255 * frac);
-    ctx.strokeStyle = `rgba(${r},${g},80,0.5)`;
-    ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.moveTo(sA.x, sA.y); ctx.lineTo(sB.x, sB.y); ctx.stroke();
+  if (style.showSpeed ?? true) {
+    const speedAlpha = style.speedAlpha ?? 0.5;
+    for (let i = 0; i < N; i++) {
+      const sA = toScreen(pts[i].pt), sB = toScreen(pts[i + 1].pt);
+      const sp = (pts[i].sp + pts[i + 1].sp) / 2;
+      const frac = maxS > minS ? (sp - minS) / (maxS - minS) : 0.5;
+      const r = Math.round(255 * (1 - frac));
+      const g = Math.round(255 * frac);
+      ctx.strokeStyle = `rgba(${r},${g},80,${speedAlpha})`;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(sA.x, sA.y);
+      ctx.lineTo(sB.x, sB.y);
+      ctx.stroke();
+    }
   }
 
-  // Main line
-  ctx.strokeStyle = '#8af';
-  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = style.lineColor ?? '#8af';
+  ctx.lineWidth = style.lineWidth ?? 2.5;
   ctx.beginPath();
   for (let i = 0; i <= N; i++) {
     const s = toScreen(pts[i].pt);
@@ -59,22 +80,6 @@ export function drawCurveVis(ctx: CanvasRenderingContext2D, toScreen: ToScreen, 
   }
   ctx.stroke();
   return { minS, maxS };
-}
-
-export function drawGhostCurve(ctx: CanvasRenderingContext2D, toScreen: ToScreen, at1: number, at2: number, a: number, b: number, c: number, p1: Point, color: string) {
-  const N = 100;
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([4, 4]);
-  ctx.beginPath();
-  for (let i = 0; i <= N; i++) {
-    const t = at1 + (at2 - at1) * i / N;
-    const pt = evalCurve(at1, t, a, b, c, p1);
-    const s = toScreen(pt);
-    if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y);
-  }
-  ctx.stroke();
-  ctx.setLineDash([]);
 }
 
 export function drawSpeedGraph(ctx: CanvasRenderingContext2D, W: number, at1: number, at2: number, a: number, b: number, c: number, tStar: number | null) {

@@ -1,4 +1,12 @@
-# Curve Controller Equations
+# Quadratic-Angle Arc Equations
+
+In the hull controller, the upper convex-hull chain is built from eight quadratic-angle arcs:
+
+- `p0 -> p1 -> p2 -> p3 -> p4` on the right,
+- `p5 -> p6 -> p7 -> p8 -> p9` on the left,
+- with the straight top segment `p4 -> p5` lying on `y = 1`.
+
+The left half is the reflection of the right half across `x = 0`.
 
 ## Setup
 
@@ -7,7 +15,7 @@ Let $t_1, t_2$ be the angular displacements of $u_1, u_2$, so $u_i = (\cos t_i, 
 
 ## Curve parametrization
 
-The curve $x(t)$ for $t \in [t_1, t_2]$ satisfies:
+The quadratic-angle arc $x(t)$ for $t \in [t_1, t_2]$ satisfies:
 
 $$x'(t) = s(t) \begin{pmatrix} \cos t \\ \sin t \end{pmatrix}$$
 

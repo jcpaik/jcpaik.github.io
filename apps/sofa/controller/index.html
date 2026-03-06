@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Curve Controller</title>
+  <title>Gerver Hull Controller</title>
   <style>
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
@@ -38,8 +38,10 @@
 <body>
   <canvas id="view"></canvas>
   <div id="hud">
-    <div class="row">Drag p1/p2 handle to set tangent</div>
-    <div class="row">Click curve to grab + deform</div>
+    <div class="row">Mirror-symmetric convex hull for Gerver&apos;s sofa</div>
+    <div class="row">Drag p0-p9 points and tangent handles</div>
+    <div class="row">Drag an arc to change its feasible family</div>
+    <div class="row">p0/p9 stay on y=0, p4/p5 stay on y=1</div>
     <div class="row">Drag empty space: pan | Wheel: zoom</div>
     <div class="row" id="info"></div>
     <div class="row" id="state"></div>

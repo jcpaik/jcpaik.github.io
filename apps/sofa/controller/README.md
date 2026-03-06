@@ -1,5 +1,15 @@
-# Curve Controller
+# Gerver Hull Controller
 
-**INTENT:** Here I experiment over curve controller. The controller is not exactly Bezier curve controller, but customized especially for Gerver's sofa.
+**INTENT:** This project controls the upper convex-hull boundary of Gerver's sofa rather than a single free curve.
 
-Note that Gerver's sofa has 'surface area measure' parametrized quadratically over the angle. I wanted a special UI that can draw Gerver's sofa exactly (Bezier curves can't).
+The hull model is:
+
+- four right-side quadratic-angle arcs,
+- one horizontal top segment on `y = 1`,
+- four left-side quadratic-angle arcs obtained by reflection across `x = 0`.
+
+A **quadratic-angle arc** is the curve type used for each non-horizontal hull piece. It is parametrized by the tangent angle `t`, with derivative
+
+`x'(t) = s(t) (cos t, sin t)`
+
+where `s(t)` is a quadratic polynomial. This matches the special arc pieces that arise in Gerver-style moving-sofa constructions more naturally than Bezier splines.
