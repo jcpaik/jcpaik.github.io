@@ -114,15 +114,12 @@ canvas.addEventListener('pointermove', e => {
   }
 
   if (dragging === 'curve') {
-    const oldPStar = pStar, oldTStarHint = tStarHint, oldLastSolveC = lastSolveC;
     pStar = w;
     const [at1, at2] = normAngles(t1, t2);
     const result = solveWithPassthrough(at1, at2, p1, p2, pStar, tStarHint!, lastSolveC);
-    if (result && minSpeedOnInterval(at1, at2, result.a, result.b, result.c) >= -1e-9) {
+    if (result) {
       tStarHint = result.tStar;
       lastSolveC = result.c;
-    } else {
-      pStar = oldPStar; tStarHint = oldTStarHint; lastSolveC = oldLastSolveC;
     }
     return;
   }

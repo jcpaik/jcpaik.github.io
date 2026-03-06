@@ -243,9 +243,34 @@ export function solveWithPassthrough(
     const step = solve2x2([dRdc_x, dRdtStar_x], [dRdc_y, dRdtStar_y], [-rx, -ry]);
     if (!step) return null;
 
-    c += step[0];
-    tStar += step[1];
+    // Backtrack dc to keep (a,b,c) in the feasible region (minSpeed >= 0).
+    // Binary search for the largest step fraction that stays feasible.
+    let frac = 1.0;
+    const newCFull = c + step[0];
+    const abFull = solveAB(t1, t2, newCFull, delta);
+    if (!abFull || minSpeedOnInterval(t1, t2, abFull[0], abFull[1], newCFull) < -1e-9) {
+      let lo = 0, hi = 1;
+      for (let k = 0; k < 20; k++) {
+        const mid = (lo + hi) / 2;
+        const cMid = c + mid * step[0];
+        const abMid = solveAB(t1, t2, cMid, delta);
+        if (abMid && minSpeedOnInterval(t1, t2, abMid[0], abMid[1], cMid) >= -1e-9) {
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+      frac = lo;
+    }
+
+    c += frac * step[0];
+    tStar += frac * step[1];
     tStar = Math.max(t1 + 0.01, Math.min(t2 - 0.01, tStar));
   }
-  return null;
+
+  // Return the boundary solution (clamped to feasibility) rather than null.
+  const abFinal = solveAB(t1, t2, c, delta);
+  if (!abFinal) return null;
+  const [a, b] = abFinal;
+  return { a, b, c, tStar };
 }
