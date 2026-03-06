@@ -8,6 +8,16 @@ In the hull controller, the upper convex-hull chain is built from eight quadrati
 
 The left half is the reflection of the right half across `x = 0`.
 
+For the default Gerver-cap initialization, the right-side breakpoints are taken at
+
+- `α = π/2 - φ`
+- `α = π/2 - θ`
+- `α = θ`
+- `α = φ`
+- `α = 0`
+
+using MathWorld's piecewise `r(α)` data for Gerver's sofa.
+
 ## Setup
 
 We have two control nodes $p_1, p_2 \in \mathbb{R}^2$ with unit tangent directions $u_1, u_2$.

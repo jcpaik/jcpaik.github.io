@@ -13,3 +13,5 @@ A **quadratic-angle arc** is the curve type used for each non-horizontal hull pi
 `x'(t) = s(t) (cos t, sin t)`
 
 where `s(t)` is a quadratic polynomial. This matches the special arc pieces that arise in Gerver-style moving-sofa constructions more naturally than Bezier splines.
+
+The default scene is initialized from Gerver's exact cap data using MathWorld's constants `A`, `B`, `φ`, `θ` and the piecewise function `r(α)` for the right cap boundary.

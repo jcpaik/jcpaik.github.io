@@ -1,5 +1,6 @@
 import { type Point, type CurvePoint, TAU, normAngles, sampleCurvePoints, closestOnCurve, evalCurve } from './curve';
 import { type ABC, computeLambda, solveFromLambda, solveWithPassthrough } from './solver';
+import { getGerverCapInitialization } from './gerver';
 import { drawCircle, drawLine, drawCurveVis, drawSpeedGraph, drawGrid } from './render';
 
 // --- Canvas ---
@@ -104,15 +105,14 @@ const ANGLE_GAP = 0.04;
 
 const ARC_COLORS = ['#72d3ff', '#7ae7c3', '#e2e46e', '#ffcd76'];
 
-let controls: ControlNode[] = [
-  { point: { x: 2.08, y: 0 }, angle: 2.2 },
-  { point: { x: 1.66512196490524, y: 0.4416042324044667 }, angle: 2.45 },
-  { point: { x: 1.1538868476866024, y: 0.7668375901709685 }, angle: 2.7 },
-  { point: { x: 0.5780807718056917, y: 0.9554786383557533 }, angle: 2.95 },
-  { point: { x: 0.11535373871839627, y: 1 }, angle: Math.PI }
-];
+const gerverCap = getGerverCapInitialization();
 
-let lambdas = [0.5, 0.5, 0.5, 0.5];
+let controls: ControlNode[] = gerverCap.controls.map(control => ({
+  point: { ...control.point },
+  angle: control.angle
+}));
+
+let lambdas = [...gerverCap.lambdas];
 
 const SEGMENTS: SegmentDef[] = [
   { kind: 'arc', index: 0, from: 0, to: 1, lambdaIndex: 0 },
